@@ -1,7 +1,7 @@
 #include "DxLib.h"
 #include "math.h"
 
-// test
+// test2
 
 class BulletBase {
 public:
