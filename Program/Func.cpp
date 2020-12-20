@@ -87,16 +87,16 @@ int CFunc::AddComma(char* str) {
 
 
 void CFunc::DumpFile(char* txt) {
-	static int count = 0;
+	static int m_count = 0;
 
-	// dmp_"yyyymmdd"_+count(4ケタ)
+	// dmp_"yyyymmdd"_+m_count(4ケタ)
 	FILE* fp;
 	char filename[80];
-	time_t now = time(NULL);
+	time_t now = time(nullptr);
 	struct tm pnow;
 	localtime_s(&pnow, &now);
-	sprintf_s(filename, "dmp_%d%02d%d_%d", pnow.tm_year + 1900, pnow.tm_mon + 1, pnow.tm_mday, count);
-	count++;
+	sprintf_s(filename, "dmp_%d%02d%d_%d", pnow.tm_year + 1900, pnow.tm_mon + 1, pnow.tm_mday, m_count);
+	m_count++;
 	fopen_s(&fp, filename, "wb");
 	if (fp) {
 		fclose(fp);

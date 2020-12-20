@@ -146,20 +146,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program\BaseBeam.cpp" />
+    <ClCompile Include="Program\BaseBullet.cpp" />
+    <ClCompile Include="Program\BaseEffect.cpp" />
+    <ClCompile Include="Program\BattleScene.cpp" />
     <ClCompile Include="Program\BulletBase.cpp" />
+    <ClCompile Include="Program\CustomBullet.cpp" />
     <ClCompile Include="Program\DXFunc.cpp" />
     <ClCompile Include="Program\Func.cpp" />
     <ClCompile Include="Program\Game.cpp" />
+    <ClCompile Include="Program\HomingBullet.cpp" />
     <ClCompile Include="Program\Input.cpp" />
     <ClCompile Include="Program\Player.cpp" />
+    <ClCompile Include="Program\Resource.cpp" />
+    <ClCompile Include="Program\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Program\BaseBeam.h" />
+    <ClInclude Include="Program\BaseBullet.h" />
+    <ClInclude Include="Program\BaseEffect.h" />
+    <ClInclude Include="Program\BattleScene.h" />
     <ClInclude Include="Program\BulletBase.h" />
+    <ClInclude Include="Program\CustomBullet.h" />
     <ClInclude Include="Program\DXFunc.h" />
     <ClInclude Include="Program\Func.h" />
     <ClInclude Include="Program\Game.h" />
+    <ClInclude Include="Program\HomingBullet.h" />
     <ClInclude Include="Program\Input.h" />
     <ClInclude Include="Program\Player.h" />
+    <ClInclude Include="Program\Resource.h" />
+    <ClInclude Include="Program\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

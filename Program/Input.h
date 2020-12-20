@@ -274,7 +274,7 @@ public:
 	CInputAllStatus* GetInputStatus();
 
 	void GetState();
-	//void init();
+	//void Init();
 	CInput();
 	~CInput();
 

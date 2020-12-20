@@ -118,7 +118,7 @@ void CInput::GetMouseStatus() {
 
 	int mouseInput = GetMouseInput();
 
-	int target[3] = { INPUT_MOUSE_LEFT, INPUT_MOUSE_RIGHT, INPUT_MOUSE_CENTER };
+	int m_target[3] = { INPUT_MOUSE_LEFT, INPUT_MOUSE_RIGHT, INPUT_MOUSE_CENTER };
 
 	for (int i = 0; i < 3; i++) {
 		if (mouseDoubleFlg[i] == true) {
@@ -129,7 +129,7 @@ void CInput::GetMouseStatus() {
 			}
 		}
 		m_mouseOldInputCount[i] = m_mouseInputCount[i];
-		if ((mouseInput & target[i]) != 0) {
+		if ((mouseInput & m_target[i]) != 0) {
 			m_mouseInputCount[i]++;
 			m_inputStatus.m_mouseStatus[i] = INPUT_ON;
 

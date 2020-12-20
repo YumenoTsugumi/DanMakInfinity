@@ -15,12 +15,12 @@ public:
 	static int DrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle);
 
 	//四角
-	static int DrawBox(double x1, double y1, double x2, double y2, int cr, int FillFlag = TRUE);
-	static int DrawBox(CPos p1, CPos p2, int cr, int FillFlag = TRUE);
+	static int DrawBox2(double x1, double y1, double x2, double y2, int cr, int FillFlag = TRUE);
+	static int DrawBox2(CPos p1, CPos p2, int cr, int FillFlag = TRUE);
 
 	//文字
-	static int DrawString(double x1, double y1, const char* string, int fontCr, int font, int edgeCr);
-	static int DrawString(CPos p1, const char* string, int fontCr, int font, int edgeCr);
+	static int DrawString(double x1, double y1, const char* string, int fontCr, int m_font, int edgeCr);
+	static int DrawString(CPos p1, const char* string, int fontCr, int m_font, int edgeCr);
 
 	//三角
 	static int DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag = TRUE);

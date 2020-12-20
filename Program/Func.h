@@ -116,13 +116,13 @@ public:
 	static int AddComma(char *str);
 
 	//ダンプファイル
-	//直下に入力文字列を吐く　ファイル名は dmp_"yyyymmdd"_+count(4ケタ)
+	//直下に入力文字列を吐く　ファイル名は dmp_"yyyymmdd"_+m_count(4ケタ)
 	static void DumpFile(char *txt);
 	//直下に入力名のファイルを吐く　中身は何も書かない
 	static void DumpFile2(char *filename);
 
 	//ダンプファイル	デバックだと吐く	あまり用途はないかもｗ
-	//直下に入力文字列を吐く　ファイル名は dmp_"yyyymmdd"_+count(4ケタ)
+	//直下に入力文字列を吐く　ファイル名は dmp_"yyyymmdd"_+m_count(4ケタ)
 	static void DumpFileDebug(char *txt);
 	//直下に入力名のファイルを吐く　中身は何も書かない
 	static void DumpFileDebug2(char *filename);

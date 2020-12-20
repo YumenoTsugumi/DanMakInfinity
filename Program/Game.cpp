@@ -1,6 +1,7 @@
 ﻿#include "Game.h"
 
 #include "Input.h"
+#include "BattleScene.h"
 
 CGame::CGame() :
 	m_fpsManager(nullptr),
@@ -35,6 +36,13 @@ void CGame::Init()
 
 }
 
+void CGame::CreateBattleScene()
+{
+	m_sceneManager = new CSceneManager();
+	CBattleScene* battleScene = new CBattleScene(0);
+	battleScene->Init(this);	//シーンにゲームクラスポインタを渡す
+	m_sceneManager->AddScene(battleScene);
+}
 
 void CGame::Main() {
 
@@ -46,14 +54,18 @@ void CGame::Main() {
 		//入力
 		m_input->GetState();
 		CInputAllStatus* inputData = m_input->GetInputStatus();
-		
+
 		// 入力のデバッグ情報表示
-		//m_input->DebugPrint();
+		m_input->DebugPrint();
+
+		// シーンの実行
+		m_sceneManager->Main(inputData);
 
 		ScreenFlip(); //描画範囲反映
 		
 		clsDx(); //printfDx削除
 		m_fpsManager->End(); //fpsEnd管理
+
 	}
 }
 

@@ -20,19 +20,19 @@ int CDxFunc::DrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int 
 }
 
 
-int CDxFunc::DrawBox(double x1, double y1, double x2, double y2, int cr, int FillFlag) {
+int CDxFunc::DrawBox2(double x1, double y1, double x2, double y2, int cr, int FillFlag) {
 	return DrawBox((int)x1, (int)y1, (int)x2, (int)y2, cr, TRUE);
 }
-int CDxFunc::DrawBox(CPos p1, CPos p2, int cr, int FillFlag) {
-	return DrawBox(p1.x, p1.y, p2.x, p2.y, cr, FillFlag);
+int CDxFunc::DrawBox2(CPos p1, CPos p2, int cr, int FillFlag) {
+	return DrawBox2(p1.x, p1.y, p2.x, p2.y, cr, FillFlag);
 }
 
 
-int CDxFunc::DrawString(double x1, double y1, const char* string, int fontCr, int font, int edgeCr) {
-	return DrawStringToHandle((int)x1, (int)y1, string, fontCr, font, edgeCr);
+int CDxFunc::DrawString(double x1, double y1, const char* string, int fontCr, int m_font, int edgeCr) {
+	return DrawStringToHandle((int)x1, (int)y1, string, fontCr, m_font, edgeCr);
 }
-int CDxFunc::DrawString(CPos p1, const char* string, int fontCr, int font, int edgeCr) {
-	return CDxFunc::DrawString(p1.x, p1.y, string, fontCr, font, edgeCr);
+int CDxFunc::DrawString(CPos p1, const char* string, int fontCr, int m_font, int edgeCr) {
+	return CDxFunc::DrawString(p1.x, p1.y, string, fontCr, m_font, edgeCr);
 }
 
 
