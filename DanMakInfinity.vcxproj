@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -146,6 +146,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program\BulletBase.cpp" />
+    <ClCompile Include="Program\DXFunc.cpp" />
+    <ClCompile Include="Program\Func.cpp" />
+    <ClCompile Include="Program\Game.cpp" />
+    <ClCompile Include="Program\Input.cpp" />
+    <ClCompile Include="Program\Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Program\BulletBase.h" />
+    <ClInclude Include="Program\DXFunc.h" />
+    <ClInclude Include="Program\Func.h" />
+    <ClInclude Include="Program\Game.h" />
+    <ClInclude Include="Program\Input.h" />
+    <ClInclude Include="Program\Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

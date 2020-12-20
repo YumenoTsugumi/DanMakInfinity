@@ -1,18 +1,20 @@
-#include "DxLib.h"
+ï»¿#include "DxLib.h"
 #include "math.h"
 
-// test2
+#include "Func.h"
+#include "DXFunc.h"
+#include "Game.h"
 
 class BulletBase {
 public:
-	double x; // ’e‚ÌÀ•WX
-	double y;// ’e‚ÌÀ•WY
-	double vx;// ’e‚ÌˆÚ“®—ÊX
-	double vy;// ’e‚ÌˆÚ“®—ÊY
-	double angle; // ’e‚ÌŠp“x
-	double speed; // ’e‚Ì‘¬“x
+	double x; // å¼¾ã®åº§æ¨™X
+	double y;// å¼¾ã®åº§æ¨™Y
+	double vx;// å¼¾ã®ç§»å‹•é‡X
+	double vy;// å¼¾ã®ç§»å‹•é‡Y
+	double angle; // å¼¾ã®è§’åº¦
+	double speed; // å¼¾ã®é€Ÿåº¦
 
-	bool use; // ’e‚ªg—p‚³‚ê‚Ä‚¢‚é‚©
+	bool use; // å¼¾ãŒä½¿ç”¨ã•ã‚Œã¦ã„ã‚‹ã‹
 };
 
 const int BulletMax = 1024;
@@ -51,7 +53,7 @@ void DrawBullet() {
 	for (int ii = 0; ii < BulletMax; ii++) {
 		if (bullets[ii].use) {
 			BulletBase* bullet = &bullets[ii];
-			int Cr = GetColor(0, 0, 255); // ÂF‚Ì’l‚ğæ“¾
+			int Cr = GetColor(0, 0, 255); // é’è‰²ã®å€¤ã‚’å–å¾—
 			DrawCircle(bullet->x, bullet->y, 20, Cr, TRUE);
 		}
 	}
@@ -68,7 +70,7 @@ void MoveBullet() {
 	}
 }
 
-// ‚Ò[‚¿‚á‚ñ
+// ã´ãƒ¼ã¡ã‚ƒã‚“
 class Player {
 public:
 	double x;
@@ -89,7 +91,7 @@ void DrawPlayer() {
 	DrawRotaGraph(player.x, player.y,
 		0.25, 0.0,
 		player.image, TRUE, FALSE);
-	int Cr = GetColor(255, 0, 0); // ÂF‚Ì’l‚ğæ“¾
+	int Cr = GetColor(255, 0, 0); // é’è‰²ã®å€¤ã‚’å–å¾—
 	DrawCircle(player.x, player.y, 3, Cr, TRUE);
 
 }
@@ -97,15 +99,6 @@ void DrawPlayer() {
 void MovePlayer() {
 	char Buf[256];
 	GetHitKeyStateAll(Buf);
-
-	/*  *
-	14 *|
-	  * | 10
-	 *  |
-	-----
-	   10
-	*/
-
 
 	int count = 0;
 	if (Buf[KEY_INPUT_LEFT] == 1) {
@@ -124,12 +117,12 @@ void MovePlayer() {
 
 	double moveValue = 0;
 	if (count == 1) {
-		// ˆÚ“®—Ê10
+		// ç§»å‹•é‡10
 		moveValue = 10;
 	}
 	else if (count ==2) {
-		// ˆÚ“®—Ê14.14
-		moveValue = 14.14/2; // ˆá‚¤
+		// ç§»å‹•é‡14.14
+		moveValue = 14.14/2; // é•ã†
 	}
 
 	if (Buf[KEY_INPUT_LEFT] == 1) {
@@ -159,19 +152,19 @@ void Collision()
 			player.x;
 			player.y;
 
-			// ‰~‚Æ‰~‚Ì“–‚½‚è”»’è
-			// i’e‚ÌÀ•W‚ÆƒvƒŒƒCƒ„[‚ÌÀ•W‚Ì‹——£j‚ª (’e‚Ì”¼Œa@-@ƒvƒŒƒCƒ„‚Ì“–‚½‚è”»’è)@ˆÈ‰º‚Å‚ ‚Á‚½‚ç
-			//@“–‚½‚Á‚Ä‚¢‚é
+			// å††ã¨å††ã®å½“ãŸã‚Šåˆ¤å®š
+			// ï¼ˆå¼¾ã®åº§æ¨™ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ã®è·é›¢ï¼‰ãŒ (å¼¾ã®åŠå¾„ã€€-ã€€ãƒ—ãƒ¬ã‚¤ãƒ¤ã®å½“ãŸã‚Šåˆ¤å®š)ã€€ä»¥ä¸‹ã§ã‚ã£ãŸã‚‰
+			//ã€€å½“ãŸã£ã¦ã„ã‚‹
 
 			double x = bullet->x - player.x;
 			double y = bullet->y - player.y;
 			double r = 20.0 - 3.0;
 			if (sqrt(x * x + y * y) < r) {
-				// “–‚½‚Á‚Ä‚¢‚é@‚Í‚¸
-				// ƒvƒŒƒCƒ„[‚ª€‚Ê
-				// ”š”­ƒGƒtƒFƒNƒg@50ms
-				// ‰ŠúˆÊ’u‚É–ß‚Á‚Ä
-				// –³“GŠÔ‚ª‚ ‚Á‚Ä
+				// å½“ãŸã£ã¦ã„ã‚‹ã€€ã¯ãš
+				// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ­»ã¬
+				// çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã€€50ms
+				// åˆæœŸä½ç½®ã«æˆ»ã£ã¦
+				// ç„¡æ•µæ™‚é–“ãŒã‚ã£ã¦
 				player.x = 400;
 				player.y = 500;
 			}
@@ -181,51 +174,36 @@ void Collision()
 }
 
 
-// ƒvƒƒOƒ‰ƒ€‚Í WinMain ‚©‚çn‚Ü‚è‚Ü‚·
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
-	SetGraphMode(800, 600, 32);	// ‰æ–Êƒ‚[ƒh‚Ìİ’è
-	ChangeWindowMode(TRUE); // ƒEƒBƒ“ƒhƒEƒ‚[ƒh
-	SetMainWindowText("DanMakInfinity"); // ƒQ[ƒ€ƒ^ƒCƒgƒ‹
-
-	if (DxLib_Init() == -1)		// ‚c‚wƒ‰ƒCƒuƒ‰ƒŠ‰Šú‰»ˆ—
-	{
-		return -1;			// ƒGƒ‰[‚ª‹N‚«‚½‚ç’¼‚¿‚ÉI—¹
+	int windowX = 800;
+	int windowY = 600;
+	SetGraphMode(windowX, windowY, 32); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
+	ChangeWindowMode(true); //ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰
+	SetOutApplicationLogValidFlag(false); //ãƒ­ã‚°ã‚’åã‹ãªã„
+	SetAlwaysRunFlag(TRUE); //ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã§ãªãã¦ã‚‚å‡¦ç†ã‚’è¡Œã†
+	SetMainWindowText("DanMakInfinity"); // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¿ã‚¤ãƒˆãƒ«
+	
+	if (DxLib_Init() == -1) {//DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªåˆæœŸåŒ–
+		return -1;
 	}
+	
+	SetDrawScreen(DX_SCREEN_BACK); //ãƒ€ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡ã‚’æœ‰åŠ¹ã«
+	
+	srand((unsigned)time(NULL)); //ä¹±æ•°åˆæœŸåŒ–
+	
+	SetDrawMode(DX_DRAWMODE_BILINEAR);//ãƒã‚¤ãƒŠãƒªã‚¢æç”»ã‚’ä½¿ç”¨ã™ã‚‹
 
-	InitBullet();
-	InitPlayer();
+	CGame* game = new CGame();
+	game->Init();
 
+	//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆé ˜åŸŸçŸ©å½¢
+	//game->setRect(CRect(0, 0, windowX, windowY));
 
-	int count = 0;
-	while (ProcessMessage() == 0) {
-		ClearDrawScreen();
+	//game->createBattleScene();
+	game->Main();
 
-		if (count % 3 == 0) {
-			AddBullet(400, 200, rand()%360, 5.0);
-		}
-		// “–‚½‚è”»’è
-		Collision();
+	DxLib_End(); // çµ‚äº†å‡¦ç†
 
-		// ƒvƒƒOƒ‰ƒ€“®‚©‚·
-		MoveBullet();
-		DrawBullet();
-
-		MovePlayer();
-		DrawPlayer();
-
-		count++;
-
-		//60fps@1•bŠÔ‚É‰æ–Ê‚ğ60‰ñXV‚·‚é
-		// 1•b1000ms / 60 = 16.666ms‚É‰æ–Ê‚ğ‚P‰ñXV‚·‚é
-		WaitTimer(16); // 16ms‘Ò‚Â
-
-		clsDx();
-		ScreenFlip();
-	}
-
-	DxLib_End();				// ‚c‚wƒ‰ƒCƒuƒ‰ƒŠg—p‚ÌI—¹ˆ—
-
-	return 0;				// ƒ\ƒtƒg‚ÌI—¹ 
+	return 0;				// ã‚½ãƒ•ãƒˆã®çµ‚äº† 
 }
