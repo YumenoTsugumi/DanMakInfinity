@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DanMakInfinity", "DanMakInfinity.vcxproj", "{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Debug|x64.ActiveCfg = Debug|x64
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Debug|x64.Build.0 = Debug|x64
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Debug|x86.ActiveCfg = Debug|Win32
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Debug|x86.Build.0 = Debug|Win32
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Release|x64.ActiveCfg = Release|x64
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Release|x64.Build.0 = Release|x64
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Release|x86.ActiveCfg = Release|Win32
+		{AF9F385E-5DB8-4B60-8B6C-0F81ABE69C0E}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {972B3D29-7DF6-46E3-8182-5B61920CC007}
+	EndGlobalSection
+EndGlobal
