@@ -1,0 +1,2 @@
+# DanMakInfinity
+STG Game Create
