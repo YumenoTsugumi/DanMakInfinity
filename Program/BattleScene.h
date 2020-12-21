@@ -1,12 +1,10 @@
 #pragma once
 
-//class COtherInfo;
-//class CPlayer;
-//class CArea;
-//class CInhBulletManager;
-class CGame;
-
+#include "Game.h"
+#include "BaseBullet.h"
 #include "Scene.h"
+#include "Player.h"
+#include "BaseBeam.h"
 
 class CBattleScene : public CScene{
 public:
@@ -24,12 +22,12 @@ public:
 	//------------------
 	void Init(CGame* gameP);
 
-	//PointerSet pointerSet;
+	CGame *m_game;
+	CPlayer m_player;
+	CBulletManager m_bulletManeger;
+	CBaseBeamManager m_beamManeger;
 
-	//CGame *game;
-	//CPlayer *player;
-	//COtherInfo *otherInfo;
-	//CArea *area;
-	//CInhBulletManager *bulletManeger;
 
+	CBaseBeam* m_beam1;
+	CPos m_pos;
 };

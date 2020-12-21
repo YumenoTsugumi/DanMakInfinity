@@ -53,10 +53,10 @@ public:
 	//CBeamImage *m_image;
 	CImageSet* m_image;
 
-	//画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
-	static void SetResource(CResourceManager* ImageManager);
-	//画像総合データのポインタ　コンストラクタで画像の読み込みを行う
-	static CResourceManager* m_imageManager;
+	////画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
+	//static void SetResource(CResourceManager* ImageManager);
+	////画像総合データのポインタ　コンストラクタで画像の読み込みを行う
+	//static CResourceManager* m_imageManager;
 
 	//ちょっと広めの範囲
 	static CRect m_bigRect;
@@ -66,12 +66,12 @@ public:
 	//レーザー１本の発射最大数を設定する
 	//デフォルト128で構成される
 	//800*600で端から端まで　速度10間隔1なら128で十分
-	CBaseBeam(CPos P, double ANGLE, int IMGNO, int num = 128);
-	CBaseBeam(CPos P, double ANGLE, const char* IMGNAME, int num = 128);
+	CBaseBeam(CPos P, double angle, int IMGNO, int num = 128);
+	CBaseBeam(CPos P, double angle, const char* IMGNAME, int num = 128);
 	virtual ~CBaseBeam();
 	virtual void Set(CPos pos, double m_speed, double m_angle, int length, double m_thick, int m_shotSpan);
-	virtual void SetImage(int IMG);
-	virtual void SetImage(const char* IMAGENAME);
+	virtual void SetImage(int image);
+	virtual void SetImage(const char* ImageName);
 
 	//位置
 	CPos m_pos;
@@ -128,7 +128,7 @@ class CBaseBeamChild : public CBaseBullet {
 public:
 
 	//コンストラクタ	弾作成
-	CBaseBeamChild(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG);
+	CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
 	//デストラクタ
 	virtual~CBaseBeamChild();
 

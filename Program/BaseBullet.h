@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Func.h"
+#include "Resource.h"
 
 class CBaseBullet;
 class CBulletImage;
@@ -9,10 +10,17 @@ class CBulletManager;
 class CBulletImageInfo;
 
 class CResourceManager;
-#include "Resource.h"
 
-const bool PLAYER = false;
-const bool ABS = true;
+
+
+
+enum EDirType
+{
+	Player = 0,
+	Abs = 1
+};
+//const bool EDirType::Player = false;
+//const bool EDirType::Abs = true;
 
 const int BLEND_NO = DX_BLENDMODE_NOBLEND;
 const int BLEND_ALPHA = DX_BLENDMODE_ALPHA;
@@ -32,37 +40,37 @@ const int BLEND_INVSRC = DX_BLENDMODE_INVSRC;
 class CBulletImageInfo{
 public:
 	int m_imageNo;//*画像No
-	int sizeX, sizeY;	//1枚当たりの画像サイズ	(読み込み時に設定する
+	int m_sizeX, m_sizeY;	//1枚当たりの画像サイズ	(読み込み時に設定する
 
-	bool animeFlg;	//アニメーションするか　false:しない	true:する
-	char animeNum;	//アニメーション枚数	2～n
-	char animePos;	//*現在のアニメーションの位置
-	char animeSpeed;	//アニメ速度	アニメの画像を切り替えるfr
+	bool m_animeFlg;	//アニメーションするか　false:しない	true:する
+	char m_animeNum;	//アニメーション枚数	2～n
+	char m_animePos;	//*現在のアニメーションの位置
+	char m_animeSpeed;	//アニメ速度	アニメの画像を切り替えるfr
 
-	bool rotationFlg;	//回転するか　false:しない	true:する
-	double rotationSpeed;	//回転速度	fr毎の加算角度(rad)
-	double rotationAngle;	//*現在の角度(rad)
+	bool m_rotationFlg;	//回転するか　false:しない	true:する
+	double m_rotationSpeed;	//回転速度	fr毎の加算角度(rad)
+	double m_rotationAngle;	//*現在の角度(rad)
 
 	//コンストラクタ
 	CBulletImageInfo();
 	//全部初期化
-	void init();
+	void Init();
 	//入力引数を全部セット
-	void Set(	bool animeFlg,char animeNum,char animePos,char animeSpeed,
-				bool rotationFlg,double rotationSpeed,double rotationAngle);
+	void Set(	bool m_animeFlg,char m_animeNum,char m_animePos,char m_animeSpeed,
+				bool m_rotationFlg,double m_rotationSpeed,double m_rotationAngle);
 
 	//すべて代入
 	void operator=(const CBulletImageInfo& info){
 		m_imageNo	= info.m_imageNo;
-		sizeX	= info.sizeX;
-		sizeY	= info.sizeY;
-		animeFlg	= info.animeFlg;
-		animeNum	= info.animeNum;
-		animePos	= info.animePos;
-		animeSpeed	= info.animeSpeed;
-		rotationFlg	= info.rotationFlg;
-		rotationSpeed	= info.rotationSpeed;
-		rotationAngle	= info.rotationAngle;
+		m_sizeX	= info.m_sizeX;
+		m_sizeY	= info.m_sizeY;
+		m_animeFlg	= info.m_animeFlg;
+		m_animeNum	= info.m_animeNum;
+		m_animePos	= info.m_animePos;
+		m_animeSpeed	= info.m_animeSpeed;
+		m_rotationFlg	= info.m_rotationFlg;
+		m_rotationSpeed	= info.m_rotationSpeed;
+		m_rotationAngle	= info.m_rotationAngle;
 	}
 };
 
@@ -113,9 +121,6 @@ public:
 	//自機狙い用座標
 	static CPos m_target;
 	static void SetTarget(CPos pos);	//毎fr更新しないといけない
-
-	//画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
-	static void SetResource(CResourceManager *ImageManager);
 
 protected:
 	//-----------------------------------
@@ -171,15 +176,15 @@ public:
 	virtual void Remove();
 
 	//値設定　主にコンストラクタから呼ぶ
-	virtual void Set(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP);
+	virtual void Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed);
 	//画像関連
-	virtual void SetImage(int IMG);
-	virtual void SetImage(const char* IMAGENAME);
+	virtual void SetImage(int image);
+	virtual void SetImage(const char* ImageName);
 	virtual void SetImageInfo(CBulletImage* bulletImage);
 
 	//コンストラクタ	弾作成
-	CBaseBullet(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG);
-	CBaseBullet(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, const char* IMAGENAME);
+	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
+	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
 	//デストラクタ
 	virtual ~CBaseBullet();
 };
@@ -218,8 +223,8 @@ public:
 	CBaseBullet::SetTarget(CPos(p,0));
 
 //●メイン使用方法
-	bulletManager->Add( new CBaseBullet(ABS, CPos(100,100), 3, abg, 0,0,0, "bullet00"));
-	bulletManager->Add( new CBaseBullet(ABS, CPos(200,100), 3, abg, 0,0,0, 1));
+	bulletManager->Add( new CBaseBullet(EDirType::Abs, CPos(100,100), 3, abg, 0,0,0, "bullet00"));
+	bulletManager->Add( new CBaseBullet(EDirType::Abs, CPos(200,100), 3, abg, 0,0,0, 1));
 
 	bulletManager->Action();
 	bulletManager->Draw();

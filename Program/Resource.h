@@ -13,7 +13,7 @@ class CBgm;
 class CSe;
 class CResourceManager;
 
-const int RESOURCENAMEMAX = 40; // リソースの名前
+const int RESOURCENAMEMAX = 40; // リソースの名前最大値
 
 //すべてのリソースが持つ管理情報
 //重複した場合早い物を引っ張ってくる
@@ -75,7 +75,7 @@ public:
 //---------------------------------------------------------------------------------
 class CImages : public CResource{
 public:
-	CImages(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY);
+	CImages(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY);
 	virtual ~CImages();
 
 	int *m_images;
@@ -88,7 +88,7 @@ public:
 //---------------------------------------------------------------------------------
 class CImageAnime : public CImages{
 public:
-	CImageAnime(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed);
+	CImageAnime(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int m_animeSpeed);
 	virtual ~CImageAnime();
 
 	int m_animeSpeed;
@@ -98,7 +98,7 @@ public:
 //---------------------------------------------------------------------------------
 class CBulletImage : public CImageAnime{
 public:
-	CBulletImage(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed, double RotaSpeed);
+	CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int m_animeSpeed, double RotaSpeed);
 	virtual ~CBulletImage();
 
 	double m_rotaSpeed;

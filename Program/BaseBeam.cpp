@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "DXFunc.h"
 #include "BaseBeam.h"
+#include "Game.h"
 
 //---------------------------------------------------------------------------------
 //	CBaseBeamManager
@@ -85,12 +86,12 @@ int CBaseBeamManager::Add(CBaseBeam* Beam) {
 //	CBaseBeam
 //---------------------------------------------------------------------------------
 CRect CBaseBeam::m_bigRect;
-CResourceManager* CBaseBeam::m_imageManager = nullptr;
+//CResourceManager* CBaseBeam::m_imageManager = nullptr;
 
 
-CBaseBeam::CBaseBeam(CPos P, double ANGLE, int IMGNO, int num /*= 128*/) {
+CBaseBeam::CBaseBeam(CPos P, double angle, int IMGNO, int num /*= 128*/) {
 	//座標, 速度, 角度, 長さ, 太さ, 発射間隔
-	Set(P, 10.0, ANGLE, -1, -1, 1);
+	Set(P, 10.0, angle, -1, -1, 1);
 	SetImage(IMGNO);
 
 	m_bulletTotalNum = num;
@@ -102,9 +103,9 @@ CBaseBeam::CBaseBeam(CPos P, double ANGLE, int IMGNO, int num /*= 128*/) {
 
 	m_order = 0;
 }
-CBaseBeam::CBaseBeam(CPos P, double ANGLE, const char* IMGNAME, int num /*= 128*/) {
+CBaseBeam::CBaseBeam(CPos P, double angle, const char* IMGNAME, int num /*= 128*/) {
 	//座標, 速度, 角度, 長さ, 太さ, 発射間隔
-	Set(P, 10.0, ANGLE, -1, -1, 1);
+	Set(P, 10.0, angle, -1, -1, 1);
 	SetImage(IMGNAME);
 
 	m_bulletTotalNum = num;
@@ -117,12 +118,12 @@ CBaseBeam::CBaseBeam(CPos P, double ANGLE, const char* IMGNAME, int num /*= 128*
 	m_order = 0;
 }
 
-void CBaseBeam::SetImage(int IMG) {
-	m_image = (CImageSet*)m_imageManager->GetResource(IMG);
+void CBaseBeam::SetImage(int image) {
+	m_image = (CImageSet*)CGame::GetResource(image);
 }
 
-void CBaseBeam::SetImage(const char* IMAGENAME) {
-	m_image = (CImageSet*)m_imageManager->GetResource(IMAGENAME);
+void CBaseBeam::SetImage(const char* ImageName) {
+	m_image = (CImageSet*)CGame::GetResource(ImageName);
 }
 
 
@@ -166,7 +167,7 @@ void CBaseBeam::Action() {
 		if (m_count % m_shotSpan == 0) {
 			//加速度、画像等は0がデフォルト
 			//画像を指定したくなかったけど、マイナスとか指定できないようにしてるから0で
-			CBaseBeamChild* b = new CBaseBeamChild(ABS, m_pos, m_speed, m_angle, 0, 0, 0, 0);
+			CBaseBeamChild* b = new CBaseBeamChild(EDirType::Abs, m_pos, m_speed, m_angle, 0, 0, 0, 0);
 			Add(b);
 		}
 	}
@@ -186,11 +187,11 @@ void CBaseBeam::Action() {
 
 	//回転とかで毎フレーム参照されると落ちるので
 	//ビームは管理側がSetRemoveしないと削除しない
-	if (m_pos.x <	CBaseBeam::m_bigRect.leftUp.x ||
-		m_pos.x >	CBaseBeam::m_bigRect.rightDown.x ||
-		m_pos.y <	CBaseBeam::m_bigRect.leftUp.y ||
-		m_pos.y >	CBaseBeam::m_bigRect.rightDown.y) {
-		//m_removeFlg = true;
+	if (m_pos.x <	CGame::GetBattleRect().leftUp.x ||
+		m_pos.x >	CGame::GetBattleRect().rightDown.x ||
+		m_pos.y <	CGame::GetBattleRect().leftUp.y ||
+		m_pos.y >	CGame::GetBattleRect().rightDown.y) {
+		m_removeFlg = true;
 	}
 
 	for (int i = 0; i < m_bulletTotalNum; i++) {
@@ -203,10 +204,10 @@ void CBaseBeam::Action() {
 				m_bullet[i]->m_removeFlg = true;
 			}
 
-			if (m_bullet[i]->m_pos.x <	CBaseBeam::m_bigRect.leftUp.x ||
-				m_bullet[i]->m_pos.x >	CBaseBeam::m_bigRect.rightDown.x ||
-				m_bullet[i]->m_pos.y <	CBaseBeam::m_bigRect.leftUp.y ||
-				m_bullet[i]->m_pos.y >	CBaseBeam::m_bigRect.rightDown.y) {
+			if (m_bullet[i]->m_pos.x <	CGame::GetBattleRect().leftUp.x ||
+				m_bullet[i]->m_pos.x >	CGame::GetBattleRect().rightDown.x ||
+				m_bullet[i]->m_pos.y <	CGame::GetBattleRect().leftUp.y ||
+				m_bullet[i]->m_pos.y >	CGame::GetBattleRect().rightDown.y) {
 				m_bullet[i]->m_removeFlg = true;
 			}
 
@@ -267,9 +268,9 @@ void CBaseBeam::Draw() {
 //void CBaseBeam::setImageData(CBeamImageManager *BeamImageManager){
 //	beamImageManager = BeamImageManager;
 //}
-void CBaseBeam::SetResource(CResourceManager* ImageManager) {
-	m_imageManager = ImageManager;
-}
+//void CBaseBeam::SetResource(CResourceManager* ImageManager) {
+//	m_imageManager = ImageManager;
+//}
 
 
 
@@ -325,8 +326,8 @@ void CBaseBeam::Move(CPos& newpos, double plusAngle) {
 //---------------------------------------------------------------------------------
 
 
-CBaseBeamChild::CBaseBeamChild(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG) :
-	CBaseBullet(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, IMG) {
+CBaseBeamChild::CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
+	CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image) {
 
 }
 

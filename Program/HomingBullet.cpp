@@ -2,14 +2,15 @@
 #include "DxLib.h"
 #include "DXFunc.h"
 #include "HomingBullet.h"
+#include "Game.h"
 
-CHomingLaser::CHomingLaser(bool TYPE, CPos P, int NUM, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG) : 
-				CBaseBullet(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, IMG){
+CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image){
 	m_num = NUM;
 	Set();
 }
-CHomingLaser::CHomingLaser(bool TYPE, CPos P, int NUM, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, const char* IMAGENAME) : 
-				CBaseBullet(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, IMAGENAME){
+CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, ImageName){
 	m_num = NUM;
 	Set();
 }
@@ -45,7 +46,8 @@ void CHomingLaser::Draw(){
 		if(i > m_count){
 			break;
 		}
-		CDxFunc::DrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.animePos]);
+		CDxFunc::DrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		//CDxFunc::DrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image->m_index);
 	}
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
@@ -70,7 +72,7 @@ void CHomingLaser::Move(){
 	double ang1 = CFunc::GetTwoVectorAngle(m_vel, movePos);
 
 	double limitAng = 0.0 / CFunc::RAD;
-	for(int i=m_limit.size()-1;i>=0;i--){
+	for(int i=(int)m_limit.size()-1;i>=0;i--){
 		CLimitInfo *limitInfo = (CLimitInfo *)m_limit[i];
 		if(m_count < limitInfo->m_count){
 			limitAng = limitInfo->m_limitAngle;
@@ -103,16 +105,16 @@ void CHomingLaser::Move(){
 
 void CHomingLaser::RectOut(){
 	//óÃàÊäOÇ…èoÇΩÇÁçÌèú
-	if(	m_posA[0].x <	CBaseBullet::m_rect.leftUp.x	- m_imageInfo.sizeX/2	|| 
-		m_posA[0].x >	CBaseBullet::m_rect.rightDown.x	+ m_imageInfo.sizeX/2	|| 
-		m_posA[0].y <	CBaseBullet::m_rect.leftUp.y	- m_imageInfo.sizeY/2	|| 
-		m_posA[0].y >	CBaseBullet::m_rect.rightDown.y	+ m_imageInfo.sizeY/2	){
+	if(	m_posA[0].x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+		m_posA[0].x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+		m_posA[0].y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+		m_posA[0].y >	CGame::GetBattleRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
 
 		int lastidx = m_num-1;
-		if(	m_posA[lastidx].x <	CBaseBullet::m_rect.leftUp.x	- m_imageInfo.sizeX/2	|| 
-			m_posA[lastidx].x >	CBaseBullet::m_rect.rightDown.x	+ m_imageInfo.sizeX/2	|| 
-			m_posA[lastidx].y <	CBaseBullet::m_rect.leftUp.y	- m_imageInfo.sizeY/2	|| 
-			m_posA[lastidx].y >	CBaseBullet::m_rect.rightDown.y	+ m_imageInfo.sizeY/2	){
+		if(	m_posA[lastidx].x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+			m_posA[lastidx].x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+			m_posA[lastidx].y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+			m_posA[lastidx].y >	CGame::GetBattleRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
 			m_removeFlg = true;
 		}
 	}

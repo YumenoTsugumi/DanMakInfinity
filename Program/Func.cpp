@@ -24,11 +24,11 @@ double CFunc::ToAbs(double VALUE) {
 	return ((VALUE >= 0) ? VALUE : -VALUE);
 }
 
-double CFunc::ToRad(double ANGLE) {
-	return ANGLE / RAD;
+double CFunc::ToRad(double angle) {
+	return angle / RAD;
 }
-double CFunc::ToDeg(double ANGLE) {
-	return ANGLE * RAD;
+double CFunc::ToDeg(double angle) {
+	return angle * RAD;
 }
 
 int CFunc::RandI(int MIN, int MAX) {
@@ -292,11 +292,11 @@ std::vector<CPos> CFunc::GetBSplineCurvePointList(
 }
 
 
-void CFunc::RotatingMatrix(CPos* P1, CPos P2, CPos P3, double ANGLE) {
+void CFunc::RotatingMatrix(CPos* P1, CPos P2, CPos P3, double angle) {
 	double ox = P2.x - P3.x;
 	double oy = P2.y - P3.y;
-	P1->x = ox * cos(ANGLE) + oy * sin(ANGLE);
-	P1->y = -ox * sin(ANGLE) + oy * cos(ANGLE);
+	P1->x = ox * cos(angle) + oy * sin(angle);
+	P1->y = -ox * sin(angle) + oy * cos(angle);
 	P1->x += P3.x;
 	P1->y += P3.y;
 }

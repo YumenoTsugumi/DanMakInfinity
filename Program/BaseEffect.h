@@ -78,13 +78,13 @@ public:
 	void SetFuncP(void (*FuncP)(CBaseEffect* eff));
 
 	//コンストラクタ	弾作成
-	CBaseEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG);
-	CBaseEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, const char* IMAGENAME);
+	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
+	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
 
 	//デストラクタ
 	virtual ~CBaseEffect();
 	virtual void Set();
-	//virtual void SetImage(int IMG);
+	//virtual void SetImage(int image);
 
 	//とりあえず全部継承しとく
 	//メイン行動
@@ -112,7 +112,7 @@ public:
 
 	CPos pp(CFunc::RandF(0,800), CFunc::RandF(0,400));
 	double ang = CFunc::RandF(0,360);
-	CBaseEffect* eff = new CBaseEffect(ABS, pp, 2.0, ang, 0,0,0, 206);
+	CBaseEffect* eff = new CBaseEffect(EDirType::Abs, pp, 2.0, ang, 0,0,0, 206);
 	eff->SetSize(3.0, +0.05);
 	eff->SetBlend(192, +3.0);
 
@@ -147,13 +147,13 @@ public:
 	int edgeCr;
 
 	//コンストラクタ	弾作成
-	CStringEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, char* DRAWSTR, int FONT);
-	CStringEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, char* DRAWSTR, const char* FONT);
+	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, int FONT);
+	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, const char* FONT);
 
 	//デストラクタ
 	virtual ~CStringEffect();
 	//virtual void Set();
-	//virtual void SetImage(int IMG);
+	//virtual void SetImage(int image);
 
 	//とりあえず全部継承しとく
 	//メイン行動

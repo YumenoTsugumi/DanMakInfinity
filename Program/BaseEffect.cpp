@@ -2,7 +2,7 @@
 #include "DXFunc.h"
 #include "BaseEffect.h"
 #include "BaseBullet.h"
-
+#include "Game.h"
 #include <float.h>
 
 //---------------------------------------------------------------------------------
@@ -30,15 +30,15 @@ CEffectManager::~CEffectManager(){
 //	CBaseEffect
 //---------------------------------------------------------------------------------
 
-CBaseEffect::CBaseEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG) :
-						CBaseBullet(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, IMG){
+CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image){
 	Set();
-	//SetImage(IMG);
+	//SetImage(image);
 }
-CBaseEffect::CBaseEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, const char* IMAGENAME) :
-						CBaseBullet(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, IMAGENAME){
+CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, ImageName){
 	Set();
-	//SetImage(IMAGENAME);
+	//SetImage(ImageName);
 }
 
 CBaseEffect::~CBaseEffect(){
@@ -109,27 +109,27 @@ void CBaseEffect::Draw(){
 	SetDrawBlendMode( m_blendType , (int)m_blendDepth ) ;
 
 	//アニメフラグがONなら
-	if(m_imageInfo.animeFlg == true){
-		if(m_count % m_imageInfo.animeSpeed == 0){
-			m_imageInfo.animePos++;
-			if(m_imageInfo.animePos >= m_imageInfo.animeNum){
+	if(m_imageInfo.m_animeFlg == true){
+		if(m_count % m_imageInfo.m_animeSpeed == 0){
+			m_imageInfo.m_animePos++;
+			if(m_imageInfo.m_animePos >= m_imageInfo.m_animeNum){
 				//アニメーションがある画像でアニメが終わったら削除するかどうか
 				//true:削除する	false:しない
 				//bool m_animeEndDelFlg;
 				if(m_animeEndDelFlg == true){
 					m_removeFlg = true;
 				} else {
-					m_imageInfo.animePos = 0;
+					m_imageInfo.m_animePos = 0;
 				}
 			}
 		}
 	}
 	//回転フラグがONなら
-	if(m_imageInfo.rotationFlg == true){
-		m_imageInfo.rotationAngle += m_imageInfo.rotationSpeed;
+	if(m_imageInfo.m_rotationFlg == true){
+		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
 	//描画
-	CDxFunc::DrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.animePos]);
+	CDxFunc::DrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
@@ -178,19 +178,19 @@ void CBaseEffect::SetRemoveCount(int DelCount){
 //	CStringEffect
 //---------------------------------------------------------------------------------
 
-CStringEffect::CStringEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, char* DRAWSTR, int FONT) : 
-					CBaseEffect(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, -1){
+CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, int FONT) :
+					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);
-	font = (CFont*)m_imageManager->GetResource(FONT);
+	font = (CFont*)CGame::GetResource(FONT);
 }
-CStringEffect::CStringEffect(bool TYPE, CPos P, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, char* DRAWSTR, const char* FONTNAME) : 
-					CBaseEffect(TYPE, P, SPEED, ANGLE, CORNER, ACCE, MAXSP, -1){
+CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, const char* FONTNAME) :
+					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);
-	font = (CFont*)m_imageManager->GetResource(FONTNAME);
+	font = (CFont*)CGame::GetResource(FONTNAME);
 }
 
 

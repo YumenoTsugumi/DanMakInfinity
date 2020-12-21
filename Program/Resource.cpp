@@ -69,17 +69,17 @@ CImage* CImageSet::GetImage(int Idx){
 //---------------------------------------------------------------------------------
 //	n分割出来るイメージ
 //---------------------------------------------------------------------------------
-CImages::CImages(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY){
+CImages::CImages(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY){
 	m_images = (int*)malloc(sizeof(int*)*(numAll));
 
 	//画像読み込み
-	LoadDivGraph( filename , numAll , numX , numY , sizeX , sizeY , m_images ) ;
+	LoadDivGraph( filename , numAll , numX , numY , m_sizeX , m_sizeY , m_images ) ;
 
 	m_num = numAll;
 	m_numX = numX;
 	m_numY = numY;
-	m_sizeX = sizeX;
-	m_sizeY = sizeY;
+	m_sizeX = m_sizeX;
+	m_sizeY = m_sizeY;
 
 	info.m_loadFlg = true;
 }
@@ -91,8 +91,8 @@ CImages::~CImages(){
 //	アニメーションのイメージ
 //---------------------------------------------------------------------------------
 
-CImageAnime::CImageAnime(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed) : 
-				CImages(filename, numAll, numX, numY, sizeX, sizeY){
+CImageAnime::CImageAnime(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed) : 
+				CImages(filename, numAll, numX, numY, m_sizeX, m_sizeY){
 	m_animeSpeed = animeSpeed;
 	info.m_loadFlg = true;
 }
@@ -103,8 +103,8 @@ CImageAnime::~CImageAnime(){
 //---------------------------------------------------------------------------------
 //	弾のイメージ
 //---------------------------------------------------------------------------------
-CBulletImage::CBulletImage(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed, double RotaSpeed) : 
-				CImageAnime(filename, numAll, numX, numY, sizeX, sizeY, animeSpeed){
+CBulletImage::CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed, double RotaSpeed) : 
+				CImageAnime(filename, numAll, numX, numY, m_sizeX, m_sizeY, animeSpeed){
 	m_rotaSpeed = RotaSpeed;
 	info.m_loadFlg = true;
 }
@@ -154,7 +154,7 @@ CResourceManager::CResourceManager(){
 
 }
 CResourceManager::~CResourceManager(){
-	m_resource.clear();
+	//m_resource.clear();
 }
 
 int CResourceManager::Add(CResource* resource, const char* Name, int Number){

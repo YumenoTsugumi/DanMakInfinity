@@ -25,8 +25,8 @@ public:
 	//値設定　主にコンストラクタから呼ぶ
 	virtual void Set();
 	//コンストラクタ　初期化する物が増えてる
-	CHomingLaser(bool TYPE, CPos P, int NUM, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, int IMG);
-	CHomingLaser(bool TYPE, CPos P, int NUM, double SPEED, double ANGLE, double CORNER, double ACCE, double MAXSP, const char* IMAGENAME);
+	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, int image);
+	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
 	~CHomingLaser();
 
 	int m_num;
@@ -50,7 +50,7 @@ public:
 
 CPos pp(CFunc::RandF(400,400), CFunc::RandF(100,100));
 for(int i=0;i<12;i++){
-	CHomingLaser *hl = new CHomingLaser(PLAYER,		//射出方向
+	CHomingLaser *hl = new CHomingLaser(EDirType::Player,		//射出方向
 										pp,			//座標
 										20,			//レーザー長さ
 										12,			//速度

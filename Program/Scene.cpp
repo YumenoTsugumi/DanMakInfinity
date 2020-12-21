@@ -1,6 +1,6 @@
 
 #include "Scene.h"
-
+#include "Game.h"
 //---------------------------------------------------------------------------------
 //	CSceneManager
 //---------------------------------------------------------------------------------
@@ -55,11 +55,11 @@ void CSceneManager::AddScene(CScene* Scene){
 //---------------------------------------------------------------------------------
 //	CScene
 //---------------------------------------------------------------------------------
-CResourceManager* CScene::m_resManager = nullptr;
+//CResourceManager* CScene::m_resManager = nullptr;
 CSceneManager* CScene::m_sceneManager = nullptr;
-void CScene::SetResource(CResourceManager *ResManager){
-	m_resManager = ResManager;
-}
+//void CScene::SetResource(CResourceManager *ResManager){
+//	m_resManager = ResManager;
+//}
 void CScene::SetSceneManager(CSceneManager *SceneManager){
 	m_sceneManager = SceneManager;
 }
@@ -194,9 +194,9 @@ CSceneExMain::CSceneExMain(int InTime) : CScene(InTime){
 	Set(InTime);
 
 	CFont* wrkFontP;
-	wrkFontP = (CFont*)m_resManager->GetResource(1000);
+	wrkFontP = (CFont*)CGame::GetResource(1000);
 	font1 = wrkFontP->m_font;
-	wrkFontP = (CFont*)m_resManager->GetResource(1001);
+	wrkFontP = (CFont*)CGame::GetResource(1001);
 	font2 = wrkFontP->m_font;
 
 	m_count = 0;
@@ -246,7 +246,7 @@ void CSceneExMain::Main(CInputAllStatus *input){
 	//if(m_count % 20 == 0){
 	//	CPos pp(CFunc::RandF(0,800), CFunc::RandF(0,600));
 	//	double ang = CFunc::RandF(0,360);
-	//	CBaseEffect* eff = new CBaseEffect(ABS, pp, 2.0, ang, 0,0,0, 200);
+	//	CBaseEffect* eff = new CBaseEffect(EDirType::Abs, pp, 2.0, ang, 0,0,0, 200);
 	//	eff->SetSize(1.0, +0.05);
 	//	eff->SetBlend(30, +1.0);
 	//	eff->SetAnimeEndDelFlg(false);
@@ -297,7 +297,7 @@ CSceneExSub1::CSceneExSub1(int InTime) :
 	//bulletManeger1 = new CBulletManager(256);
 
 	CFont* wrkFontP;
-	wrkFontP = (CFont*)m_resManager->GetResource(1000);
+	wrkFontP = (CFont*)CGame::GetResource(1000);
 	m_font = wrkFontP->m_font;
 }
 
@@ -311,7 +311,7 @@ void CSceneExSub1::Main(CInputAllStatus *input){
 	if(!NowFeed()){
 
 		//入力参照
-		if(input->m_btnStatus[INPUT_PAD_BTN2] == INPUT_PUSH){
+		if(input->m_btnStatus[INPUT_DEF_CANCEL] == INPUT_PUSH){
 			SetFeedOut(120);
 			SetBackScene();
 		}
@@ -320,7 +320,7 @@ void CSceneExSub1::Main(CInputAllStatus *input){
 
 
 	//CPos ppp(CFunc::RandF(0,360),CFunc::RandF(0,360));
-	//CCustomBullet *bu = new CCustomBullet(ABS, ppp, 4, m_count, 0,0,0, 1);
+	//CCustomBullet *bu = new CCustomBullet(EDirType::Abs, ppp, 4, m_count, 0,0,0, 1);
 	//bulletManeger1->Add(bu);
 	////どんな状態でもアクションする処理
 	//bulletManeger1->Action();

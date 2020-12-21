@@ -82,9 +82,9 @@ public:
 	static int Square(int X);
 
 	//deg->rad
-	static double ToRad(double ANGLE);
+	static double ToRad(double angle);
 	//rad->deg
-	static double ToDeg(double ANGLE);
+	static double ToDeg(double angle);
 
 	//絶対値
 	static int ToAbs(int VALUE);
@@ -155,7 +155,7 @@ public:
 
 	//P2に対して...不明
 	//P1は結果
-	static void RotatingMatrix(CPos *P1, CPos P2, CPos P3, double ANGLE);
+	static void RotatingMatrix(CPos *P1, CPos P2, CPos P3, double angle);
 
 	//v1とv2の2次元内積
 	static double InsideProduct(CPos v1, CPos v2);

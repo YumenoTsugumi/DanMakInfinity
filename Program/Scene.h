@@ -52,10 +52,10 @@ public:
 	virtual ~CScene();
 
 
-	//画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
-	static void SetResource(CResourceManager *ResManager);
-	//画像総合データのポインタ　コンストラクタで画像の読み込みを行う
-	static CResourceManager *m_resManager;
+	////画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
+	//static void SetResource(CResourceManager *ResManager);
+	////画像総合データのポインタ　コンストラクタで画像の読み込みを行う
+	//static CResourceManager *m_resManager;
 
 	//シーンマネージャー　これが設定されていないとシーンがシーンを追加できない
 	//staticなのは不服だけど良い案なし・・・
