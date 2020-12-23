@@ -25,8 +25,8 @@ public:
 	//値設定　主にコンストラクタから呼ぶ
 	virtual void Set();
 	//コンストラクタ　初期化する物が増えてる
-	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, int image);
-	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
+	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
+	CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 	~CHomingLaser();
 
 	int m_num;

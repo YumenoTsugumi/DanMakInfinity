@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "BaseBeam.h"
 
+#include "Launcher.h"
+
 class CBattleScene : public CScene{
 public:
 	//------------------
@@ -25,9 +27,12 @@ public:
 	CGame *m_game;
 	CPlayer m_player;
 	CBulletManager m_bulletManeger;
-	CBaseBeamManager m_beamManeger;
+	CBeamManager m_beamManeger;
 
 
 	CBaseBeam* m_beam1;
 	CPos m_pos;
+
+
+	std::vector<BaseLauncher*> m_launcher;
 };

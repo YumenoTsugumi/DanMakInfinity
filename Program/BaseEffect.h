@@ -78,8 +78,8 @@ public:
 	void SetFuncP(void (*FuncP)(CBaseEffect* eff));
 
 	//コンストラクタ	弾作成
-	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
-	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
+	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
+	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 
 	//デストラクタ
 	virtual ~CBaseEffect();
@@ -147,8 +147,8 @@ public:
 	int edgeCr;
 
 	//コンストラクタ	弾作成
-	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, int FONT);
-	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, const char* FONT);
+	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT);
+	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONT);
 
 	//デストラクタ
 	virtual ~CStringEffect();

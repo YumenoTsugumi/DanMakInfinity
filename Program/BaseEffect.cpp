@@ -30,13 +30,13 @@ CEffectManager::~CEffectManager(){
 //	CBaseEffect
 //---------------------------------------------------------------------------------
 
-CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image){
+CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image){
 	Set();
 	//SetImage(image);
 }
-CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, ImageName){
+CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
 	Set();
 	//SetImage(ImageName);
 }
@@ -178,15 +178,15 @@ void CBaseEffect::SetRemoveCount(int DelCount){
 //	CStringEffect
 //---------------------------------------------------------------------------------
 
-CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, int FONT) :
-					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, -1){
+CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT) :
+					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);
 	font = (CFont*)CGame::GetResource(FONT);
 }
-CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, char* DRAWSTR, const char* FONTNAME) :
-					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, -1){
+CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONTNAME) :
+					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);

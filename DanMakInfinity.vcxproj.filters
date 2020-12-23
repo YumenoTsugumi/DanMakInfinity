@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Launcher">
+      <UniqueIdentifier>{d9111ad2-79c1-482c-a8a2-a5c17288a40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Launcher">
+      <UniqueIdentifier>{79dd5c4e-3a13-4896-b131-9786285f25a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -60,6 +66,15 @@
     <ClCompile Include="Program\HomingBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Program\BaseLauncher.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Launcher\Launcher000.cpp">
+      <Filter>ソース ファイル\Launcher</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Launcher\Launcher010.cpp">
+      <Filter>ソース ファイル\Launcher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program\BulletBase.h">
@@ -103,6 +118,18 @@
     </ClInclude>
     <ClInclude Include="Program\HomingBullet.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\BaseLauncher.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Launcher\Launcher000.h">
+      <Filter>ヘッダー ファイル\Launcher</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Launcher\Launcher010.h">
+      <Filter>ヘッダー ファイル\Launcher</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Launcher\Launcher.h">
+      <Filter>ヘッダー ファイル\Launcher</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

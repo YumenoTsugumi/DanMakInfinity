@@ -129,12 +129,12 @@ CRect CBaseBullet::m_rect;
 //CBulletImageManager* CBaseBullet::m_imageManager = nullptr;
 CResourceManager* CBaseBullet::m_imageManager = nullptr;
 
-CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image){
-	Set(type, P, speed, angle, corner, acce, maxSpeed);
+CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image){
+	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
 	SetImage(image);
 }
-CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName){
-	Set(type, P, speed, angle, corner, acce, maxSpeed);
+CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName){
+	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
 	SetImage(ImageName);
 }
 
@@ -219,7 +219,7 @@ void CBaseBullet::SetRect(CRect &rect){
 
 
 
-void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed){
+void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle){
 
 	//Šp“xƒ^ƒCƒv
 	m_type = type;
@@ -238,7 +238,12 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 	}
 	//ŽžŠú‘_‚¢Šp“x
 	else {
+		//angle = CFunc::GetNearAngle(angle, nearAngle);
+
 		m_angle = (CFunc::GetTwoPointAngle(m_pos, m_target) + angle/CFunc::RAD + (180.0/CFunc::RAD));
+		if (nearAngle != 0) {
+			
+		}
 	}
 
 	//‘¬“x

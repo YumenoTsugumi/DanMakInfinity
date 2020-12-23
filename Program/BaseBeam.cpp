@@ -4,10 +4,10 @@
 #include "Game.h"
 
 //---------------------------------------------------------------------------------
-//	CBaseBeamManager
+//	CBeamManager
 //---------------------------------------------------------------------------------
 
-CBaseBeamManager::CBaseBeamManager(int num/* = 64*/) {
+CBeamManager::CBeamManager(int num/* = 64*/) {
 	m_beamTotalNum = num;
 
 	m_beam = new CBaseBeam * [m_beamTotalNum];
@@ -17,11 +17,11 @@ CBaseBeamManager::CBaseBeamManager(int num/* = 64*/) {
 
 	m_order = 0;
 }
-CBaseBeamManager::~CBaseBeamManager() {
+CBeamManager::~CBeamManager() {
 	delete[] m_beam;
 }
 
-void CBaseBeamManager::Action() {
+void CBeamManager::Action() {
 	for (int i = 0; i < m_beamTotalNum; i++) {
 		if (m_beam[i] != nullptr) {
 			m_beam[i]->Action();
@@ -33,14 +33,14 @@ void CBaseBeamManager::Action() {
 		}
 	}
 }
-void CBaseBeamManager::Draw() {
+void CBeamManager::Draw() {
 	for (int i = 0; i < m_beamTotalNum; i++) {
 		if (m_beam[i] != nullptr) {
 			m_beam[i]->Draw();
 		}
 	}
 }
-int CBaseBeamManager::Add(CBaseBeam* Beam) {
+int CBeamManager::Add(CBaseBeam* Beam) {
 	for (int i = m_order; i < m_beamTotalNum; i++) {
 		//挿入位置が最大値なら挿入位置を0に戻す
 		if (m_beam[i] == nullptr) {
@@ -167,7 +167,7 @@ void CBaseBeam::Action() {
 		if (m_count % m_shotSpan == 0) {
 			//加速度、画像等は0がデフォルト
 			//画像を指定したくなかったけど、マイナスとか指定できないようにしてるから0で
-			CBaseBeamChild* b = new CBaseBeamChild(EDirType::Abs, m_pos, m_speed, m_angle, 0, 0, 0, 0);
+			CBaseBeamChild* b = new CBaseBeamChild(EDirType::Abs, m_pos, m_speed, m_angle, 0, 0, 0, 0,0);
 			Add(b);
 		}
 	}
@@ -326,8 +326,8 @@ void CBaseBeam::Move(CPos& newpos, double plusAngle) {
 //---------------------------------------------------------------------------------
 
 
-CBaseBeamChild::CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
-	CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image) {
+CBaseBeamChild::CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
+	CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image) {
 
 }
 

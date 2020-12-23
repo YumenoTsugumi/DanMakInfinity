@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -149,6 +149,7 @@
     <ClCompile Include="Program\BaseBeam.cpp" />
     <ClCompile Include="Program\BaseBullet.cpp" />
     <ClCompile Include="Program\BaseEffect.cpp" />
+    <ClCompile Include="Program\BaseLauncher.cpp" />
     <ClCompile Include="Program\BattleScene.cpp" />
     <ClCompile Include="Program\BulletBase.cpp" />
     <ClCompile Include="Program\CustomBullet.cpp" />
@@ -157,6 +158,8 @@
     <ClCompile Include="Program\Game.cpp" />
     <ClCompile Include="Program\HomingBullet.cpp" />
     <ClCompile Include="Program\Input.cpp" />
+    <ClCompile Include="Program\Launcher\Launcher000.cpp" />
+    <ClCompile Include="Program\Launcher\Launcher010.cpp" />
     <ClCompile Include="Program\Player.cpp" />
     <ClCompile Include="Program\Resource.cpp" />
     <ClCompile Include="Program\Scene.cpp" />
@@ -165,6 +168,7 @@
     <ClInclude Include="Program\BaseBeam.h" />
     <ClInclude Include="Program\BaseBullet.h" />
     <ClInclude Include="Program\BaseEffect.h" />
+    <ClInclude Include="Program\BaseLauncher.h" />
     <ClInclude Include="Program\BattleScene.h" />
     <ClInclude Include="Program\BulletBase.h" />
     <ClInclude Include="Program\CustomBullet.h" />
@@ -173,6 +177,9 @@
     <ClInclude Include="Program\Game.h" />
     <ClInclude Include="Program\HomingBullet.h" />
     <ClInclude Include="Program\Input.h" />
+    <ClInclude Include="Program\Launcher\Launcher.h" />
+    <ClInclude Include="Program\Launcher\Launcher000.h" />
+    <ClInclude Include="Program\Launcher\Launcher010.h" />
     <ClInclude Include="Program\Player.h" />
     <ClInclude Include="Program\Resource.h" />
     <ClInclude Include="Program\Scene.h" />

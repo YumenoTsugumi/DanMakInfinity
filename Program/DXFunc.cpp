@@ -36,15 +36,15 @@ int CDxFunc::DrawString(CPos p1, const char* string, int fontCr, int m_font, int
 }
 
 
-int CDxFunc::DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag) {
-	return DrawTriangle(x1, y1, x2, y2, x3, y3, cr, FillFlag);
-}
-int CDxFunc::DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag) {
-	return DrawTriangle((int)x1, (int)y1, (int)x2, (int)y2, (int)x3, (int)y3, cr, FillFlag);
-}
-int CDxFunc::DrawTriangle(CPos p1, CPos p2, CPos p3, int cr, int FillFlag) {
-	return DrawTriangle((int)(p1.x), (int)(p1.y), (int)(p2.x), (int)(p2.y), (int)(p3.x), (int)(p3.y), cr, FillFlag);
-}
+//int CDxFunc::DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag) {
+//	return DrawTriangle(x1, y1, x2, y2, x3, y3, cr, FillFlag);
+//}
+//int CDxFunc::DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag) {
+//	return DrawTriangle((int)x1, (int)y1, (int)x2, (int)y2, (int)x3, (int)y3, cr, FillFlag);
+//}
+//int CDxFunc::DrawTriangle(CPos p1, CPos p2, CPos p3, int cr, int FillFlag) {
+//	return DrawTriangle((int)(p1.x), (int)(p1.y), (int)(p2.x), (int)(p2.y), (int)(p3.x), (int)(p3.y), cr, FillFlag);
+//}
 
 
 //------------------------------------------------------

@@ -23,9 +23,9 @@ public:
 	static int DrawString(CPos p1, const char* string, int fontCr, int m_font, int edgeCr);
 
 	//三角
-	static int DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag = TRUE);
-	static int DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag = TRUE);
-	static int DrawTriangle(CPos p1, CPos p2, CPos p3, int cr, int FillFlag = TRUE);
+	//static int DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag = TRUE);
+	//static int DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag = TRUE);
+	//static int DrawTriangle(CPos p1, CPos p2, CPos p3, int cr, int FillFlag = TRUE);
 
 };
 

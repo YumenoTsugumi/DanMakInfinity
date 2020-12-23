@@ -5,20 +5,20 @@
 
 class CBeamImage;
 class CBeamImageManager;
-class CBaseBeamManager;
+class CBeamManager;
 class CBaseBeam;
 class CBaseBeamChild;
 
 //---------------------------------------------------------------------------------
-//	CBaseBeamManager
+//	CBeamManager
 //---------------------------------------------------------------------------------
-class CBaseBeamManager {
+class CBeamManager {
 public:
 	//コンストラクタ
 	//弾幕の発射最大数を設定する
 	//デフォルト64
-	CBaseBeamManager(int num = 64);
-	~CBaseBeamManager();
+	CBeamManager(int num = 64);
+	~CBeamManager();
 
 	//発射最大数	64
 	//コンストラクタで設定後は変更不可
@@ -128,7 +128,7 @@ class CBaseBeamChild : public CBaseBullet {
 public:
 
 	//コンストラクタ	弾作成
-	CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
+	CBaseBeamChild(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
 	//デストラクタ
 	virtual~CBaseBeamChild();
 
@@ -166,7 +166,7 @@ public:
 		resManager.Add(new CImageSet(2, fileA), "laser02", 101);	}
 
 	//ビーム管理クラス
-	CBaseBeamManager *beamManager = new CBaseBeamManager(64);
+	CBeamManager *beamManager = new CBeamManager(64);
 
 
 	//普通に発射

@@ -176,15 +176,15 @@ public:
 	virtual void Remove();
 
 	//値設定　主にコンストラクタから呼ぶ
-	virtual void Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed);
+	virtual void Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle);
 	//画像関連
 	virtual void SetImage(int image);
 	virtual void SetImage(const char* ImageName);
 	virtual void SetImageInfo(CBulletImage* bulletImage);
 
 	//コンストラクタ	弾作成
-	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image);
-	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName);
+	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
+	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 	//デストラクタ
 	virtual ~CBaseBullet();
 };

@@ -9,6 +9,8 @@
 #include "CustomBullet.h"
 #include "HomingBullet.h"
 
+
+
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
 
@@ -35,42 +37,39 @@ void CBattleScene::Init(CGame* gameP){
 	//bulletManeger = new CInhBulletManager(1024);
 	// 変化弾の定義に必要
 	CCustomBullet::SetBulletManagerPointer(&m_bulletManeger);
+	BaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
+	BaseLauncher::SetBeamManagerPointer(&m_beamManeger);
 
-	//player = new CPlayer();
-	//otherInfo = new COtherInfo();
-	//area = new CArea();
-
-	//pointerSet.player = player;
-	//pointerSet.otherInfo = otherInfo;
-	//pointerSet.area = area;
-	//pointerSet.resManager = CScene::resManager;
-
-	//player->setPointerSet(&pointerSet);
-	//otherInfo->setPointerSet(&pointerSet);
-	//area->setPointerSet(&pointerSet);
-	//bulletManeger->setPointerSet(&pointerSet);
-	//CInhBullet::setPointerSet(&pointerSet);
-
-	//otherInfo->Init(game->m_rect);
-	//player->Init();
-	//area->Init();
 
 	//普通に発射
 	m_pos = CPos(300, 300);
 	CPos vel(1.0, 1.0);
 	double ang = 0.0;
-	m_beam1 = new CBaseBeam(m_pos, ang, 100);
-	m_beamManeger.Add(m_beam1);
+	//m_beam1 = new CBaseBeam(m_pos, ang, 100);
+	//m_beamManeger.Add(m_beam1);
+
+	for (int ii = 0; ii < 11; ii++) {
+		CPos pos(50 + ii*70, 100);
+		m_launcher.push_back(new Launcher000(ii * 10, pos));
+	}
+	//for (int ii = 0; ii < 10; ii++) {
+	//	CPos pos(50 + ii * 70, 200);
+	//	m_launcher.push_back(new Launcher001(ii * 10, pos));
+	//}
+	//for (int ii = 0; ii < 10; ii++) {
+	//	CPos pos(50 + ii * 70, 300);
+	//	m_launcher.push_back(new Launcher010(ii * 10, pos));
+	//}
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
 	for (int i = 0; i < 5; i++) {
-		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Abs, m_bullet->m_pos, 10, 90 + -20 + i * 10, 0, 0.10, 10, 10));
+		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Abs, m_bullet->m_pos, 10, 90 + -20 + i * 10, 0, 0.10, 10, 0,10));
 	}
 }
 void addFuncB(CCustomBullet* m_bullet) {
 	for (int i = 0; i < 10; i++) {
-		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Player, m_bullet->m_pos, 2.5, i * (360.0 / 10), 0, 0, 0, 10));
+		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Player, m_bullet->m_pos, 2.5, i * (360.0 / 10), 0, 0, 0, 0,10));
 	}
 }
 
@@ -88,7 +87,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	static int count = 0;
 	count++;
 
-
+#if 0
 	//移動回転
 	CPos ppp(300, 300);
 	CPos vel(1.0, 1.0);
@@ -121,7 +120,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 					20,			//レーザー長さ
 					12,			//速度
 					i * 60.0,		//射出角度
-					0, 0, 0,		//加速は有効
+					0, 0, 0, 0, 		//加速は有効
 					"hLaser02");//画像
 				hl->AddLimitInfo(30, 5.0);						//30frまでは角度制限5.0
 				hl->AddLimitInfo(60, 3.0);						//60frまでは角度制限3.0
@@ -200,7 +199,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	//int bulletA[] = {00,01,02, 10,11,12, 20,21,22,23,24,25, 30,31,32, 40,41,42, 50,51,52};
 
 	//CPos ppp(m_count % 100,m_count % 100);
-
+#endif
 
 	////どんな状態でもアクションする処理
 	m_player.Action(input);
@@ -208,6 +207,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_beamManeger.Action();
 	CBaseBullet::SetTarget(m_player.m_pos);
 	//area->Action();
+
+	for (auto* launcher : m_launcher) {
+		launcher->Action(launcher->m_pos);
+	}
 
 	//area->Draw();
 	m_player.Draw();

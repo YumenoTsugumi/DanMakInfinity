@@ -5,8 +5,8 @@
 
 CBulletManager* CCustomBullet::m_manager = nullptr;
 
-CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image){
+CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image){
 	//親のコンストラクタが呼ばれたあと（Setとかで設定）ココに来る
 	//継承クラスの設定
 	Set();
@@ -18,8 +18,8 @@ CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, 
 		m_angle = angle;
 	}
 }
-CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, ImageName){
+CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
 	//親のコンストラクタが呼ばれたあと（Setとかで設定）ココに来る
 	//継承クラスの設定
 	Set();

@@ -4,13 +4,13 @@
 #include "HomingBullet.h"
 #include "Game.h"
 
-CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, int image) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, image){
+CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image){
 	m_num = NUM;
 	Set();
 }
-CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, const char* ImageName) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, ImageName){
+CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
 	m_num = NUM;
 	Set();
 }
