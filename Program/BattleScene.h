@@ -7,6 +7,7 @@
 #include "BaseBeam.h"
 
 #include "Launcher.h"
+#include "BaseEnemy.h"
 
 class CBattleScene : public CScene{
 public:
@@ -35,4 +36,6 @@ public:
 
 
 	std::vector<BaseLauncher*> m_launcher;
+
+	std::vector<BaseEnemy*> m_enemys;
 };

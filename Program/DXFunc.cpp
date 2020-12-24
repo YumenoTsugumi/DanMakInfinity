@@ -35,6 +35,11 @@ int CDxFunc::DrawString(CPos p1, const char* string, int fontCr, int m_font, int
 	return CDxFunc::DrawString(p1.x, p1.y, string, fontCr, m_font, edgeCr);
 }
 
+int CDxFunc::DrawCircle(CPos p1, double r, int posnum, unsigned int color, int fillFlag)
+{
+	return DrawCircleAA(p1.x, p1.y, r, posnum, color, fillFlag);
+}
+
 
 //int CDxFunc::DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag) {
 //	return DrawTriangle(x1, y1, x2, y2, x3, y3, cr, FillFlag);

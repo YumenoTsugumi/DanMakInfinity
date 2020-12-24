@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -154,6 +154,9 @@
     <ClCompile Include="Program\BulletBase.cpp" />
     <ClCompile Include="Program\CustomBullet.cpp" />
     <ClCompile Include="Program\DXFunc.cpp" />
+    <ClCompile Include="Program\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="Program\Enemy\Enemy000.cpp" />
+    <ClCompile Include="Program\Enemy\MoveComponent.cpp" />
     <ClCompile Include="Program\Func.cpp" />
     <ClCompile Include="Program\Game.cpp" />
     <ClCompile Include="Program\HomingBullet.cpp" />
@@ -173,6 +176,9 @@
     <ClInclude Include="Program\BulletBase.h" />
     <ClInclude Include="Program\CustomBullet.h" />
     <ClInclude Include="Program\DXFunc.h" />
+    <ClInclude Include="Program\Enemy\BaseEnemy.h" />
+    <ClInclude Include="Program\Enemy\Enemy000.h" />
+    <ClInclude Include="Program\Enemy\MoveComponent.h" />
     <ClInclude Include="Program\Func.h" />
     <ClInclude Include="Program\Game.h" />
     <ClInclude Include="Program\HomingBullet.h" />

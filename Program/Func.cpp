@@ -301,6 +301,14 @@ void CFunc::RotatingMatrix(CPos* P1, CPos P2, CPos P3, double angle) {
 	P1->y += P3.y;
 }
 
+double CFunc::GetDistanceSqrt(const CPos& p1, const CPos& p2)
+{
+	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+}
+double CFunc::GetDistance(const CPos& p1, const CPos& p2)
+{
+	return ((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+}
 
 
 CRect::CRect() {

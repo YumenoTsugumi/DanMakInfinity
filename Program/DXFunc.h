@@ -22,6 +22,9 @@ public:
 	static int DrawString(double x1, double y1, const char* string, int fontCr, int m_font, int edgeCr);
 	static int DrawString(CPos p1, const char* string, int fontCr, int m_font, int edgeCr);
 
+	//丸
+	static int DrawCircle(CPos p1, double r, int posnum, unsigned int Color, int FillFlag);
+
 	//三角
 	//static int DrawTriangle(double x1, double y1, double x2, double y2, double x3, double y3, int cr, int FillFlag = TRUE);
 	//static int DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, int cr, int FillFlag = TRUE);

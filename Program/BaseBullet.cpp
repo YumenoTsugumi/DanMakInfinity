@@ -238,11 +238,13 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 	}
 	//éûä˙ë_Ç¢äpìx
 	else {
-		//angle = CFunc::GetNearAngle(angle, nearAngle);
-
-		m_angle = (CFunc::GetTwoPointAngle(m_pos, m_target) + angle/CFunc::RAD + (180.0/CFunc::RAD));
-		if (nearAngle != 0) {
-			
+		if (nearAngle == 0) {
+			m_angle = (CFunc::GetTwoPointAngle(m_pos, m_target) + angle/CFunc::RAD + (180.0/CFunc::RAD));
+		} else {
+			// éÀäpêßå¿Ç†ÇË
+			double ang = CFunc::GetTwoPointAngle(m_pos, m_target) * CFunc::RAD;
+			double ang2 = CFunc::GetNearAngle(ang, nearAngle) / CFunc::RAD;
+			m_angle = ang2 + angle / CFunc::RAD + (180.0 / CFunc::RAD);
 		}
 	}
 

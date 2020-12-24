@@ -62,5 +62,5 @@ void CPlayer::Action(CInputAllStatus* input)
 }
 void CPlayer::Draw()
 {
-	CDxFunc::DrawRotaGraph(m_pos.x, m_pos.y, 0.75, 0.0, m_playerImage->m_iamge);
+	CDxFunc::DrawRotaGraph(m_pos.x, m_pos.y, 0.25, 0.0, m_playerImage->m_iamge);
 }

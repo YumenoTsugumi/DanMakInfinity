@@ -9,7 +9,8 @@
 #include "CustomBullet.h"
 #include "HomingBullet.h"
 
-
+#include "Enemy000.h"
+#include "MoveComponent.h"
 
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
@@ -48,10 +49,10 @@ void CBattleScene::Init(CGame* gameP){
 	//m_beam1 = new CBaseBeam(m_pos, ang, 100);
 	//m_beamManeger.Add(m_beam1);
 
-	for (int ii = 0; ii < 11; ii++) {
-		CPos pos(50 + ii*70, 100);
-		m_launcher.push_back(new Launcher000(ii * 10, pos));
-	}
+	//for (int ii = 0; ii < 11; ii++) {
+	//	CPos pos(50 + ii*70, 100);
+	//	m_launcher.push_back(new Launcher000(ii * 10, pos));
+	//}
 	//for (int ii = 0; ii < 10; ii++) {
 	//	CPos pos(50 + ii * 70, 200);
 	//	m_launcher.push_back(new Launcher001(ii * 10, pos));
@@ -60,6 +61,28 @@ void CBattleScene::Init(CGame* gameP){
 	//	CPos pos(50 + ii * 70, 300);
 	//	m_launcher.push_back(new Launcher010(ii * 10, pos));
 	//}
+	CPos pos(50 + 300, 300);
+	m_launcher.push_back(new Launcher010(0, pos));
+
+	{
+		CPos pos1(0, 100);
+		Enemy000* e1 = new Enemy000(pos1);
+		e1->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 500));
+		e1->AddLauncher(CPos(0, 0), new Launcher010(0, pos1));
+		m_enemys.push_back(e1);
+
+		CPos pos2(-50, 100);
+		Enemy000* e2 = new Enemy000(pos2);
+		e2->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 450));
+		e2->AddLauncher(CPos(0, 0), new Launcher010(0, pos2));
+		m_enemys.push_back(e2);
+
+		CPos pos3(-100, 100);
+		Enemy000* e3 = new Enemy000(pos3);
+		e3->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 400));
+		e3->AddLauncher(CPos(0, 0), new Launcher010(0, pos3));
+		m_enemys.push_back(e3);
+	}
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -208,15 +231,19 @@ void CBattleScene::Main(CInputAllStatus *input){
 	CBaseBullet::SetTarget(m_player.m_pos);
 	//area->Action();
 
-	for (auto* launcher : m_launcher) {
-		launcher->Action(launcher->m_pos);
-	}
+	//for (auto* launcher : m_launcher) {
+	//	launcher->Action(launcher->m_pos);
+	//}
 
 	//area->Draw();
 	m_player.Draw();
 	m_bulletManeger.Draw();
 	m_beamManeger.Draw();
 
+	for (BaseEnemy* enemy : m_enemys) {
+		enemy->Action();
+		enemy->Draw();
+	}
 	//m_count++;
 
 }

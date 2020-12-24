@@ -186,6 +186,9 @@ public:
 	//2ベクトルの角度
 	static double GetTwoVectorAngle(CPos &p1, CPos &p2);
 
+	// 2点間の距離
+	static double GetDistanceSqrt(const CPos& p1, const CPos& p2);
+	static double GetDistance(const CPos& p1, const CPos& p2);
 };
 
 //矩形領域

@@ -22,7 +22,7 @@ void Launcher010::Action(const CPos& newPos)
 	int loop = (int)(2 + 3 * RankRatio());
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, dVal[0], 0);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 30, 0);
 			BaseLauncher::m_bulletManager->Add(b);
 		}
 		m_count = 0;
