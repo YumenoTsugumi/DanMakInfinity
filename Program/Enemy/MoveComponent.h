@@ -2,10 +2,10 @@
 
 #include "Func.h"
 
-class MoveComponent {
+class CMoveComponent {
 public:
-	MoveComponent() {}
-	virtual ~MoveComponent() {}
+	CMoveComponent() {}
+	virtual ~CMoveComponent() {}
 	virtual void Action(CPos& updatePos) = 0;
 	virtual void DebugPrint() {};
 };
@@ -14,10 +14,10 @@ public:
 // 直線移動
 //-------------------------------------------------------------------------------------
 
-class ConstantVelocityLinearMotion : public MoveComponent {
+class CConstantVelocityLinearMotion : public CMoveComponent {
 public:
-	ConstantVelocityLinearMotion(double angle, double speed);
-	virtual ~ConstantVelocityLinearMotion();
+	CConstantVelocityLinearMotion(double angle, double speed);
+	virtual ~CConstantVelocityLinearMotion();
 	virtual void Action(CPos& updatePos) = 0;
 	virtual void DebugPrint();
 protected:
@@ -27,19 +27,19 @@ protected:
 };
 
 // 直線移動(停止しない)
-class CVLM_NonStop : public ConstantVelocityLinearMotion {
+class CCVLM_NonStop : public CConstantVelocityLinearMotion {
 public:
-	CVLM_NonStop(double angle, double speed);
-	virtual ~CVLM_NonStop();
+	CCVLM_NonStop(double angle, double speed);
+	virtual ~CCVLM_NonStop();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();
 };
 
 // 直線移動(一定距離動いたら停止)
-class CVLM_DistanceStop : public ConstantVelocityLinearMotion {
+class CCVLM_DistanceStop : public CConstantVelocityLinearMotion {
 public:
-	CVLM_DistanceStop(double angle, double speed, double maxDistance);
-	virtual ~CVLM_DistanceStop();
+	CCVLM_DistanceStop(double angle, double speed, double maxDistance);
+	virtual ~CCVLM_DistanceStop();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();
 protected:
@@ -48,10 +48,10 @@ protected:
 };
 
 // 直線移動(特定の位置までいったら停止)
-class CVLM_CertainAmountStop : public ConstantVelocityLinearMotion {
+class CCVLM_CertainAmountStop : public CConstantVelocityLinearMotion {
 public:
-	CVLM_CertainAmountStop(const CPos& targetPos, double speed);
-	virtual ~CVLM_CertainAmountStop();
+	CCVLM_CertainAmountStop(const CPos& targetPos, double speed);
+	virtual ~CCVLM_CertainAmountStop();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();
 protected:

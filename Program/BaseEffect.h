@@ -46,7 +46,7 @@ public:
 	//この値を超えたら削除する
 	double m_deleteOverSize;
 	void SetSize(double Size, double PlusSize);	//削除する際の急速縮小値
-	void SetdeleteOverSize(double deleteOverSize);	//削除する際の急速濃度
+	void SetDeleteOverSize(double deleteOverSize);	//削除する際の急速濃度
 
 	//CBaseBullet::SetBlendType
 	//DX_BLENDMODE_NOBLEND　:　ノーブレンド（デフォルト）

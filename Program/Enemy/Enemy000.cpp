@@ -1,14 +1,14 @@
 ﻿#include "Enemy000.h"
 #include "DXFunc.h"
 
-Enemy000::Enemy000(const CPos& pos) : BaseEnemy(pos){
+CEnemy000::CEnemy000(const CPos& pos) : CBaseEnemy(pos){
 
 }
-Enemy000::~Enemy000() {
+CEnemy000::~CEnemy000() {
 
 }
 
-void Enemy000::Action() {
+void CEnemy000::Action() {
 	if (m_moveComponent) {
 		m_moveComponent->Action(m_pos);
 	}
@@ -17,7 +17,7 @@ void Enemy000::Action() {
 		l.m_launcher->Action(m_pos);
 	}
 }
-void Enemy000::Draw() {
+void CEnemy000::Draw() {
 	if (m_moveComponent) {
 		//m_moveComponent->DebugPrint();
 	}
@@ -26,11 +26,11 @@ void Enemy000::Draw() {
 }
 
 // ダメージを受けたとき
-void Enemy000::Damaged() {
+void CEnemy000::Damaged() {
 
 }
 
 // 死んだ時
-void Enemy000::Die() {
+void CEnemy000::Die() {
 
 }

@@ -1,18 +1,18 @@
 ﻿
 #include "BaseLauncher.h"
 
-CBulletManager* BaseLauncher::m_bulletManager = nullptr;
-CBeamManager* BaseLauncher::m_beamManager = nullptr;
+CBulletManager* CBaseLauncher::m_bulletManager = nullptr;
+CBeamManager* CBaseLauncher::m_beamManager = nullptr;
 
-void BaseLauncher::SetBulletManagerPointer(CBulletManager* manager) {
+void CBaseLauncher::SetBulletManagerPointer(CBulletManager* manager) {
 	m_bulletManager = manager;
 }
-void BaseLauncher::SetBeamManagerPointer(CBeamManager* manager){
+void CBaseLauncher::SetBeamManagerPointer(CBeamManager* manager){
 	m_beamManager = manager;
 }
 
 
-BaseLauncher::BaseLauncher(int rank, const CPos& pos) :
+CBaseLauncher::CBaseLauncher(int rank, const CPos& pos) :
 	m_rank(rank),
 	m_count(0),
 	m_pos(pos)
@@ -22,23 +22,23 @@ BaseLauncher::BaseLauncher(int rank, const CPos& pos) :
 	memset(cVal, 0, sizeof(cVal));
 	memset(bVal, 0, sizeof(bVal));
 };
-BaseLauncher::~BaseLauncher() {
+CBaseLauncher::~CBaseLauncher() {
 
 };
 
 
-void BaseLauncher::Action(const CPos& newPos) {
+void CBaseLauncher::Action(const CPos& newPos) {
 	m_pos = newPos;
 }
 
 
 // 現在のランクの割合を返す 0.0～1.0
-double BaseLauncher::RankRatio() {
+double CBaseLauncher::RankRatio() {
 	return ((double)m_rank / (double)MAX_RANK);
 }
 // 連弾の速度差を生成する(speedの10％までをindexで等分割する)
 // 10連弾なら　indexは0～9 maxIndexは10
-double BaseLauncher::SpeedRange(double speed, int index, int max)
+double CBaseLauncher::SpeedRange(double speed, int index, int max)
 {
 	return speed + (0.1*speed * ((double)index / (double)(max)));
 }

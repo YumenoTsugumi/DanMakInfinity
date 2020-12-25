@@ -15,11 +15,12 @@
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
 
-CBattleScene::CBattleScene(int InTime) : 
+CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
 	m_bulletManeger(2048),
 	m_beamManeger(128),
-	m_player()
+	m_player(),
+	m_bg()
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
@@ -38,8 +39,8 @@ void CBattleScene::Init(CGame* gameP){
 	//bulletManeger = new CInhBulletManager(1024);
 	// 変化弾の定義に必要
 	CCustomBullet::SetBulletManagerPointer(&m_bulletManeger);
-	BaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
-	BaseLauncher::SetBeamManagerPointer(&m_beamManeger);
+	CBaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
+	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
 
 
 	//普通に発射
@@ -51,36 +52,36 @@ void CBattleScene::Init(CGame* gameP){
 
 	//for (int ii = 0; ii < 11; ii++) {
 	//	CPos pos(50 + ii*70, 100);
-	//	m_launcher.push_back(new Launcher000(ii * 10, pos));
+	//	m_launcher.push_back(new CLauncher000(ii * 10, pos));
 	//}
 	//for (int ii = 0; ii < 10; ii++) {
 	//	CPos pos(50 + ii * 70, 200);
-	//	m_launcher.push_back(new Launcher001(ii * 10, pos));
+	//	m_launcher.push_back(new CLauncher001(ii * 10, pos));
 	//}
 	//for (int ii = 0; ii < 10; ii++) {
 	//	CPos pos(50 + ii * 70, 300);
-	//	m_launcher.push_back(new Launcher010(ii * 10, pos));
+	//	m_launcher.push_back(new CLauncher010(ii * 10, pos));
 	//}
 	CPos pos(50 + 300, 300);
-	m_launcher.push_back(new Launcher010(0, pos));
+	m_launcher.push_back(new CLauncher010(0, pos));
 
 	{
 		CPos pos1(0, 100);
-		Enemy000* e1 = new Enemy000(pos1);
-		e1->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 500));
-		e1->AddLauncher(CPos(0, 0), new Launcher010(0, pos1));
+		CEnemy000* e1 = new CEnemy000(pos1);
+		e1->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 500));
+		e1->AddLauncher(CPos(0, 0), new CLauncher010(0, pos1));
 		m_enemys.push_back(e1);
 
 		CPos pos2(-50, 100);
-		Enemy000* e2 = new Enemy000(pos2);
-		e2->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 450));
-		e2->AddLauncher(CPos(0, 0), new Launcher010(0, pos2));
+		CEnemy000* e2 = new CEnemy000(pos2);
+		e2->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 450));
+		e2->AddLauncher(CPos(0, 0), new CLauncher010(0, pos2));
 		m_enemys.push_back(e2);
 
 		CPos pos3(-100, 100);
-		Enemy000* e3 = new Enemy000(pos3);
-		e3->SetMoveComponent(new CVLM_DistanceStop(0.0, 2.5, 400));
-		e3->AddLauncher(CPos(0, 0), new Launcher010(0, pos3));
+		CEnemy000* e3 = new CEnemy000(pos3);
+		e3->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 400));
+		e3->AddLauncher(CPos(0, 0), new CLauncher010(0, pos3));
 		m_enemys.push_back(e3);
 	}
 }
@@ -225,6 +226,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 #endif
 
 	////どんな状態でもアクションする処理
+	m_bg.Action();
 	m_player.Action(input);
 	m_bulletManeger.Action();
 	m_beamManeger.Action();
@@ -235,12 +237,13 @@ void CBattleScene::Main(CInputAllStatus *input){
 	//	launcher->Action(launcher->m_pos);
 	//}
 
+	m_bg.Draw();
 	//area->Draw();
 	m_player.Draw();
 	m_bulletManeger.Draw();
 	m_beamManeger.Draw();
 
-	for (BaseEnemy* enemy : m_enemys) {
+	for (CBaseEnemy* enemy : m_enemys) {
 		enemy->Action();
 		enemy->Draw();
 	}

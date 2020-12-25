@@ -10,10 +10,10 @@ const int MAX_RANK = 100;
 //	連弾になる			xx~xx弾
 //	速度が速くなる		xx～xx
 
-class BaseLauncher {
+class CBaseLauncher {
 public:
-	BaseLauncher(int rank, const CPos& pos);
-	virtual ~BaseLauncher();
+	CBaseLauncher(int rank, const CPos& pos);
+	virtual ~CBaseLauncher();
 
 	virtual void Action(const CPos& newPos);
 
@@ -46,22 +46,22 @@ protected:
 // 禁じ手のdefine
 //--------------------------------------------------
 
-//class Launcher001 : public BaseLauncher {
+//class CLauncher001 : public CBaseLauncher {
 //public:
-//	Launcher001(int rank, const CPos& pos);
-//	virtual ~Launcher001() override;
+//	CLauncher001(int rank, const CPos& pos);
+//	virtual ~CLauncher001() override;
 //	virtual void Action(const CPos& newPos) override;
 //};
 #define LANCHERHEADER(ClassName) \
-class ClassName : public BaseLauncher { \
+class ClassName : public CBaseLauncher { \
 public:  \
 	ClassName(int rank, const CPos& pos);  \
 	virtual ~ClassName() override;  \
 	virtual void Action(const CPos& newPos) override;  \
 };  \
 
-////Launcher001::Launcher001(int rank, const CPos& pos) : BaseLauncher(rank, pos){}
-////Launcher001::~Launcher001(){}
+////CLauncher001::CLauncher001(int rank, const CPos& pos) : CBaseLauncher(rank, pos){}
+////CLauncher001::~CLauncher001(){}
 #define LANCHERCPP(ClassName) \
-ClassName::ClassName(int rank, const CPos& pos) : BaseLauncher(rank, pos){}; \
+ClassName::ClassName(int rank, const CPos& pos) : CBaseLauncher(rank, pos){}; \
 ClassName::~ClassName(){}; \

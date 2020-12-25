@@ -5,8 +5,8 @@
 //	発射間隔が早くなる	15fr～7fr
 //	速度が速くなる		5～8
 //	連弾になる			1~3弾
-LANCHERCPP(Launcher000)
-void Launcher000::Action(const CPos& newPos)
+LANCHERCPP(CLauncher000)
+void CLauncher000::Action(const CPos& newPos)
 {
 	__super::Action(newPos);
 
@@ -16,7 +16,7 @@ void Launcher000::Action(const CPos& newPos)
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
 			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 0,0);
-			BaseLauncher::m_bulletManager->Add(b);
+			CBaseLauncher::m_bulletManager->Add(b);
 		}
 		m_count = 0;
 
@@ -30,8 +30,8 @@ void Launcher000::Action(const CPos& newPos)
 //	発射間隔が早くなる	30fr～20fr
 //	速度が速くなる		3～4
 //	連弾になる			1~3弾
-LANCHERCPP(Launcher001)
-void Launcher001::Action(const CPos& newPos)
+LANCHERCPP(CLauncher001)
+void CLauncher001::Action(const CPos& newPos)
 {
 	__super::Action(newPos);
 
@@ -43,9 +43,9 @@ void Launcher001::Action(const CPos& newPos)
 			CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), -15.0, 0, 0, 0, 0, 0);
 			CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), 0.0, 0, 0, 0, 0, 0);
 			CBaseBullet* b3 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), 15.0, 0, 0, 0, 0, 0);
-			BaseLauncher::m_bulletManager->Add(b1);
-			BaseLauncher::m_bulletManager->Add(b2);
-			BaseLauncher::m_bulletManager->Add(b3);
+			CBaseLauncher::m_bulletManager->Add(b1);
+			CBaseLauncher::m_bulletManager->Add(b2);
+			CBaseLauncher::m_bulletManager->Add(b3);
 		}
 		m_count = 0;
 

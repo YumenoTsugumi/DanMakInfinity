@@ -37,7 +37,6 @@ void CGame::Init()
 	m_input.SetKeyboard(INPUT_DEF_ENTER, INPUT_KEY_Z);
 	m_input.SetKeyboard(INPUT_DEF_CANCEL, INPUT_KEY_X);
 
-
 	//弾幕画像(試作型)
 	//ふぁいる、総数、X、Y、サイズX、サイズY、アニメ速度、回転速度
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet00.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet00", 00);
@@ -61,15 +60,25 @@ void CGame::Init()
 		m_resourceManager.Add(new CImageSet(2, fileA), "laser02", 101);	
 	}
 
-	m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser01", 00);
-	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 01);
-	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 02);
+	m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser01", 1000);
+	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 1001);
+	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 1002);
 	//m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser01", 500);
 	//m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser02", 501);
 	//m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser03", 502);
 	//m_resourceManager.Add(new CImage("Resource\\h00.png"), "hLaser00", 500);
 	//m_resourceManager.Add(new CImage("Resource\\h01.png"), "hLaser01", 501);
 	//m_resourceManager.Add(new CImage("Resource\\h02.png"), "hLaser02", 502);
+
+	m_resourceManager.Add(new CImages("Resource\\bg00.png", 2, 2, 1, 32, 128), "bg00", 10000);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg01.png",1,1,1,800,1200,0,0.0), "bg01", 10001);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg02.png",1,1,1,800,800,0,0.0), "bg02", 10002);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg03.png",1,1,1,64,64,0,0.0), "bg03", 10003);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg04.png",1,1,1,64,64,0,0.0), "bg04", 10004);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg05.png",1,1,1,64,64,0,0.0), "bg05", 10005);
+
+
+
 
 
 	// ゲーム弾が見える範囲

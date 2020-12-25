@@ -21,29 +21,29 @@ enum MoveStatus {
 };
 
 struct Launcher {
-	Launcher(const CPos& pos, BaseLauncher* launcher) {
+	Launcher(const CPos& pos, CBaseLauncher* launcher) {
 		m_relativePos = pos;
 		m_launcher = launcher;
 	}
-	BaseLauncher* m_launcher; // 発射口の実態
+	CBaseLauncher* m_launcher; // 発射口の実態
 	CPos m_relativePos; // 座標(敵本体の座標からの相対座標)
 };
 
-class BaseEnemy {
+class CBaseEnemy {
 public:
-	BaseEnemy(const CPos& pos);
-	virtual ~BaseEnemy();
+	CBaseEnemy(const CPos& pos);
+	virtual ~CBaseEnemy();
 
 	virtual void Action();
 	virtual void Draw();
 	virtual void Damaged(); // ダメージを受けたとき
 	virtual void Die(); // 死んだ時
 
-	void SetMoveComponent(MoveComponent* component);
-	void AddLauncher(const CPos& pos, BaseLauncher* launcher);
+	void SetMoveComponent(CMoveComponent* component);
+	void AddLauncher(const CPos& pos, CBaseLauncher* launcher);
 protected:
 	std::vector<Launcher> m_launchers; // 発射口
-	MoveComponent* m_moveComponent; // 移動コンポーネント
+	CMoveComponent* m_moveComponent; // 移動コンポーネント
 	int m_life; // ライフ
 	MoveStatus m_moveStatus; // 入退場ステータス
 	EnemyType m_type; // 地上～空　小型～大型

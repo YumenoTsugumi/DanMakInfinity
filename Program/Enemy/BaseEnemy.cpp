@@ -1,36 +1,36 @@
 ﻿#include "BaseEnemy.h"
 
-BaseEnemy::BaseEnemy(const CPos& pos):
+CBaseEnemy::CBaseEnemy(const CPos& pos):
 	m_pos(pos)
 {
 
 }
-BaseEnemy::~BaseEnemy() {
+CBaseEnemy::~CBaseEnemy() {
 
 }
 
-void BaseEnemy::Action() {
+void CBaseEnemy::Action() {
 
 }
-void BaseEnemy::Draw() {
+void CBaseEnemy::Draw() {
 
 }
 
 // ダメージを受けたとき
-void BaseEnemy::Damaged() {
+void CBaseEnemy::Damaged() {
 
 } 
 
 // 死んだ時
-void BaseEnemy::Die() {
+void CBaseEnemy::Die() {
 
 }
 
-void BaseEnemy::SetMoveComponent(MoveComponent* component)
+void CBaseEnemy::SetMoveComponent(CMoveComponent* component)
 {
 	m_moveComponent = component;
 }
-void BaseEnemy::AddLauncher(const CPos& pos, BaseLauncher* launcher)
+void CBaseEnemy::AddLauncher(const CPos& pos, CBaseLauncher* launcher)
 {
 	Launcher l(pos, launcher);
 	m_launchers.push_back(l);

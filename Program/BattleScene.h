@@ -9,6 +9,8 @@
 #include "Launcher.h"
 #include "BaseEnemy.h"
 
+#include "BackGround.h"
+
 class CBattleScene : public CScene{
 public:
 	//------------------
@@ -35,7 +37,9 @@ public:
 	CPos m_pos;
 
 
-	std::vector<BaseLauncher*> m_launcher;
+	std::vector<CBaseLauncher*> m_launcher;
 
-	std::vector<BaseEnemy*> m_enemys;
+	std::vector<CBaseEnemy*> m_enemys;
+
+	CBackGroundPatternA m_bg;
 };

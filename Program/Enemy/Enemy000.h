@@ -2,10 +2,10 @@
 
 #include "BaseEnemy.h"
 
-class Enemy000 : public BaseEnemy {
+class CEnemy000 : public CBaseEnemy {
 public:
-	Enemy000(const CPos& pos);
-	~Enemy000();
+	CEnemy000(const CPos& pos);
+	~CEnemy000();
 
 	virtual void Action();
 	virtual void Draw();

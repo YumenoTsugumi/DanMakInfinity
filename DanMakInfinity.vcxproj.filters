@@ -25,6 +25,12 @@
     <Filter Include="ヘッダー ファイル\Enemy">
       <UniqueIdentifier>{a1fcdad7-d6eb-45de-9cfc-363476f431fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\BackGround">
+      <UniqueIdentifier>{3dd9935f-ba6a-46a4-959c-ef560155cf1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\BackGorund">
+      <UniqueIdentifier>{bccd3b81-4140-4438-b88a-b14a03e97e49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -90,6 +96,9 @@
     <ClCompile Include="Program\Enemy\Enemy000.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Program\BackGround\BackGround.cpp">
+      <Filter>ソース ファイル\BackGround</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program\BulletBase.h">
@@ -154,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="Program\Enemy\MoveComponent.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\BackGround\BackGround.h">
+      <Filter>ヘッダー ファイル\BackGorund</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

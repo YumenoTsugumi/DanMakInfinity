@@ -3,7 +3,7 @@
 #include "BaseLauncher.h"
 
 
-LANCHERHEADER(Launcher000)
-LANCHERHEADER(Launcher001)
+LANCHERHEADER(CLauncher000)
+LANCHERHEADER(CLauncher001)
 
 

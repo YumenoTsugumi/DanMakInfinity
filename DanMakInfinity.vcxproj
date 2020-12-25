@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program\BackGround\BackGround.cpp" />
     <ClCompile Include="Program\BaseBeam.cpp" />
     <ClCompile Include="Program\BaseBullet.cpp" />
     <ClCompile Include="Program\BaseEffect.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Program\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Program\BackGround\BackGround.h" />
     <ClInclude Include="Program\BaseBeam.h" />
     <ClInclude Include="Program\BaseBullet.h" />
     <ClInclude Include="Program\BaseEffect.h" />
