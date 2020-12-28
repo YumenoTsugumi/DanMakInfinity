@@ -76,6 +76,27 @@ void CBaseEffect::Action(){
 void CBaseEffect::EffectAction(){
 
 	m_blendDepth += m_plusBlend;
+
+	if (m_plusBlend == 0) {
+
+	} else 
+	if (m_plusBlend > 0) {
+		if (m_blendDepth < m_maxBlend) {
+			m_blendDepth += m_plusBlend;
+		}
+		else {
+			m_blendDepth = m_maxBlend;
+		}
+	}
+	else {
+		if (m_blendDepth > m_maxBlend) {
+			m_blendDepth -= m_plusBlend;
+		}
+		else {
+			m_blendDepth = m_maxBlend;
+		}
+	}
+
 	m_size += m_plusSize;
 
 
@@ -148,10 +169,9 @@ void CBaseEffect::SetFuncP(void (*FuncP)(CBaseEffect* eff)){
 	funcP = FuncP;
 }
 
-
-
-void CBaseEffect::SetBlend(int BlendDepth, double PlusBlend){
+void CBaseEffect::SetBlend(int BlendDepth, double PlusBlend, double MaxBlend /*= 255*/){
 	m_blendDepth = (double)BlendDepth;
+	m_maxBlend = MaxBlend;
 	m_plusBlend = PlusBlend;
 }
 

@@ -28,4 +28,5 @@ public:
 	CBulletImage* m_image04;
 	CBulletImage* m_image05;
 	CBulletImage* m_image06;
+
 };

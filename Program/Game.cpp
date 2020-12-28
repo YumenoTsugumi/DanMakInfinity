@@ -47,6 +47,10 @@ void CGame::Init()
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet11", 11);
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet12", 12);
 
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet20.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet20", 20);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
+
 	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 1000);
 
 	//画像
@@ -76,6 +80,7 @@ void CGame::Init()
 	m_resourceManager.Add(new CBulletImage("Resource\\bg03.png",1,1,1,64,64,0,0.0), "bg03", 10003);
 	m_resourceManager.Add(new CBulletImage("Resource\\bg04.png",1,1,1,64,64,0,0.0), "bg04", 10004);
 	m_resourceManager.Add(new CBulletImage("Resource\\bg05.png",1,1,1,64,64,0,0.0), "bg05", 10005);
+	m_resourceManager.Add(new CBulletImage("Resource\\bg06.png", 1, 1, 1, 1024, 1024, 0, 0.0), "bg06", 10006);
 
 
 

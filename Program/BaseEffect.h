@@ -37,7 +37,8 @@ public:
 
 	//”Z‚³‚Ì‰ÁŒ¸ŽZ
 	double m_plusBlend;
-	void SetBlend(int BlendDepth, double PlusBlend);
+	double m_maxBlend;
+	void SetBlend(int BlendDepth, double PlusBlend, double MaxBlend=255);
 
 	//•`‰æƒTƒCƒY
 	double m_size;

@@ -19,12 +19,16 @@ void CLauncher010::Action(const CPos& newPos)
 
 	int span = (int)(12.0 - 4.0 * RankRatio());
 	double speed = 4.0 + 3.0 * RankRatio();
-	int loop = (int)(2 + 3 * RankRatio());
+	int loop = (int)(6 + 3 * RankRatio());
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 30, 0);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), ii*60, 0, 0, 0, 30, 20 + ii%3);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
+		//for (int ii = 0; ii < loop; ii++) {
+		//	CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), -45, 0, 0, 0, 30, 1);
+		//	CBaseLauncher::m_bulletManager->Add(b);
+		//}
 		m_count = 0;
 
 		return;
