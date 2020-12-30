@@ -1,22 +1,33 @@
 ﻿#include "DXFunc.h"
 #include "DxLib.h"
 
-int CDxFunc::DrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle) {
-	return DrawRotaGraphF((float)x, (float)y, ExtRate, Angle, GrHandle, TRUE);
+int CDxFunc::MyDrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag) {
+	return DrawRotaGraphF((float)x, (float)y, ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
 }
-int CDxFunc::DrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle) {
+int CDxFunc::MyDrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag) {
 	//↑のをコール
-	return DrawRotaGraph(p.x, p.y, ExtRate, Angle, GrHandle);
+	return DrawRotaGraph(p.x, p.y, ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
 }
 
 
-int CDxFunc::DrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle) {
+int CDxFunc::MyDrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag) {
 	return DrawRotaGraph2F((float)x1, (float)y1, (float)x2, (float)y2,
-		ExtRate, Angle, GrHandle, TRUE);
+		ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
 }
-int CDxFunc::DrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle) {
+int CDxFunc::MyDrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag) {
 	//↑のをコール
-	return DrawRotaGraph2(p1.x, p1.y, p2.x, p2.y, ExtRate, Angle, GrHandle);
+	return DrawRotaGraph2(p1.x, p1.y, p2.x, p2.y, ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
+}
+
+
+//回転中心指示3
+int CDxFunc::MyDrawRotaGraph3(double x1, double y1, double x2, double y2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag, int TurnFlag)
+{
+	return DrawRotaGraph3(x1, y1, x2, y2, ExtRateX, ExtRateY, Angle, GrHandle, TransFlag, TurnFlag);
+}
+int CDxFunc::MyDrawRotaGraph3(CPos p1, CPos p2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag, int TurnFlag)
+{
+	return MyDrawRotaGraph3(p1.x, p1.y, p2.x, p2.y, ExtRateX, ExtRateY, Angle, GrHandle, TransFlag, TurnFlag);
 }
 
 

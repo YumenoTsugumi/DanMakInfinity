@@ -84,7 +84,7 @@ void CCustomBullet::Draw(){
 		int alpha = (int)((double)255 * ((double)m_standByCount / m_standByTime ));
 
 		SetDrawBlendMode( DX_BLENDMODE_ALPHA , alpha ) ;
-		CDxFunc::DrawRotaGraph(m_pos.x, m_pos.y, 1.0, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 1.0, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 	} else {
 		//í èÌï`âÊ
 		CBaseBullet::Draw();

@@ -46,8 +46,8 @@ void CHomingLaser::Draw(){
 		if(i > m_count){
 			break;
 		}
-		CDxFunc::DrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
-		//CDxFunc::DrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image->m_index);
+		CDxFunc::MyDrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		//CDxFunc::MyDrawRotaGraph(m_posA[i], 0.2f, m_angleA[i] + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image->m_index);
 	}
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }

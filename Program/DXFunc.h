@@ -7,12 +7,16 @@
 class CDxFunc {
 public:
 	//普通描画
-	static int DrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle);
-	static int DrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle);
+	static int MyDrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	static int MyDrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 
 	//回転中心指示
-	static int DrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle);
-	static int DrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle);
+	static int MyDrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	static int MyDrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+
+	//回転中心指示3
+	static int MyDrawRotaGraph3(double x1, double y1, double x2, double y2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	static int MyDrawRotaGraph3(CPos p1, CPos p2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 
 	//四角
 	static int DrawBox2(double x1, double y1, double x2, double y2, int cr, int FillFlag = TRUE);

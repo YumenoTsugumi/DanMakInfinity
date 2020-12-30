@@ -4,6 +4,9 @@
 #include "BattleScene.h"
 #include "BaseBeam.h"
 
+#include <thread>
+#include <chrono>
+
 CResourceManager CGame::m_resourceManager;
 CRect CGame::m_battleRect;
 
@@ -37,54 +40,11 @@ void CGame::Init()
 	m_input.SetKeyboard(INPUT_DEF_ENTER, INPUT_KEY_Z);
 	m_input.SetKeyboard(INPUT_DEF_CANCEL, INPUT_KEY_X);
 
-	//弾幕画像(試作型)
-	//ふぁいる、総数、X、Y、サイズX、サイズY、アニメ速度、回転速度
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet00.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet00", 00);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet01.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet01", 01);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet02.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet02", 02);
 
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet10.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet10", 10);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet11", 11);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet12", 12);
+	std::thread th(CGame::ImageLoadByThread);
+	th.detach();
 
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet20.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet20", 20);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
-
-	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 1000);
-
-	//画像
-	//レーザー用の画像読み込み
-	{	
-		const char fileA[][RESOURCENAMEMAX] = { "Resource/bulletstand_b.png","Resource/childLaser_b.png" };
-		m_resourceManager.Add(new CImageSet(2, fileA), "laser01", 100);	
-	}
-	{	
-		const char fileA[][RESOURCENAMEMAX] = { "Resource/bulletstand_r.png","Resource/childLaser_r.png" };
-		m_resourceManager.Add(new CImageSet(2, fileA), "laser02", 101);	
-	}
-
-	m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser01", 1000);
-	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 1001);
-	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 1002);
-	//m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser01", 500);
-	//m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser02", 501);
-	//m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 16, 64, 10, 0.0), "hLaser03", 502);
-	//m_resourceManager.Add(new CImage("Resource\\h00.png"), "hLaser00", 500);
-	//m_resourceManager.Add(new CImage("Resource\\h01.png"), "hLaser01", 501);
-	//m_resourceManager.Add(new CImage("Resource\\h02.png"), "hLaser02", 502);
-
-	m_resourceManager.Add(new CImages("Resource\\bg00.png", 2, 2, 1, 32, 128), "bg00", 10000);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg01.png",1,1,1,800,1200,0,0.0), "bg01", 10001);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg02.png",1,1,1,800,800,0,0.0), "bg02", 10002);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg03.png",1,1,1,64,64,0,0.0), "bg03", 10003);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg04.png",1,1,1,64,64,0,0.0), "bg04", 10004);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg05.png",1,1,1,64,64,0,0.0), "bg05", 10005);
-	m_resourceManager.Add(new CBulletImage("Resource\\bg06.png", 1, 1, 1, 1024, 1024, 0, 0.0), "bg06", 10006);
-
-
-
-
+	ImageLoad();
 
 	// ゲーム弾が見える範囲
 	CGame::SetBattleRect(CRect(0, 0, 800, 600));
@@ -123,3 +83,81 @@ void CGame::Main() {
 	}
 }
 
+void CGame::ImageLoad()
+{
+
+	//弾幕画像(試作型)
+	//ふぁいる、総数、X、Y、サイズX、サイズY、アニメ速度、回転速度
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet00.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet00", 00);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet01.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet01", 01);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet02.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet02", 02);
+
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet10.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet10", 10);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet11", 11);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet12", 12);
+
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet20.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet20", 20);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
+
+	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 1000);
+
+	//画像
+	//レーザー用の画像読み込み
+	m_resourceManager.Add(new CImage("Resource\\bulletstand_b.png"), "laser01_stand", 100);
+	m_resourceManager.Add(new CImage("Resource\\childLaser_b.png"), "laser01_laser", 101);
+
+	m_resourceManager.Add(new CImage("Resource\\bulletstand_r.png"), "laser02_stand", 110);
+	m_resourceManager.Add(new CImage("Resource\\childLaser_r.png"), "laser02_laser", 111);
+
+	// homingLaser
+	m_resourceManager.Add(new CBulletImage("Resource\\h00.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser01", 200);
+	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 201);
+	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 202);
+
+}
+void CGame::ImageLoadByThread()
+{
+
+	auto start = std::chrono::system_clock::now();      // 計測スタート時刻を保存
+
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_00.png"), "X_bg_space_00", 10000);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_01.png"), "X_bg_space_01", 10001);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_02.png"), "X_bg_space_02", 10002);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_03.png"), "X_bg_space_03", 10003);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_04.png"), "X_bg_space_04", 10004);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_05.png"), "X_bg_space_05", 10005);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_06.png"), "X_bg_space_06", 10006);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_07.png"), "X_bg_space_07", 10007);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_08.png"), "X_bg_space_08", 10008);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_09.png"), "X_bg_space_09", 10009);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_10.png"), "X_bg_space_10", 10010);
+
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b00.png"), "X_bg_space_b00", 10011);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b01.png"), "X_bg_space_b01", 10012);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b02.png"), "X_bg_space_b02", 10013);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b03.png"), "X_bg_space_b03", 10014);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b04.png"), "X_bg_space_b04", 10015);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b05.png"), "X_bg_space_b05", 10016);
+
+
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_00.png"), "bg_planet_00", 10100);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_01.png"), "bg_planet_01", 10101);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_02.png"), "bg_planet_02", 10102);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_03.png"), "bg_planet_03", 10103);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_04.png"), "bg_planet_04", 10104);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_05.png"), "bg_planet_05", 10105);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_06.png"), "bg_planet_06", 10106);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_07.png"), "bg_planet_07", 10107);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_08.png"), "bg_planet_08", 10108);
+	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_09.png"), "bg_planet_09", 10109);
+
+
+
+
+	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存
+	auto dur = end - start;        // 要した時間を計算
+	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+	// 要した時間をミリ秒（1/1000秒）に変換して表示
+	printfDx(" milli sec %d", msec);
+}

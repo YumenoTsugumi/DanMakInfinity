@@ -3,6 +3,9 @@
 #include "Func.h"
 #include "DxLib.h"
 
+#include <map>
+#include <string>
+
 class CResourceInfo;
 class CImage;
 class CImages;
@@ -13,38 +16,41 @@ class CBgm;
 class CSe;
 class CResourceManager;
 
-const int RESOURCENAMEMAX = 40; // リソースの名前最大値
+class CResource;
 
-//すべてのリソースが持つ管理情報
-//重複した場合早い物を引っ張ってくる
-class CResourceInfo{
+//---------------------------------------------------------------------------------
+//	リソースのマネージャ
+//---------------------------------------------------------------------------------
+class CResourceManager {
+	static const int MAXINDEX;
 public:
-	//リソースが所属しているidx
-	int m_index;
+	std::map<std::string, CResource*> m_resource;
+	std::vector<CResource*> m_indexToMapResource;
 
-	//管理名	こいつを指定して引っ張ってくる
-	char m_name[RESOURCENAMEMAX];
-	//管理番号	こいつを指定して引っ張ってくる
-	int m_number;
+	void Add(CResource* resource, const char* name, int index);
+	CResource* GetResource(const char* name);
+	CResource* GetResource(int index);
 
-	//読み込み終えたか
-	//false:未読み込み
-	bool m_loadFlg;
+	CResourceManager();
+	~CResourceManager();
 };
+
 
 //---------------------------------------------------------------------------------
 // リソースのベースとなるクラス
 //---------------------------------------------------------------------------------
 class CResource{
 public:
-	CResourceInfo info;
-	void SetIndex(int Idx);
-	void SetInfo(const char* name, int number);
-	
-	CResource();
-	virtual ~CResource();
-	void Init();
+	//管理名	こいつを指定して引っ張ってくる
+	std::string m_name;
+	int m_index;
 
+	//読み込み終えたか
+	//false:未読み込み
+	bool m_loadFlg;
+
+	CResource(const char* filename);
+	virtual ~CResource();
 };
 //---------------------------------------------------------------------------------
 // イメージ１枚
@@ -56,18 +62,6 @@ public:
 
 	int m_iamge;
 	int m_sizeX, m_sizeY;
-};
-//---------------------------------------------------------------------------------
-// イメージ２枚で１つ
-//---------------------------------------------------------------------------------
-class CImageSet : public CResource{
-public:
-	CImageSet(int Num, const char Filename[][RESOURCENAMEMAX]);
-	virtual ~CImageSet();
-	CImage* GetImage(int Idx);
-
-	int m_num;
-	CImage** m_image;
 };
 
 //---------------------------------------------------------------------------------
@@ -133,22 +127,6 @@ public:
 	virtual ~CSe();
 
 	int m_SE;
-};
-
-
-//---------------------------------------------------------------------------------
-//	リソースのマネージャ
-//---------------------------------------------------------------------------------
-class CResourceManager{
-public:
-	std::vector<CResource*> m_resource;
-	int Add(CResource* Resource, const char* Name, int Number);
-
-	CResource* GetResource(int number);
-	CResource* GetResource(const char* Name);
-
-	CResourceManager();
-	~CResourceManager();
 };
 
 

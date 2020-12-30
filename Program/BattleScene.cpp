@@ -36,7 +36,6 @@ void CBattleScene::Init(CGame* gameP){
 
 	m_game = gameP;
 
-	//bulletManeger = new CInhBulletManager(1024);
 	// •Ï‰»’e‚Ì’è‹`‚É•K—v
 	CCustomBullet::SetBulletManagerPointer(&m_bulletManeger);
 	CBaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
@@ -84,6 +83,8 @@ void CBattleScene::Init(CGame* gameP){
 		e3->AddLauncher(CPos(0, 0), new CLauncher010(0, pos3));
 		m_enemys.push_back(e3);
 	}
+
+	m_bg.SetInitPlayerPos(m_player.m_pos);
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -230,15 +231,12 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_player.Action(input);
 	m_bulletManeger.Action();
 	m_beamManeger.Action();
+	m_bg.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos);
-	//area->Action();
 
-	//for (auto* launcher : m_launcher) {
-	//	launcher->Action(launcher->m_pos);
-	//}
+
 
 	m_bg.Draw();
-	//area->Draw();
 	m_player.Draw();
 	m_bulletManeger.Draw();
 	m_beamManeger.Draw();
@@ -247,6 +245,5 @@ void CBattleScene::Main(CInputAllStatus *input){
 		enemy->Action();
 		enemy->Draw();
 	}
-	//m_count++;
 
 }

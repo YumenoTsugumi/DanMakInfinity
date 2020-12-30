@@ -51,7 +51,10 @@ class CBaseBeam : public CBulletManager {
 public:
 	//画像へのポインタ
 	//CBeamImage *m_image;
-	CImageSet* m_image;
+	//CImageSet* m_image;
+	CImage* m_imageStand;
+	CImage* m_imageLaser;
+
 
 	////画像データ設定　（渡すモノはnewで確保すること　解放はこのクラス(実際には上位)がする
 	//static void SetResource(CResourceManager* ImageManager);
@@ -66,12 +69,13 @@ public:
 	//レーザー１本の発射最大数を設定する
 	//デフォルト128で構成される
 	//800*600で端から端まで　速度10間隔1なら128で十分
-	CBaseBeam(CPos P, double angle, int IMGNO, int num = 128);
-	CBaseBeam(CPos P, double angle, const char* IMGNAME, int num = 128);
+	CBaseBeam(CPos P, double angle, int imageIndex1, int imageIndex2, int num = 128);
+	CBaseBeam(CPos P, double angle, const char* imageName1, const char* imageName2, int num = 128);
 	virtual ~CBaseBeam();
 	virtual void Set(CPos pos, double m_speed, double m_angle, int length, double m_thick, int m_shotSpan);
-	virtual void SetImage(int image);
-	virtual void SetImage(const char* ImageName);
+
+	virtual void SetImage(int imageIndex1, int imageIndex2);
+	virtual void SetImage(const char* imageName1, const char* imageName2);
 
 	//位置
 	CPos m_pos;

@@ -3,72 +3,63 @@
 #include "Game.h"
 
 CBackGround::CBackGround() : m_effectManager(512){
-
 }
 CBackGround::~CBackGround() {
-
 }
 void CBackGround::Action() {
-
 }
 void CBackGround::Draw() {
-
 }
 
 
-CBackGroundPatternA::CBackGroundPatternA() {
-	m_images = (CImages*)CGame::GetResource(10000);
-	m_image01 = (CBulletImage*)CGame::GetResource(10001);
-	m_image02 = (CBulletImage*)CGame::GetResource(10002);
-	m_image03 = (CBulletImage*)CGame::GetResource(10003);
-	m_image04 = (CBulletImage*)CGame::GetResource(10004);
-	m_image05 = (CBulletImage*)CGame::GetResource(10005);
-	m_image06 = (CBulletImage*)CGame::GetResource(10006);
-}
-CBackGroundPatternA::~CBackGroundPatternA(){
+char fileNameSpaceBG[11][20] = {
+	"X_bg_space_00",	"X_bg_space_01",	"X_bg_space_02",	"X_bg_space_03",
+	"X_bg_space_04",	"X_bg_space_05",	"X_bg_space_06",	"X_bg_space_07",
+	"X_bg_space_08",	"X_bg_space_09",	"X_bg_space_10"
+};
+char fileNameSpaceBase[6][20] = {
+	"X_bg_space_b00",	"X_bg_space_b01",	"X_bg_space_b02",
+	"X_bg_space_b03",	"X_bg_space_b04",	"X_bg_space_b05"
+};
+char fileNamePlanet[10][20] = {
+	"bg_planet_00",	"bg_planet_01",	"bg_planet_02",	"bg_planet_03",	"bg_planet_04",	
+	"bg_planet_05",	"bg_planet_06",	"bg_planet_07",	"bg_planet_08",	"bg_planet_09"
+};
 
-}
-void CBackGroundPatternA::Action() {
-
-	{
-		static int count2 = 0;
-		count2++;
-		if ( 0 && count2 == 1) {
-			CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
-			//double ang = CFunc::RandF(180 + 45, 360 - 45);
-			double ang = CFunc::RandF(0 + 45, 180 - 45);
-			CBaseEffect* eff = new CBaseEffect(EDirType::Abs, pp, CFunc::RandF(5.0, 7.5), ang, 0, 0, 0, 0, 10005);
-			eff->SetSize(CFunc::RandF(1.0, 2.0), CFunc::RandF(0.1, 0.05));
-			eff->SetBlend(CFunc::RandI(16, 64), +0.0);
-			eff->SetAnimeEndDelFlg(false);	//アニメーション終了後削除するか
-			eff->SetRemoveCount(CFunc::RandI(180, 360));	//60frで削除
-			eff->SetBlendType(DX_BLENDMODE_SUB);
-			m_effectManager.Add(eff);
-		}
+CBackGroundPatternA::CBackGroundPatternA()
+{
+	int spaceBGIndex = CFunc::RandI(0, 10);
+	m_imageFarwaySpace = (CImage*)CGame::GetResource(fileNameSpaceBG[spaceBGIndex]);
+	m_scrollFarwayY = 0.4;
+	if (CFunc::RandI(0, 1)) {
+		m_posSpaceFarwayY = CPos(400 - (1000 - 500), 300 - (1000 - 300));
 	}
-	{
-		static int count = 0;
-		count++;
-		if (count % 480 == 1) {
-			CPos pp(400, 0);
-			double ang = 90.0;
-			CBaseEffect* eff = new CBaseEffect(EDirType::Abs, pp, 2.0, ang, 0, 0, 0, 0, 10006);
-			eff->SetBlend(0, 32, 214);
-			eff->SetAnimeEndDelFlg(false);	//アニメーション終了後削除するか
-			eff->SetRemoveCount(180);	//60frで削除
-			eff->SetSize(2.0, 0.0);
-			eff->SetDeleteTiming(-4.0, 0);
-			//DX_BLENDMODE_NOBLEND　:　ノーブレンド（デフォルト）
-			//DX_BLENDMODE_ALPHA　　:　αブレンド
-			//DX_BLENDMODE_ADD　　　:　加算ブレンド
-			//DX_BLENDMODE_SUB　　　:　減算ブレンド
-			//DX_BLENDMODE_MULA　　　:　乗算ブレンド
-			//DX_BLENDMODE_INVSRC　　:　反転ブレンド
-			eff->SetBlendType(DX_BLENDMODE_SUB);
-
-			m_effectManager.Add(eff);
-		}
+	else {
+		m_posSpaceFarwayY = CPos(400 + (1000 - 500), 300 - (1000 - 300));
 	}
+
+	int spaceSpaceBaseIndex = CFunc::RandI(0, 6);
+	m_imageNearSpace = (CImage*)CGame::GetResource(fileNameSpaceBase[spaceSpaceBaseIndex]);
+	m_scrollNearY = m_scrollFarwayY * 0.5;
+	if (CFunc::RandI(0, 1)) {
+		m_posSpaceNear = CPos(400 - (1000 - 500), 300 - (1000 - 300));
+	}
+	else {
+		m_posSpaceNear = CPos(400 + (1000 - 500), 300 - (1000 - 300));
+	}
+
+
+	m_initPlayerPos = CPos(0,0);
+	m_movedPlayerPos = CPos(0, 0);
+}
+CBackGroundPatternA::~CBackGroundPatternA()
+{
+
+}
+void CBackGroundPatternA::Action() 
+{
+	m_posSpaceFarwayY.y += m_scrollFarwayY;
+	m_posSpaceNear.y += m_scrollNearY;
 
 
 	m_effectManager.Action();
@@ -76,10 +67,25 @@ void CBackGroundPatternA::Action() {
 
 void CBackGroundPatternA::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-	CDxFunc::DrawRotaGraph(400, 300, 1.0, 0.0, m_image01->m_images[0]);
 
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	CPos subPos; // 背景とプレイヤーの位置の位相
+	subPos.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 5.0;
+	subPos.y = (m_initPlayerPos.y - m_movedPlayerPos.y) / 5.0;
+	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY.x + subPos.x, m_posSpaceFarwayY.y + subPos.y, 1.0, 0.0, m_imageFarwaySpace->m_iamge, TRUE, FALSE);
+	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY.x + subPos.x, m_posSpaceFarwayY.y - 2000.0 + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageFarwaySpace->m_iamge, TRUE, TRUE);
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
+	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y - 2000.0 + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageNearSpace->m_iamge, TRUE, FALSE);
+
 
 	m_effectManager.Draw();
 }
 
+void CBackGroundPatternA::SetInitPlayerPos(CPos& initPos) {
+	m_initPlayerPos = initPos;
+}
+void CBackGroundPatternA::SetPlayerMovedPos(CPos& movedPos) {
+	m_movedPlayerPos = movedPos;
+}

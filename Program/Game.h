@@ -44,4 +44,7 @@ public:
 	void Init();
 	void CreateBattleScene();
 	void Main();
+
+	void ImageLoad();
+	static void ImageLoadByThread();
 };

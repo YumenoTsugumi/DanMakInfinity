@@ -1,79 +1,96 @@
 #include "DxLib.h"
 #include "resource.h"
 
+
+
+//---------------------------------------------------------------------------------
+//	マネージャー
+//---------------------------------------------------------------------------------
+const int CResourceManager::MAXINDEX = 100000;
+CResourceManager::CResourceManager() {
+	m_indexToMapResource.resize(MAXINDEX);
+}
+CResourceManager::~CResourceManager() {
+
+}
+
+void CResourceManager::Add(CResource* resource, const char* name, int index) {
+	if (resource == nullptr) {
+		return;
+	}
+	if (index < 0 || index >= MAXINDEX) {
+		assert(0);
+		return;
+	}
+
+	m_resource[name] = resource;
+
+	m_indexToMapResource[index] = resource;
+}
+
+CResource* CResourceManager::GetResource(const char* name) {
+	CResource* res = m_resource[name];
+	while (!res || !res->m_loadFlg) {
+		ProcessMessage();
+		res = m_resource[name];
+		Sleep(16);
+	}
+	return m_resource[name];
+}
+CResource* CResourceManager::GetResource(int index) {
+	CResource* res = m_indexToMapResource[index];
+	while (!res || !res->m_loadFlg) {
+		ProcessMessage();
+		res = m_indexToMapResource[index];
+		Sleep(16);
+	}
+	return m_indexToMapResource[index];
+}
+
+
+
 //---------------------------------------------------------------------------------
 //	リソースのベースとなるクラス
 //---------------------------------------------------------------------------------
-void CResource::SetInfo(const char* name, int number){
-	int len = (int)strlen(name);
-	if(len >= RESOURCENAMEMAX-1){
-		return ;
-	}
-	strcpy_s(info.m_name, RESOURCENAMEMAX, name);
-	info.m_number = number;
-}
-
-CResource::CResource(){
-	Init();
+CResource::CResource(const char* filename) :
+	m_name(filename),
+	m_loadFlg(false)
+{
 }
 CResource::~CResource(){
-}
-
-void CResource::Init(){
-	info.m_index = -1;
-	strcpy_s(info.m_name, RESOURCENAMEMAX, "noname");
-	info.m_number = 0;
-	info.m_loadFlg = false;
-}
-
-void CResource::SetIndex(int Idx){
-	info.m_index = Idx;
 }
 
 //---------------------------------------------------------------------------------
 //	イメージ１枚
 //---------------------------------------------------------------------------------
-CImage::CImage(const char* filename) : CResource(){
+CImage::CImage(const char* filename) : CResource(filename)
+{
 	m_iamge = LoadGraph(filename);
 	GetGraphSize( m_iamge , &(m_sizeX) , &(m_sizeY) ) ;
 
-	info.m_loadFlg = true;
+	m_loadFlg = true;
 
 	assert(m_iamge >= 0);
 }
-
 CImage::~CImage(){
 
 }
-//---------------------------------------------------------------------------------
-//	イメージ２枚で１つ
-//---------------------------------------------------------------------------------
-CImageSet::CImageSet(int Num, const char Filename[][RESOURCENAMEMAX]){
-	m_num = Num;
-	m_image = (CImage**)malloc(sizeof(CImage*)*(m_num));
 
-	for(int i=0;i<m_num;i++){
-		m_image[i] = new CImage(Filename[i]);
-	}
-}
-CImageSet::~CImageSet(){
-	for(int i=0;i<m_num;i++){
-		delete m_image[i];
-	}
-	free(m_image);
-}
-CImage* CImageSet::GetImage(int Idx){
-	return m_image[Idx];
-}
 
 //---------------------------------------------------------------------------------
 //	n分割出来るイメージ
 //---------------------------------------------------------------------------------
-CImages::CImages(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY){
+CImages::CImages(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY) :
+	CResource(filename) ,
+	m_images(nullptr),
+	m_num(0),
+	m_numX(0), m_numY(0),
+	m_sizeX(0), m_sizeY(0)
+{
 	m_images = (int*)malloc(sizeof(int*)*(numAll));
 
 	//画像読み込み
-	LoadDivGraph( filename , numAll , numX , numY , m_sizeX , m_sizeY , m_images ) ;
+	LoadDivGraph( filename , numAll , numX , numY , sizeX , sizeY , m_images ) ;
 
 	m_num = numAll;
 	m_numX = numX;
@@ -81,43 +98,46 @@ CImages::CImages(const char* filename, int numAll, int numX, int numY, int m_siz
 	m_sizeX = m_sizeX;
 	m_sizeY = m_sizeY;
 
-	info.m_loadFlg = true;
+	m_loadFlg = true;
 }
 
 CImages::~CImages(){
 	free(m_images);
 }
+
 //---------------------------------------------------------------------------------
 //	アニメーションのイメージ
 //---------------------------------------------------------------------------------
-
 CImageAnime::CImageAnime(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed) : 
-				CImages(filename, numAll, numX, numY, m_sizeX, m_sizeY){
+	CImages(filename, numAll, numX, numY, m_sizeX, m_sizeY) , 
+	m_animeSpeed(0)
+{
 	m_animeSpeed = animeSpeed;
-	info.m_loadFlg = true;
 }
 
 CImageAnime::~CImageAnime(){
-	free(m_images);
 }
 //---------------------------------------------------------------------------------
 //	弾のイメージ
 //---------------------------------------------------------------------------------
 CBulletImage::CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed, double RotaSpeed) : 
-				CImageAnime(filename, numAll, numX, numY, m_sizeX, m_sizeY, animeSpeed){
+	CImageAnime(filename, numAll, numX, numY, m_sizeX, m_sizeY, animeSpeed),
+	m_rotaSpeed(0)
+{
 	m_rotaSpeed = RotaSpeed;
-	info.m_loadFlg = true;
 }
 
-CBulletImage::~CBulletImage(){
-	free(m_images);
+CBulletImage::~CBulletImage()
+{
 }
 
 
 //---------------------------------------------------------------------------------
 //	フォント
 //---------------------------------------------------------------------------------
-CFont::CFont(const char* fontPath, int m_size /*= -1*/, int m_thick /*= -1*/, int fontType /*= DX_FONTTYPE_ANTIALIASING_EDGE_4X4*/){
+CFont::CFont(const char* fontPath, int m_size /*= -1*/, int m_thick /*= -1*/, int fontType /*= DX_FONTTYPE_ANTIALIASING_EDGE_4X4*/) : 
+	CResource(fontPath)
+{
 	m_font = -1;
 
 	LPCSTR font_path1 = fontPath; // 読み込むフォントファイルのパス
@@ -126,7 +146,7 @@ CFont::CFont(const char* fontPath, int m_size /*= -1*/, int m_thick /*= -1*/, in
 		assert(0);
 	}
 	m_font = CreateFontToHandle( "IPAゴシック" , m_size , m_thick , DX_FONTTYPE_ANTIALIASING_EDGE, -1, 1 ) ;
-	info.m_loadFlg = true;
+	m_loadFlg = true;
 }
 CFont::~CFont(){
 
@@ -143,55 +163,5 @@ CFont::~CFont(){
 //---------------------------------------------------------------------------------
 //	効果音
 //---------------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------------
-//	マネージャー
-//---------------------------------------------------------------------------------
-
-
-CResourceManager::CResourceManager(){
-
-}
-CResourceManager::~CResourceManager(){
-	//m_resource.clear();
-}
-
-int CResourceManager::Add(CResource* resource, const char* Name, int Number){
-	if(resource == nullptr){
-		return -1;
-	}
-	resource->SetInfo(Name, Number);
-	m_resource.push_back(resource);
-	int rtnIdx = (int)m_resource.size();
-	resource->SetIndex(rtnIdx);
-
-	return rtnIdx;
-}
-
-CResource* CResourceManager::GetResource(int number){
-	int size = (int)m_resource.size();
-	for(int i=0; i< size; i++){
-		CResource* p = (CResource*)(m_resource[i]);
-		if(p->info.m_number == number){
-			return p;
-		}
-	}
-	assert(0);
-	return nullptr;
-}
-
-CResource* CResourceManager::GetResource(const char* Name){
-	int size = (int)m_resource.size();
-	for(int i=0; i< size; i++){
-		CResource* p = (CResource*)(m_resource[i]);
-		int rtn = strcmp(p->info.m_name, Name);
-		if(rtn == 0){
-			return p;
-		}
-	}
-	assert(0);
-	return nullptr;
-}
 
 

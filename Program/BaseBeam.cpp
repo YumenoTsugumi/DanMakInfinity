@@ -89,10 +89,10 @@ CRect CBaseBeam::m_bigRect;
 //CResourceManager* CBaseBeam::m_imageManager = nullptr;
 
 
-CBaseBeam::CBaseBeam(CPos P, double angle, int IMGNO, int num /*= 128*/) {
+CBaseBeam::CBaseBeam(CPos P, double angle, int imageIndex1, int imageIndex2, int num /*= 128*/) {
 	//À•W, ‘¬“x, Šp“x, ’·‚³, ‘¾‚³, ”­ËŠÔŠu
 	Set(P, 10.0, angle, -1, -1, 1);
-	SetImage(IMGNO);
+	SetImage(imageIndex1, imageIndex2);
 
 	m_bulletTotalNum = num;
 
@@ -103,10 +103,10 @@ CBaseBeam::CBaseBeam(CPos P, double angle, int IMGNO, int num /*= 128*/) {
 
 	m_order = 0;
 }
-CBaseBeam::CBaseBeam(CPos P, double angle, const char* IMGNAME, int num /*= 128*/) {
+CBaseBeam::CBaseBeam(CPos P, double angle, const char* imageName1, const char* imageName2, int num /*= 128*/) {
 	//À•W, ‘¬“x, Šp“x, ’·‚³, ‘¾‚³, ”­ËŠÔŠu
 	Set(P, 10.0, angle, -1, -1, 1);
-	SetImage(IMGNAME);
+	SetImage(imageName1, imageName2);
 
 	m_bulletTotalNum = num;
 
@@ -118,12 +118,13 @@ CBaseBeam::CBaseBeam(CPos P, double angle, const char* IMGNAME, int num /*= 128*
 	m_order = 0;
 }
 
-void CBaseBeam::SetImage(int image) {
-	m_image = (CImageSet*)CGame::GetResource(image);
+void CBaseBeam::SetImage(int imageIndex1, int imageIndex2) {
+	m_imageStand = (CImage*)CGame::GetResource(imageIndex1);
+	m_imageLaser = (CImage*)CGame::GetResource(imageIndex2);
 }
-
-void CBaseBeam::SetImage(const char* ImageName) {
-	m_image = (CImageSet*)CGame::GetResource(ImageName);
+void CBaseBeam::SetImage(const char* imageName1, const char* imageName2) {
+	m_imageStand = (CImage*)CGame::GetResource(imageName1);
+	m_imageLaser = (CImage*)CGame::GetResource(imageName2);
 }
 
 
@@ -226,14 +227,10 @@ void CBaseBeam::Action() {
 void CBaseBeam::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
-	//GetImage
-	CImage* standImg = m_image->GetImage(0);
-	CImage* laserImg = m_image->GetImage(1);
-
 	//‘äÀ
 	double siz = 1.0 * m_removeSize;
-	CDxFunc::DrawRotaGraph(m_pos.x, m_pos.y, siz, 0.0, standImg->m_iamge);
-	CDxFunc::DrawRotaGraph(m_pos.x, m_pos.y, siz * 0.8, 0.0, standImg->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, siz, 0.0, m_imageStand->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, siz * 0.8, 0.0, m_imageLaser->m_iamge);
 
 	//íœ’†‚Å‚È‚¯‚ê‚Î—\ü‚ğ•\¦‚·‚é
 	if (m_removeNow == false) {
@@ -248,7 +245,7 @@ void CBaseBeam::Draw() {
 			double x, y;
 			x = m_pos.x + cos(m_drawAngle) * (double)i / 2 * m_speed;
 			y = m_pos.y + sin(m_drawAngle) * (double)i / 2 * m_speed;
-			CDxFunc::DrawRotaGraph(x, y, 0.12, m_drawAngle + 90.0 / CFunc::RAD, laserImg->m_iamge);
+			CDxFunc::MyDrawRotaGraph(x, y, 0.12, m_drawAngle + 90.0 / CFunc::RAD, m_imageLaser->m_iamge);
 		}
 	}
 
@@ -258,7 +255,7 @@ void CBaseBeam::Draw() {
 			double bure = CFunc::RandF(-5, 5) / CFunc::RAD;
 			//íœ’†‚¾‚Æ‚¾‚ñ‚¾‚ñ¬‚³‚­‚·‚é
 			double siz = 1.0 * m_removeSize;
-			CDxFunc::DrawRotaGraph(m_bullet[i]->m_pos, siz, m_drawAngle + 90.0 / CFunc::RAD + bure, laserImg->m_iamge);
+			CDxFunc::MyDrawRotaGraph(m_bullet[i]->m_pos, siz, m_drawAngle + 90.0 / CFunc::RAD + bure, m_imageLaser->m_iamge);
 		}
 	}
 

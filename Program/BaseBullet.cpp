@@ -169,7 +169,7 @@ void CBaseBullet::Draw(){
 		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
 	//•`‰æ
-	CDxFunc::DrawRotaGraph(m_pos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	CDxFunc::MyDrawRotaGraph(m_pos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
@@ -295,7 +295,7 @@ void CBaseBullet::SetImageInfo(CBulletImage* bulletImage){
 	m_imageInfo.m_animeNum = bulletImage->m_num;
 	m_imageInfo.m_animePos = 0;
 	m_imageInfo.m_animeSpeed = bulletImage->m_animeSpeed;
-	m_imageInfo.m_imageNo = bulletImage->info.m_index;
+	m_imageInfo.m_imageNo = bulletImage->m_index;
 
 	if(bulletImage->m_rotaSpeed == 0.0){
 		m_imageInfo.m_rotationFlg = false;
