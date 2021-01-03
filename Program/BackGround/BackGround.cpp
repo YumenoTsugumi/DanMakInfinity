@@ -32,20 +32,20 @@ CBackGroundPatternA::CBackGroundPatternA()
 	m_imageFarwaySpace = (CImage*)CGame::GetResource(fileNameSpaceBG[spaceBGIndex]);
 	m_scrollFarwayY = 0.4;
 	if (CFunc::RandI(0, 1)) {
-		m_posSpaceFarwayY = CPos(400 - (1000 - 500), 300 - (1000 - 300));
+		m_posSpaceFarwayY = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
 	}
 	else {
-		m_posSpaceFarwayY = CPos(400 + (1000 - 500), 300 - (1000 - 300));
+		m_posSpaceFarwayY = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
 	}
 
 	int spaceSpaceBaseIndex = CFunc::RandI(0, 6);
 	m_imageNearSpace = (CImage*)CGame::GetResource(fileNameSpaceBase[spaceSpaceBaseIndex]);
 	m_scrollNearY = m_scrollFarwayY * 0.5;
 	if (CFunc::RandI(0, 1)) {
-		m_posSpaceNear = CPos(400 - (1000 - 500), 300 - (1000 - 300));
+		m_posSpaceNear = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
 	}
 	else {
-		m_posSpaceNear = CPos(400 + (1000 - 500), 300 - (1000 - 300));
+		m_posSpaceNear = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
 	}
 
 
@@ -61,8 +61,6 @@ void CBackGroundPatternA::Action()
 	m_posSpaceFarwayY.y += m_scrollFarwayY;
 	m_posSpaceNear.y += m_scrollNearY;
 
-
-	m_effectManager.Action();
 }
 
 void CBackGroundPatternA::Draw() {
@@ -79,8 +77,6 @@ void CBackGroundPatternA::Draw() {
 	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
 	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y - 2000.0 + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageNearSpace->m_iamge, TRUE, FALSE);
 
-
-	m_effectManager.Draw();
 }
 
 void CBackGroundPatternA::SetInitPlayerPos(CPos& initPos) {

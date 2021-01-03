@@ -49,6 +49,48 @@ public:
 		x /= P.x;
 		y /= P.y;
 	}
+
+	// https://qiita.com/Reputeless/items/96226cfe1282a014b147 参考
+	CPos operator +() const
+	{
+		return *this;
+	}
+
+	CPos operator -() const
+	{
+		return{ -x, -y };
+	}
+
+	CPos operator +(const CPos& other) const // 2項 +
+	{
+		return{ x + other.x, y + other.y };
+	}
+
+	CPos operator -(const CPos& other) const // 2項 -
+	{
+		return{ x - other.x, y - other.y };
+	}
+
+	CPos operator *(double s) const // 2項 *
+	{
+		return{ x * s, y * s };
+	}
+
+	CPos operator /(double s) const // 2項 /
+	{
+		return{ x / s, y / s };
+	}
+
+
+
+
+
+
+
+
+
+
+
 	void Unit(){
 		double len;
 		len = sqrt(x*x + y*y);
@@ -72,6 +114,7 @@ public:
 	static const double RAD;
 	static const double TOL1;
 	static const double TOL2;
+	static const double TOLZERO;
 	static const int MAXSTRING;
 
 	//---------------------------------
@@ -134,7 +177,7 @@ public:
 	//@param DIVIDE 分解度
 	//@return 座標リスト
 	static std::vector<CPos> GetHermiteCurvePointList(
-			CPos *p0, CPos *v0, CPos *p1, CPos *v1,
+			const CPos& p0, const CPos& v0, const CPos& p1, const CPos& v1,
 			int DIVIDE=16);
 	//ベジェ曲線の座標リストを取得
 	//@param p0 始点	//@param p1 制御点１
@@ -142,7 +185,7 @@ public:
 	//@param DIVIDE 分解度
 	//@return 座標リスト
 	static std::vector<CPos> GetBezierCurvePointList(
-			CPos *p0, CPos *p1, CPos *p2, CPos *p3,
+			const CPos& p0, const CPos& p1, const CPos& p2, const CPos& p3,
 			int DIVIDE=16);
 	//Bスプライン曲線の座標リストを取得
 	//@param p0 始点	//@param p1 制御点１
@@ -150,8 +193,12 @@ public:
 	//@param DIVIDE 分解度
 	//@return 座標リスト
 	static std::vector<CPos> GetBSplineCurvePointList(
-			CPos *p0, CPos *p1, CPos *p2, CPos *p3,
+			const CPos& p0, const CPos& p1, const CPos& p2, const CPos& p3,
 			int DIVIDE=16);
+
+	// 連続するCPos列の距離を計測する
+	static double GetCurvePointListDistance(const std::vector<CPos>& posArray);
+
 
 	//P2に対して...不明
 	//P1は結果
@@ -165,6 +212,12 @@ public:
 	//1~2を結ぶ線分と3までの最近線の距離
 	static double GetDistance(double x1, double y1, double x2, double y2, double x3, double y3);
 	static double GetDistance(CPos p1, CPos p2, CPos p3);
+
+	//1ベクトルの角度
+	static double GetOneVectorAngle(CPos);
+	static double GetOneVectorAngle(double x1, double y1);
+	static double GetOneVectorAngleDeg(CPos);
+	static double GetOneVectorAngleDeg(double x1, double y1);
 
 	//2点の角度
 	static double GetTwoPointAngle(CPos, CPos);
@@ -204,3 +257,12 @@ public:
 	CPos rightDown;	//右下座標
 
 };
+
+// http://pyopyopyo.hatenablog.com/entry/2019/02/08/102456　参考
+template <typename ... Args> std::string MyFormat(const std::string& fmt, Args ... args)
+{
+	size_t len = std::snprintf(nullptr, 0, fmt.c_str(), args ...);
+	std::vector<char> buf(len + 1);
+	std::snprintf(&buf[0], len + 1, fmt.c_str(), args ...);
+	return std::string(&buf[0], &buf[0] + len);
+}

@@ -17,7 +17,7 @@ void CPlayer::Init()
 	m_pos.x = 400;
 	m_pos.y = 500;
 
-	m_playerImage = (CImage*)CGame::GetResource(1000);
+	m_playerImage = (CImage*)CGame::GetResource(999);
 }
 
 void CPlayer::Action(CInputAllStatus* input)

@@ -12,17 +12,20 @@ const int MAX_RANK = 100;
 
 class CBaseLauncher {
 public:
-	CBaseLauncher(int rank, const CPos& pos);
+	CBaseLauncher(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CBaseLauncher();
 
-	virtual void Action(const CPos& newPos);
+	virtual void Action(const CPos& newEnemyPos);
 
 	//弾幕管理をしているマネージャ
 	static CBulletManager* m_bulletManager;
 	static void SetBulletManagerPointer(CBulletManager* Manager);
 	static CBeamManager* m_beamManager;
 	static void SetBeamManagerPointer(CBeamManager* Manager);
-	CPos m_pos; // 発射口の座標
+
+	CPos m_enemyPos; // 敵の座標
+	CPos m_relativePos; // 敵の座標を中心としたときの発射口の座標
+
 	int m_rank; // 1~100を想定
 protected:
 	int m_count; // 発射のタイミングのカウンター
@@ -48,20 +51,20 @@ protected:
 
 //class CLauncher001 : public CBaseLauncher {
 //public:
-//	CLauncher001(int rank, const CPos& pos);
+//	CLauncher001(int rank, const CPos& enemyPos, const CPos& relativePos);
 //	virtual ~CLauncher001() override;
-//	virtual void Action(const CPos& newPos) override;
+//	virtual void Action(const CPos& newEnemyPos) override;
 //};
 #define LANCHERHEADER(ClassName) \
 class ClassName : public CBaseLauncher { \
 public:  \
-	ClassName(int rank, const CPos& pos);  \
+	ClassName(int rank, const CPos& enemyPos, const CPos& relativePos);  \
 	virtual ~ClassName() override;  \
-	virtual void Action(const CPos& newPos) override;  \
+	virtual void Action(const CPos& newEnemyPos) override;  \
 };  \
 
-////CLauncher001::CLauncher001(int rank, const CPos& pos) : CBaseLauncher(rank, pos){}
+////CLauncher001::CLauncher001(int rank, const CPos& enemyPos, const CPos& relativePos) : CBaseLauncher(rank, enemyPos, relativePos){}
 ////CLauncher001::~CLauncher001(){}
 #define LANCHERCPP(ClassName) \
-ClassName::ClassName(int rank, const CPos& pos) : CBaseLauncher(rank, pos){}; \
+ClassName::ClassName(int rank, const CPos& enemyPos, const CPos& relativePos) : CBaseLauncher(rank, enemyPos, relativePos){}; \
 ClassName::~ClassName(){}; \

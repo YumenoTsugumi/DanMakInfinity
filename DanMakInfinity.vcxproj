@@ -156,6 +156,7 @@
     <ClCompile Include="Program\CustomBullet.cpp" />
     <ClCompile Include="Program\DXFunc.cpp" />
     <ClCompile Include="Program\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="Program\Enemy\BehaviorComponent.cpp" />
     <ClCompile Include="Program\Enemy\Enemy000.cpp" />
     <ClCompile Include="Program\Enemy\MoveComponent.cpp" />
     <ClCompile Include="Program\Func.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Program\CustomBullet.h" />
     <ClInclude Include="Program\DXFunc.h" />
     <ClInclude Include="Program\Enemy\BaseEnemy.h" />
+    <ClInclude Include="Program\Enemy\BehaviorComponent.h" />
     <ClInclude Include="Program\Enemy\Enemy000.h" />
     <ClInclude Include="Program\Enemy\MoveComponent.h" />
     <ClInclude Include="Program\Func.h" />

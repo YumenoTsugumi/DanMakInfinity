@@ -12,10 +12,11 @@ void CBaseLauncher::SetBeamManagerPointer(CBeamManager* manager){
 }
 
 
-CBaseLauncher::CBaseLauncher(int rank, const CPos& pos) :
+CBaseLauncher::CBaseLauncher(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	m_rank(rank),
 	m_count(0),
-	m_pos(pos)
+	m_enemyPos(enemyPos),
+	m_relativePos(relativePos)
 {
 	memset(iVal, 0, sizeof(iVal));
 	memset(dVal, 0, sizeof(dVal));
@@ -27,8 +28,8 @@ CBaseLauncher::~CBaseLauncher() {
 };
 
 
-void CBaseLauncher::Action(const CPos& newPos) {
-	m_pos = newPos;
+void CBaseLauncher::Action(const CPos& newEnemyPos) {
+	m_enemyPos = newEnemyPos;
 }
 
 

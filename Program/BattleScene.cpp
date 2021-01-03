@@ -10,7 +10,7 @@
 #include "HomingBullet.h"
 
 #include "Enemy000.h"
-#include "MoveComponent.h"
+
 
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
@@ -31,7 +31,7 @@ CBattleScene::~CBattleScene(){
 
 }
 
-void CBattleScene::Init(CGame* gameP){
+void CBattleScene::Init(CGame* gameP) {
 	m_player.Init();
 
 	m_game = gameP;
@@ -42,46 +42,22 @@ void CBattleScene::Init(CGame* gameP){
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
 
 
-	//普通に発射
-	m_pos = CPos(300, 300);
-	CPos vel(1.0, 1.0);
-	double ang = 0.0;
-	//m_beam1 = new CBaseBeam(m_pos, ang, 100);
-	//m_beamManeger.Add(m_beam1);
 
-	//for (int ii = 0; ii < 11; ii++) {
-	//	CPos pos(50 + ii*70, 100);
-	//	m_launcher.push_back(new CLauncher000(ii * 10, pos));
+	//// 000敵
+	//for(int ii=0;ii<6;ii++)
+	//{
+	//	double x = CFunc::RandF(50, 300);
+	//	double y = CFunc::RandF(-100, -10);
+	//	CPos pos1(x, y);
+	//	CEnemy000* e1 = new CEnemy000(pos1);
+	//	m_enemys.push_back(e1);
 	//}
-	//for (int ii = 0; ii < 10; ii++) {
-	//	CPos pos(50 + ii * 70, 200);
-	//	m_launcher.push_back(new CLauncher001(ii * 10, pos));
-	//}
-	//for (int ii = 0; ii < 10; ii++) {
-	//	CPos pos(50 + ii * 70, 300);
-	//	m_launcher.push_back(new CLauncher010(ii * 10, pos));
-	//}
-	CPos pos(50 + 300, 300);
-	m_launcher.push_back(new CLauncher010(0, pos));
 
+	// 001敵
+	for(int ii=0;ii<6;ii++)
 	{
-		CPos pos1(0, 100);
-		CEnemy000* e1 = new CEnemy000(pos1);
-		e1->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 500));
-		e1->AddLauncher(CPos(0, 0), new CLauncher010(0, pos1));
-		m_enemys.push_back(e1);
-
-		CPos pos2(-50, 100);
-		CEnemy000* e2 = new CEnemy000(pos2);
-		e2->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 450));
-		e2->AddLauncher(CPos(0, 0), new CLauncher010(0, pos2));
+		CEnemy001* e2 = new CEnemy001(CPos(-100, -100), ii);
 		m_enemys.push_back(e2);
-
-		CPos pos3(-100, 100);
-		CEnemy000* e3 = new CEnemy000(pos3);
-		e3->SetMoveComponent(new CCVLM_DistanceStop(0.0, 2.5, 400));
-		e3->AddLauncher(CPos(0, 0), new CLauncher010(0, pos3));
-		m_enemys.push_back(e3);
 	}
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
@@ -89,7 +65,7 @@ void CBattleScene::Init(CGame* gameP){
 
 void addFuncA(CCustomBullet* m_bullet) {
 	for (int i = 0; i < 5; i++) {
-		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Abs, m_bullet->m_pos, 10, 90 + -20 + i * 10, 0, 0.10, 10, 0,10));
+		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Abs, m_bullet->m_pos, 10.0, 90.0 + -20.0 + i * 10.0, 0, 0.10, 10, 0,10));
 	}
 }
 void addFuncB(CCustomBullet* m_bullet) {
@@ -229,21 +205,24 @@ void CBattleScene::Main(CInputAllStatus *input){
 	////どんな状態でもアクションする処理
 	m_bg.Action();
 	m_player.Action(input);
+	for (CBaseEnemy* enemy : m_enemys) {
+		enemy->Action();
+	}
 	m_bulletManeger.Action();
 	m_beamManeger.Action();
 	m_bg.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos);
 
 
-
 	m_bg.Draw();
 	m_player.Draw();
+	for (CBaseEnemy* enemy : m_enemys) {
+		enemy->Draw();
+		enemy->DebugPrint();
+	}
 	m_bulletManeger.Draw();
 	m_beamManeger.Draw();
 
-	for (CBaseEnemy* enemy : m_enemys) {
-		enemy->Action();
-		enemy->Draw();
-	}
+
 
 }

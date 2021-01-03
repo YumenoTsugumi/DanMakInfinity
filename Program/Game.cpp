@@ -100,7 +100,7 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
 
-	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 1000);
+	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
 	//画像
 	//レーザー用の画像読み込み
@@ -121,39 +121,60 @@ void CGame::ImageLoadByThread()
 
 	auto start = std::chrono::system_clock::now();      // 計測スタート時刻を保存
 
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_00.png"), "X_bg_space_00", 10000);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_01.png"), "X_bg_space_01", 10001);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_02.png"), "X_bg_space_02", 10002);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_03.png"), "X_bg_space_03", 10003);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_04.png"), "X_bg_space_04", 10004);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_05.png"), "X_bg_space_05", 10005);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_06.png"), "X_bg_space_06", 10006);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_07.png"), "X_bg_space_07", 10007);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_08.png"), "X_bg_space_08", 10008);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_09.png"), "X_bg_space_09", 10009);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_10.png"), "X_bg_space_10", 10010);
+	// 背景
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_00.jpg"), "X_bg_space_00", 10000);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_01.jpg"), "X_bg_space_01", 10001);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_02.jpg"), "X_bg_space_02", 10002);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_03.jpg"), "X_bg_space_03", 10003);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_04.jpg"), "X_bg_space_04", 10004);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_05.jpg"), "X_bg_space_05", 10005);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_06.jpg"), "X_bg_space_06", 10006);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_07.jpg"), "X_bg_space_07", 10007);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_08.jpg"), "X_bg_space_08", 10008);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_09.jpg"), "X_bg_space_09", 10009);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_10.jpg"), "X_bg_space_10", 10010);
 
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b00.png"), "X_bg_space_b00", 10011);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b01.png"), "X_bg_space_b01", 10012);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b02.png"), "X_bg_space_b02", 10013);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b03.png"), "X_bg_space_b03", 10014);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b04.png"), "X_bg_space_b04", 10015);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_space_b05.png"), "X_bg_space_b05", 10016);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b00.jpg"), "X_bg_space_b00", 10011);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b01.jpg"), "X_bg_space_b01", 10012);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b02.jpg"), "X_bg_space_b02", 10013);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b03.jpg"), "X_bg_space_b03", 10014);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b04.jpg"), "X_bg_space_b04", 10015);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_space_b05.jpg"), "X_bg_space_b05", 10016);
+
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_00.png"), "bg_planet_00", 10100);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_01.png"), "bg_planet_01", 10101);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_02.png"), "bg_planet_02", 10102);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_03.png"), "bg_planet_03", 10103);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_04.png"), "bg_planet_04", 10104);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_05.png"), "bg_planet_05", 10105);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_06.png"), "bg_planet_06", 10106);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_07.png"), "bg_planet_07", 10107);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_08.png"), "bg_planet_08", 10108);
+	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_09.png"), "bg_planet_09", 10109);
 
 
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_00.png"), "bg_planet_00", 10100);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_01.png"), "bg_planet_01", 10101);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_02.png"), "bg_planet_02", 10102);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_03.png"), "bg_planet_03", 10103);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_04.png"), "bg_planet_04", 10104);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_05.png"), "bg_planet_05", 10105);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_06.png"), "bg_planet_06", 10106);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_07.png"), "bg_planet_07", 10107);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_08.png"), "bg_planet_08", 10108);
-	m_resourceManager.Add(new CImage("ResourceX\\bg_planet_09.png"), "bg_planet_09", 10109);
-
-
-
+	// 敵
+	for (int ii = 0; ii < 24; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\blue\\illumBlue%02d.png", ii + 1);
+		std::string format2 = MyFormat("enemy%02db", ii + 1);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20000 + ii);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumBlue01.png"), "enemy01b", 20001);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumBlue24.png"), "enemy24b", 20024);
+	}
+	for (int ii = 0; ii < 24; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\green\\illumGreen%02d.png", ii + 1);
+		std::string format2 = MyFormat("enemy%02dg", ii + 1);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20050 + ii);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumGreen01.png"), "enemy01g", 20051);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumGreen24.png"), "enemy24g", 20074);
+	}
+	for (int ii = 0; ii < 24; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\illumRed%02d.png", ii + 1);
+		std::string format2 = MyFormat("enemy%02dr", ii + 1);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20100 + ii);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed01.png"), "enemy01r", 20101);
+		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed24.png"), "enemy24r", 20124);
+	}
 
 	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存
 	auto dur = end - start;        // 要した時間を計算

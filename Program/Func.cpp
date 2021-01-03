@@ -8,6 +8,7 @@ const double CFunc::PI = 3.1415926535897932384626433832795;
 const double CFunc::RAD = 57.295779513082320876798154814105;
 const double CFunc::TOL1 = 0.01;
 const double CFunc::TOL2 = 0.1 / CFunc::RAD;
+const double CFunc::TOLZERO = 0.0000001;
 const int CFunc::MAXSTRING = 256;
 
 double CFunc::Square(double X) {
@@ -197,6 +198,27 @@ double CFunc::GetNearAngle(double targetAngle, double nearAngle) {
 	return returnAng;
 }
 
+
+//1ベクトルの角度
+double CFunc::GetOneVectorAngle(CPos p)
+{
+	return GetOneVectorAngle(p.x, p.y);
+}
+double CFunc::GetOneVectorAngle(double x1, double y1)
+{
+	return atan2(y1, x1);
+}
+
+double CFunc::GetOneVectorAngleDeg(CPos p)
+{
+	return GetOneVectorAngle(p.x, p.y) * CFunc::RAD;
+}
+double CFunc::GetOneVectorAngleDeg(double x1, double y1)
+{
+	return GetOneVectorAngle(x1, y1) * CFunc::RAD;
+}
+
+
 double CFunc::GetTwoPointAngle(CPos p1, CPos p2) {
 	return GetTwoPointAngle(p1.x, p1.y, p2.x, p2.y);
 }
@@ -215,7 +237,7 @@ double CFunc::GetTwoPointAngle(double x1, double y1, double x2, double y2) {
  * @return 座標リスト
  */
 std::vector<CPos> CFunc::GetHermiteCurvePointList(
-	CPos* p0, CPos* v0, CPos* p1, CPos* v1,
+	const CPos&  p0, const CPos&  v0, const CPos&  p1, const CPos&  v1,
 	int DIVIDE/*=16*/) {
 	std::vector<CPos> pList;
 	for (int i = 0; i < DIVIDE; i++) {
@@ -227,8 +249,8 @@ std::vector<CPos> CFunc::GetHermiteCurvePointList(
 		double mV0 = u3 - 2 * u2 + u1;
 		double mP1 = -2 * u3 + 3 * u2;
 		double mV1 = u3 - u2;
-		pList.push_back(CPos(p0->x * mP0 + v0->x * mV0 + p1->x * mP1 + v1->x * mV1,
-			p0->y * mP0 + v0->y * mV0 + p1->y * mP1 + v1->y * mV1));
+		pList.push_back(CPos(p0.x * mP0 + v0.x * mV0 + p1.x * mP1 + v1.x * mV1,
+			p0.y * mP0 + v0.y * mV0 + p1.y * mP1 + v1.y * mV1));
 	}
 	return pList;
 }
@@ -246,7 +268,7 @@ std::vector<CPos> CFunc::GetHermiteCurvePointList(
  * @return 座標リスト
  */
 std::vector<CPos> CFunc::GetBezierCurvePointList(
-	CPos* p0, CPos* p1, CPos* p2, CPos* p3,
+	const CPos&  p0, const CPos&  p1, const CPos&  p2, const CPos&  p3,
 	int DIVIDE/*=16*/) {
 	std::vector<CPos> pList;
 	for (int i = 0; i < DIVIDE; i++) {
@@ -256,8 +278,8 @@ std::vector<CPos> CFunc::GetBezierCurvePointList(
 		double mP1 = 3 * u * (1 - u) * (1 - u);
 		double mP2 = 3 * u * u * (1 - u);
 		double mP3 = u * u * u;
-		pList.push_back(CPos(p0->x * mP0 + p1->x * mP1 + p2->x * mP2 + p3->x * mP3,
-			p0->y * mP0 + p1->y * mP1 + p2->y * mP2 + p3->y * mP3));
+		pList.push_back(CPos(p0.x * mP0 + p1.x * mP1 + p2.x * mP2 + p3.x * mP3,
+			p0.y * mP0 + p1.y * mP1 + p2.y * mP2 + p3.y * mP3));
 	}
 	return pList;
 }
@@ -273,7 +295,7 @@ std::vector<CPos> CFunc::GetBezierCurvePointList(
  * @return 座標リスト
  */
 std::vector<CPos> CFunc::GetBSplineCurvePointList(
-	CPos* p0, CPos* p1, CPos* p2, CPos* p3,
+	const CPos&  p0, const CPos&  p1, const CPos&  p2, const CPos&  p3,
 	int DIVIDE/*=16*/) {
 	std::vector<CPos> pList;
 	for (int i = 0; i < DIVIDE; i++) {
@@ -285,10 +307,22 @@ std::vector<CPos> CFunc::GetBSplineCurvePointList(
 		double mP1 = (3 * u3 - 6 * u2 + 4) * 1.0 / 6;
 		double mP2 = (-3 * u3 + 3 * u2 + 3 * u1 + 1) * 1.0 / 6;
 		double mP3 = (1 * u3) * 1.0 / 6;
-		pList.push_back(CPos(p0->x * mP0 + p1->x * mP1 + p2->x * mP2 + p3->x * mP3,
-			p0->y * mP0 + p1->y * mP1 + p2->y * mP2 + p3->y * mP3));
+		pList.push_back(CPos(p0.x * mP0 + p1.x * mP1 + p2.x * mP2 + p3.x * mP3,
+			p0.y * mP0 + p1.y * mP1 + p2.y * mP2 + p3.y * mP3));
 	}
 	return pList;
+}
+
+// 連続するCPos列の距離を計測する
+double CFunc::GetCurvePointListDistance(const std::vector<CPos>& posArray)
+{
+	double dist = 0;
+	for (int ii = 0; ii < posArray.size() -1; ii++) {
+		CPos p1 = posArray[ii];
+		CPos p2 = posArray[ii+1];
+		dist += GetDistanceSqrt(p1, p2);
+	}
+	return dist;
 }
 
 
@@ -324,3 +358,5 @@ void CRect::Set(const double& x1, const double& y1, const double& x2, const doub
 	leftUp = p1;	//左上座標
 	rightDown = p2;	//右下座標
 }
+
+

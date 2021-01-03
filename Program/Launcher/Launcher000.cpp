@@ -6,16 +6,16 @@
 //	速度が速くなる		5～8
 //	連弾になる			1~3弾
 LANCHERCPP(CLauncher000)
-void CLauncher000::Action(const CPos& newPos)
+void CLauncher000::Action(const CPos& newEnemyPos)
 {
-	__super::Action(newPos);
+	__super::Action(newEnemyPos);
 
 	int span = (int)(15.0 - 8.0 * RankRatio());
 	double speed = 5.0 + 3.0 * RankRatio();
 	int loop = (int)(1 + 2 * RankRatio());
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 0,0);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 0,0);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
 		m_count = 0;
@@ -40,9 +40,9 @@ void CLauncher001::Action(const CPos& newPos)
 	int loop = (int)(1 + 2 * RankRatio());
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
-			CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), -15.0, 0, 0, 0, 0, 0);
-			CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), 0.0, 0, 0, 0, 0, 0);
-			CBaseBullet* b3 = new CBaseBullet(EDirType::Player, m_pos, SpeedRange(speed, ii, loop), 15.0, 0, 0, 0, 0, 0);
+			CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii, loop), -15.0, 0, 0, 0, 0, 0);
+			CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii, loop), 0.0, 0, 0, 0, 0, 0);
+			CBaseBullet* b3 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii, loop), 15.0, 0, 0, 0, 0, 0);
 			CBaseLauncher::m_bulletManager->Add(b1);
 			CBaseLauncher::m_bulletManager->Add(b2);
 			CBaseLauncher::m_bulletManager->Add(b3);

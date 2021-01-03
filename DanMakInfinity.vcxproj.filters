@@ -99,6 +99,9 @@
     <ClCompile Include="Program\BackGround\BackGround.cpp">
       <Filter>ソース ファイル\BackGround</Filter>
     </ClCompile>
+    <ClCompile Include="Program\Enemy\BehaviorComponent.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program\BulletBase.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Program\BackGround\BackGround.h">
       <Filter>ヘッダー ファイル\BackGorund</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\BehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
