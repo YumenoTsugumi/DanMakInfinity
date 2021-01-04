@@ -40,9 +40,9 @@ void CGame::Init()
 	m_input.SetKeyboard(INPUT_DEF_ENTER, INPUT_KEY_Z);
 	m_input.SetKeyboard(INPUT_DEF_CANCEL, INPUT_KEY_X);
 
-
-	std::thread th(CGame::ImageLoadByThread);
-	th.detach();
+	CGame::ImageLoadByThread(); // 不具合が多いので普通に読み込む
+	//std::thread th(CGame::ImageLoadByThread);
+	//th.detach();
 
 	ImageLoad();
 
@@ -100,6 +100,7 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
 
+	m_resourceManager.Add(new CBulletImage("ResourceX\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
 	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
 	//画像
@@ -175,6 +176,40 @@ void CGame::ImageLoadByThread()
 		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed01.png"), "enemy01r", 20101);
 		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed24.png"), "enemy24r", 20124);
 	}
+
+	{
+		std::vector<std::string> filenames;
+		for (int ii = 0; ii < 35; ii++) {
+			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 2g\\FireballExplosion2_%04d.png", ii);
+			filenames.push_back(format1);
+		}
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion2", 20500);
+	}
+	{
+		std::vector<std::string> filenames;
+		for (int ii = 0; ii < 57; ii++) {
+			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 3g\\FireballExplosion3_%04d.png", ii);
+			filenames.push_back(format1);
+		}
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion3", 20501);
+	}
+	{
+		std::vector<std::string> filenames;
+		for (int ii = 0; ii < 47; ii++) {
+			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 7g\\FireballExplosion7_%04d.png", ii);
+			filenames.push_back(format1);
+		}
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion7", 20502);
+	}
+	{
+		std::vector<std::string> filenames;
+		for (int ii = 0; ii < 48; ii++) {
+			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 10g\\FireballExplosion10_%04d.png", ii);
+			filenames.push_back(format1);
+		}
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion10", 20503);
+	}
+
 
 	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存
 	auto dur = end - start;        // 要した時間を計算

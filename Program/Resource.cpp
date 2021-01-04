@@ -95,11 +95,29 @@ CImages::CImages(const char* filename, int numAll, int numX, int numY, int sizeX
 	m_num = numAll;
 	m_numX = numX;
 	m_numY = numY;
-	m_sizeX = m_sizeX;
-	m_sizeY = m_sizeY;
+	m_sizeX = sizeX;
+	m_sizeY = sizeY;
 
 	m_loadFlg = true;
 }
+CImages::CImages(const std::vector<std::string>& filenames, int sizeX, int sizeY) :
+	CResource("")
+{
+
+	m_images = (int*)malloc(sizeof(int*) * (filenames.size()));
+	for (int ii = 0; ii < filenames.size(); ii++) {
+		m_images[ii] = LoadGraph(filenames[ii].c_str());
+	}
+
+	m_num = filenames.size();
+	m_numX = filenames.size();
+	m_numY = 1;
+	m_sizeX = sizeX;
+	m_sizeY = sizeY;
+
+	m_loadFlg = true;
+}
+
 
 CImages::~CImages(){
 	free(m_images);
@@ -108,11 +126,18 @@ CImages::~CImages(){
 //---------------------------------------------------------------------------------
 //	アニメーションのイメージ
 //---------------------------------------------------------------------------------
-CImageAnime::CImageAnime(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed) : 
-	CImages(filename, numAll, numX, numY, m_sizeX, m_sizeY) , 
-	m_animeSpeed(0)
+CImageAnime::CImageAnime(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed) : 
+	CImages(filename, numAll, numX, numY, sizeX, sizeY) , 
+	m_animeSpeed(animeSpeed)
 {
-	m_animeSpeed = animeSpeed;
+
+}
+
+CImageAnime::CImageAnime(const std::vector<std::string>& filenames, int sizeX, int sizeY, int animeSpeed) :
+	CImages(filenames, sizeX, sizeY),
+	m_animeSpeed(animeSpeed)
+{
+
 }
 
 CImageAnime::~CImageAnime(){
@@ -120,11 +145,15 @@ CImageAnime::~CImageAnime(){
 //---------------------------------------------------------------------------------
 //	弾のイメージ
 //---------------------------------------------------------------------------------
-CBulletImage::CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed, double RotaSpeed) : 
-	CImageAnime(filename, numAll, numX, numY, m_sizeX, m_sizeY, animeSpeed),
-	m_rotaSpeed(0)
+CBulletImage::CBulletImage(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed, double rotaSpeed) :
+	CImageAnime(filename, numAll, numX, numY, sizeX, sizeY, animeSpeed),
+	m_rotaSpeed(rotaSpeed)
 {
-	m_rotaSpeed = RotaSpeed;
+}
+CBulletImage::CBulletImage(const std::vector<std::string>& filenames, int sizeX, int sizeY, int animeSpeed, double rotaSpeed) :
+	CImageAnime(filenames, sizeX, sizeY, animeSpeed),
+	m_rotaSpeed(rotaSpeed)
+{
 }
 
 CBulletImage::~CBulletImage()

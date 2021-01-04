@@ -187,6 +187,9 @@ public:
 	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 	//デストラクタ
 	virtual ~CBaseBullet();
+
+	// 弾が何かに当たった時
+	void virtual Hit();
 };
 
 

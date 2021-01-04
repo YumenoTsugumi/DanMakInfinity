@@ -33,12 +33,12 @@ CEffectManager::~CEffectManager(){
 CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
 						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image){
 	Set();
-	//SetImage(image);
+	SetImage(image);
 }
 CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
 						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
 	Set();
-	//SetImage(ImageName);
+	SetImage(ImageName);
 }
 
 CBaseEffect::~CBaseEffect(){

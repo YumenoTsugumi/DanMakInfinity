@@ -110,6 +110,11 @@ CBezierBehavior::CBezierBehavior(const CPos& st, const CPos& p1, const CPos& p2,
 {
 
 }
+CBezierBehavior::CBezierBehavior(const std::vector<CPos>& posArray, double speed) : CBehaviorComponent(),
+m_move(posArray, speed)
+{
+}
+
 CBezierBehavior::~CBezierBehavior()
 {
 

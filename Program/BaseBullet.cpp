@@ -133,9 +133,9 @@ CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, doub
 	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
 	SetImage(image);
 }
-CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName){
+CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName){
 	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
-	SetImage(ImageName);
+	SetImage(imageName);
 }
 
 
@@ -322,3 +322,8 @@ void CBaseBullet::SetBlendType(int BlendType){
 	m_blendType = BlendType;
 }
 
+// ’e‚ª‰½‚©‚É“–‚½‚Á‚½Žž
+void CBaseBullet::Hit()
+{
+	m_removeFlg = true;
+}

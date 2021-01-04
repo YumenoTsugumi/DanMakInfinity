@@ -69,7 +69,8 @@ public:
 //---------------------------------------------------------------------------------
 class CImages : public CResource{
 public:
-	CImages(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY);
+	CImages(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY);
+	CImages(const std::vector<std::string>& filenames, int sizeX, int sizeY);
 	virtual ~CImages();
 
 	int *m_images;
@@ -77,12 +78,14 @@ public:
 	int m_numX, m_numY;
 	int m_sizeX, m_sizeY;
 };
+
 //---------------------------------------------------------------------------------
 // アニメーションのイメージ
 //---------------------------------------------------------------------------------
 class CImageAnime : public CImages{
 public:
-	CImageAnime(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int m_animeSpeed);
+	CImageAnime(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed);
+	CImageAnime(const std::vector<std::string>& filenames, int sizeX, int sizeY, int animeSpeed);
 	virtual ~CImageAnime();
 
 	int m_animeSpeed;
@@ -92,7 +95,8 @@ public:
 //---------------------------------------------------------------------------------
 class CBulletImage : public CImageAnime{
 public:
-	CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int m_animeSpeed, double RotaSpeed);
+	CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed, double rotaSpeed);
+	CBulletImage(const std::vector<std::string>& filename, int sizeX, int sizeY, int animeSpeed, double rotaSpeed);
 	virtual ~CBulletImage();
 
 	double m_rotaSpeed;

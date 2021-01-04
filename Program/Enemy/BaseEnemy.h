@@ -7,6 +7,35 @@
 #include <vector>
 #include "Game.h"
 
+class CBaseEnemy;
+//敵を管理するクラス
+class CEnemyManager {
+public:
+
+	//コンストラクタ
+	//敵の最大数を設定する
+	//デフォルト1024
+	CEnemyManager(int m_num = 64);
+	virtual ~CEnemyManager();
+
+	//最大数	64ぐらいあれば弾幕できるんじゃないか
+	//コンストラクタで設定後は変更不可
+	int m_enemyTotalNum;
+
+	//弾の挿入位置	徐々にずらし弾が重ならないようにするため
+	int m_order;
+
+	//弾データ	弾クラスを代入する
+	//ポインタを入れる箱
+	CBaseEnemy** m_enemy;
+
+	virtual void Action();
+	virtual void Draw();
+
+	int Add(CBaseEnemy* enemy);
+};
+
+
 enum EnemyType {
 	GroundS = 0, // 地上小型機
 	GroundM, // 地上中型機
@@ -35,21 +64,25 @@ public:
 	virtual void Action();
 	virtual void Draw();
 	virtual void Shot();
-	virtual void Damaged(); // ダメージを受けたとき
+	virtual void Damaged(int damage); // ダメージを受けたとき
 	virtual void Die(); // 死んだ時
 	virtual void DebugPrint();
 
 	void SetBehaviorComponent(CBehaviorComponent* component, int waitTime = 0);
 	void AddLauncher(const CPos& pos, CBaseLauncher* launcher);
-protected:
+
+
 	std::vector<Launcher> m_launchers; // 発射口
 	CBehaviorComponent* m_behaviorComponent; // 移動コンポーネント
 	int m_life; // ライフ
+	bool m_removeFlg; // trueになると勝手に削除しｔくれる
 
 	EnemyType m_type; // 地上～空　小型～大型
 	CPos m_pos; // 座標
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
 	int m_count;
+
+	double m_hitSize; // 当たり判定の大きさ（半径）継承したクラスで設定する
 };
 
 /*

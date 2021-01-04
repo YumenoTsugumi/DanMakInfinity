@@ -58,6 +58,7 @@ protected:
 	CCVLM_CertainAmountStop m_inMove;
 	CCVLM_CertainAmountStop m_outMove;
 };
+
 //-------------------------------------------------------------------------------------
 // ベジエ曲線
 //-------------------------------------------------------------------------------------
@@ -65,6 +66,7 @@ protected:
 class CBezierBehavior : public CBehaviorComponent {
 public:
 	CBezierBehavior(const CPos& st, const CPos& p1, const CPos& p2, const CPos& ed, double speed);
+	CBezierBehavior(const std::vector<CPos>& posArray, double speed);
 	virtual ~CBezierBehavior();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();

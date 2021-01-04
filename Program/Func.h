@@ -243,7 +243,8 @@ public:
 	static double GetDistanceSqrt(const CPos& p1, const CPos& p2);
 	static double GetDistance(const CPos& p1, const CPos& p2);
 
-
+	// ２つの円が重なっているか
+	static bool CollisionCircleToCircle(const CPos& p1, double p1Radius, const CPos& p2, double p2Radius);
 };
 
 //矩形領域

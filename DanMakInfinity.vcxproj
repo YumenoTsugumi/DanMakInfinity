@@ -118,6 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableSpecificWarnings>26451</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,6 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>26451</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +163,7 @@
     <ClCompile Include="Program\Enemy\MoveComponent.cpp" />
     <ClCompile Include="Program\Func.cpp" />
     <ClCompile Include="Program\Game.cpp" />
+    <ClCompile Include="Program\BattleSceneCollision.cpp" />
     <ClCompile Include="Program\HomingBullet.cpp" />
     <ClCompile Include="Program\Input.cpp" />
     <ClCompile Include="Program\Launcher\Launcher000.cpp" />

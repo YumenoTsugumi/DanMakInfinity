@@ -27,19 +27,22 @@ public:
 	//------------------
 	void Init(CGame* gameP);
 
-	CGame *m_game;
-	CPlayer m_player;
-	CBulletManager m_bulletManeger;
-	CBeamManager m_beamManeger;
+	CGame *m_game; // 上位のゲームクラス
+	CPlayer m_player; // プレイヤー自身
+	CBulletManager m_playerBullet; // プレイヤーの弾
+
+	//std::vector<CBaseEnemy*> m_enemys; // 敵
+	CEnemyManager m_enemyManager; // 敵
+	CBulletManager m_bulletManeger; // 敵の弾
+	CBeamManager m_beamManeger; // 敵のビーム
+
+	CBackGroundPatternA m_bg; // 背景
+
+	// 参照する範囲が広いのでグローバルにした
+	static CEffectManager m_effectManager; // エフェクト
 
 
-	CBaseBeam* m_beam1;
-	CPos m_pos;
+	// BattleSceneCollision.cppにて実装
+	void Collision_Enemy_BulyerBullet(); // 敵　時機の弾
 
-
-	std::vector<CBaseLauncher*> m_launcher;
-
-	std::vector<CBaseEnemy*> m_enemys;
-
-	CBackGroundPatternA m_bg;
 };

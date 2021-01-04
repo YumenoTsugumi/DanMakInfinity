@@ -12,13 +12,18 @@
 #include "Enemy000.h"
 
 
+
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
 
+CEffectManager CBattleScene::m_effectManager;
+
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
+	m_playerBullet(256),
 	m_bulletManeger(2048),
 	m_beamManeger(128),
+	m_enemyManager(64),
 	m_player(),
 	m_bg()
 {
@@ -33,6 +38,7 @@ CBattleScene::~CBattleScene(){
 
 void CBattleScene::Init(CGame* gameP) {
 	m_player.Init();
+	m_player.SetBulletManager(&m_playerBullet); // プレイヤーにプレイヤ弾管理を設定
 
 	m_game = gameP;
 
@@ -40,6 +46,7 @@ void CBattleScene::Init(CGame* gameP) {
 	CCustomBullet::SetBulletManagerPointer(&m_bulletManeger);
 	CBaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
+
 
 
 
@@ -54,10 +61,10 @@ void CBattleScene::Init(CGame* gameP) {
 	//}
 
 	// 001敵
-	for(int ii=0;ii<6;ii++)
+	for(int ii=0;ii<120;ii++)
 	{
 		CEnemy001* e2 = new CEnemy001(CPos(-100, -100), ii);
-		m_enemys.push_back(e2);
+		m_enemyManager.Add(e2);
 	}
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
@@ -75,14 +82,14 @@ void addFuncB(CCustomBullet* m_bullet) {
 }
 
 void CBattleScene::Main(CInputAllStatus *input){
-	//フェード中でなければ
-	if(!NowFeed()){
-		//入力参照
-		if(input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH){
-			SetFeedOut(120);
-			SetBackScene();
-		}
-	}
+	////フェード中でなければ
+	//if(!NowFeed()){
+	//	//入力参照
+	//	if(input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH){
+	//		SetFeedOut(120);
+	//		SetBackScene();
+	//	}
+	//}
 
 
 	static int count = 0;
@@ -205,24 +212,25 @@ void CBattleScene::Main(CInputAllStatus *input){
 	////どんな状態でもアクションする処理
 	m_bg.Action();
 	m_player.Action(input);
-	for (CBaseEnemy* enemy : m_enemys) {
-		enemy->Action();
-	}
+	m_playerBullet.Action();
+	m_enemyManager.Action();
+
 	m_bulletManeger.Action();
 	m_beamManeger.Action();
 	m_bg.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos);
+	m_effectManager.Action();
 
+
+	Collision_Enemy_BulyerBullet();
 
 	m_bg.Draw();
+	m_enemyManager.Draw();
 	m_player.Draw();
-	for (CBaseEnemy* enemy : m_enemys) {
-		enemy->Draw();
-		enemy->DebugPrint();
-	}
+	m_playerBullet.Draw();
 	m_bulletManeger.Draw();
 	m_beamManeger.Draw();
+	m_effectManager.Draw();
 
-
-
+	
 }

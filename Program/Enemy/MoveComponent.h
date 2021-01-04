@@ -90,6 +90,7 @@ protected:
 class CBezierMotion : public CMoveComponent {
 public:
 	CBezierMotion(const CPos& st, const CPos& p1, const CPos& p2, const CPos& ed, double speed);
+	CBezierMotion(const std::vector<CPos>& posArray, double speed); // 4,8,12みたいに4点毎
 	virtual ~CBezierMotion();
 	virtual ArrivalStatus Action(CPos& updatePos);
 	virtual void DebugPrint();
@@ -98,11 +99,14 @@ protected:
 	double m_speed;
 	CPos m_vel;
 
+	int m_divide;
+
 	CPos m_nowPos; // 曲線上の現在位置
 	int m_nextPosIndex;// 曲線上の次の位置のインデックス
 
 	bool m_arrival; // 到着済みか
-	std::vector<CPos> m_vezier;
+	std::vector<CPos> m_controlPointArray; // 制御点
+	std::vector<CPos> m_vezier; // ベジエ曲線近似点
 private:
 	double m_saveDirection; // 速度が0になった時に方向が安定しないので、0になる直前の値を覚えておく
 };

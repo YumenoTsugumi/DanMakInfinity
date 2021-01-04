@@ -143,11 +143,35 @@ void CCVLM_CertainAmountStop::SetArrivalAcce(double outAcce, double outMinSpeed,
 CBezierMotion::CBezierMotion(const CPos& st, const CPos& p1, const CPos& p2, const CPos& ed, double speed) : CMoveComponent(),
 m_speed(speed)
 {
-	m_vezier = CFunc::GetBezierCurvePointList(st, p1, p2, ed, 32);
+	m_divide = 32;
+	m_vezier = CFunc::GetBezierCurvePointList(st, p1, p2, ed, m_divide);
 
 	m_nowPos = m_vezier[0];
 	m_nextPosIndex = 1;
 }
+#include <iterator>
+// 4,8,12みたいに4点毎
+// 0～3と4~7のべじえは連続的ではないので、いいように入力すること
+CBezierMotion::CBezierMotion(const std::vector<CPos>& posArray, double speed) : CMoveComponent(),
+m_speed(speed)
+{
+	if (posArray.size() % 4 != 0) {
+		assert(0);
+	}
+	m_divide = 32;
+	m_controlPointArray = posArray;
+
+	int loopCount = posArray.size() / 4;
+	for (int ii = 0; ii < loopCount; ii++) {
+		std::vector<CPos> pos = CFunc::GetBezierCurvePointList(posArray[ii*4+0], posArray[ii * 4 + 1], posArray[ii * 4 + 2], posArray[ii * 4 + 3], m_divide);
+		copy(pos.begin(), pos.end(), back_inserter(m_vezier));
+	}
+
+	m_nowPos = m_vezier[0];
+	m_nextPosIndex = 1;
+}
+
+
 
 CBezierMotion::~CBezierMotion(){}
 
@@ -205,10 +229,14 @@ double CBezierMotion::GetDirection()
 
 void CBezierMotion::DebugPrint()
 {
-	unsigned int cr = GetColor(255, 0, 0);    // 白色の値を取得
+	unsigned int cr = GetColor(255, 0, 0); 
 	for (int ii = 0; ii < m_vezier.size()-1; ii++) {
 		CPos p1 = m_vezier[ii];
 		CPos p2 = m_vezier[ii + 1];
 		DrawLine(p1.x, p1.y, p2.x, p2.y, cr);    // 線を描画
+	}
+
+	for (int ii = 0; ii < m_controlPointArray.size(); ii++) {
+		DrawCircle(m_controlPointArray[ii].x, m_controlPointArray[ii].y, 6, cr);    // 線を描画
 	}
 }

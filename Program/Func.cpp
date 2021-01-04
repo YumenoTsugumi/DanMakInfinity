@@ -226,6 +226,18 @@ double CFunc::GetTwoPointAngle(double x1, double y1, double x2, double y2) {
 	return atan2((y1 - y2), (x1 - x2));
 }
 
+// ２つの円が重なっているか
+bool CFunc::CollisionCircleToCircle(const CPos& p1, double p1Radius, const CPos& p2, double p2Radius)
+{
+	double x = p1.x - p2.x;
+	double y = p1.y - p2.y;
+	double r = x * x + y * y;
+	double s = p1Radius * p1Radius + p2Radius * p2Radius;
+	if (r < s) {
+		return true;
+	}
+	return false;
+}
 
 /**
  * エルミート曲線の座標リストを取得
