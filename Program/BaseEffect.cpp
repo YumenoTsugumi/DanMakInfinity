@@ -8,8 +8,6 @@
 //---------------------------------------------------------------------------------
 //	CEffectManager
 //---------------------------------------------------------------------------------
-
-
 CEffectManager::CEffectManager(int m_num/* = 512*/){
 	m_bulletTotalNum = m_num;
 
@@ -21,22 +19,39 @@ CEffectManager::CEffectManager(int m_num/* = 512*/){
 	m_order = 0;
 }
 
-CEffectManager::~CEffectManager(){
+CEffectManager::~CEffectManager()
+{
+	// 親のデストラクタで開放される
+	//delete [] m_bullet;
+}
 
-	delete [] m_bullet;
+void CEffectManager::Draw(int order) {
+	for (int i = 0; i < m_bulletTotalNum; i++) {
+		if (m_bullet[i] == nullptr) {
+			continue;
+		}
+		CBaseEffect* effect = (CBaseEffect*)m_bullet[i];
+		if (effect->m_order == order) {
+			m_bullet[i]->Draw();
+		}
+	}
 }
 
 //---------------------------------------------------------------------------------
 //	CBaseEffect
 //---------------------------------------------------------------------------------
 
-CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image){
+CBaseEffect::CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, image),
+	m_order(order)
+{
 	Set();
 	SetImage(image);
 }
-CBaseEffect::CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
+CBaseEffect::CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName),
+	m_order(order)
+{
 	Set();
 	SetImage(ImageName);
 }
@@ -58,9 +73,19 @@ void CBaseEffect::Set(){
 	m_deleteTimingPlusAlpha = -10.0;
 	m_deleteTimingPlusSize = 0.0;
 	m_removeCount = MAXINT;
+
+	m_waitCount = 0;
+	m_waitTime = 0;
 }
 
 void CBaseEffect::Action(){
+	if (m_waitTime > 0) {
+		if (m_waitCount <= m_waitTime) {
+			m_waitCount++;
+			return;
+		}
+	}
+
 	//移動
 	Move();
 
@@ -127,6 +152,13 @@ void CBaseEffect::EffectAction(){
 }
 
 void CBaseEffect::Draw(){
+	if (m_waitTime > 0) {
+		if (m_waitCount <= m_waitTime) {
+			m_waitCount++;
+			return;
+		}
+	}
+
 	SetDrawBlendMode( m_blendType , (int)m_blendDepth ) ;
 
 	//アニメフラグがONなら
@@ -170,6 +202,12 @@ void CBaseEffect::SetFuncP(void (*FuncP)(CBaseEffect* eff)){
 }
 
 void CBaseEffect::SetBlend(int BlendDepth, double PlusBlend, double MaxBlend /*= 255*/){
+	// PlusBlendが負の値の場合、MaxBlendを指示すること
+	if (PlusBlend < 0) {
+		if (MaxBlend >= BlendDepth) {
+			assert(0);
+		}
+	}
 	m_blendDepth = (double)BlendDepth;
 	m_maxBlend = MaxBlend;
 	m_plusBlend = PlusBlend;
@@ -192,21 +230,25 @@ void CBaseEffect::SetDeleteTiming(double DeleteTimingPlusAlpha, double DeleteTim
 void CBaseEffect::SetRemoveCount(int DelCount){
 	m_removeCount = DelCount;
 }
-
+// 待つ時間
+void CBaseEffect::SetWaitTime(int waitTime)
+{
+	m_waitTime = waitTime;
+}
 
 //---------------------------------------------------------------------------------
 //	CStringEffect
 //---------------------------------------------------------------------------------
 
-CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT) :
-					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
+CStringEffect::CStringEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT) :
+					CBaseEffect(order, type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);
 	font = (CFont*)CGame::GetResource(FONT);
 }
-CStringEffect::CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONTNAME) :
-					CBaseEffect(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
+CStringEffect::CStringEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONTNAME) :
+					CBaseEffect(order, type, P, speed, angle, corner, acce, maxSpeed, nearAngle, -1){
 	fontCr = 0xffffff;
 	edgeCr = 0x000000;
 	strcpy_s(drawString, STRINGEFFECTMAX, DRAWSTR);

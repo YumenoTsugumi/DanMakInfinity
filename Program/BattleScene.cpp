@@ -225,12 +225,18 @@ void CBattleScene::Main(CInputAllStatus *input){
 	Collision_Enemy_BulyerBullet();
 
 	m_bg.Draw();
+	m_effectManager.Draw(0); // 0 一番ボトム
 	m_enemyManager.Draw();
+	m_effectManager.Draw(10); // 10	敵よりあと
 	m_player.Draw();
+	m_effectManager.Draw(20); // 20 プレイヤーより後
 	m_playerBullet.Draw();
+	m_effectManager.Draw(30); // 30 プレイヤーの弾より後
 	m_bulletManeger.Draw();
+	m_effectManager.Draw(40);
 	m_beamManeger.Draw();
-	m_effectManager.Draw();
+	m_effectManager.Draw(50); // 50 最前面
+	
 
 	
 }

@@ -95,7 +95,7 @@ public:
 //---------------------------------------------------------------------------------
 class CBulletImage : public CImageAnime{
 public:
-	CBulletImage(const char* filename, int numAll, int numX, int numY, int m_sizeX, int m_sizeY, int animeSpeed, double rotaSpeed);
+	CBulletImage(const char* filename, int numAll, int numX, int numY, int sizeX, int sizeY, int animeSpeed, double rotaSpeed);
 	CBulletImage(const std::vector<std::string>& filename, int sizeX, int sizeY, int animeSpeed, double rotaSpeed);
 	virtual ~CBulletImage();
 

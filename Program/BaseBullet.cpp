@@ -48,9 +48,10 @@ CBulletManager::CBulletManager(int num/* = 1024*/){
 	m_order = 0;
 }
 
-CBulletManager::~CBulletManager(){
-
+CBulletManager::~CBulletManager()
+{
 	delete [] m_bullet;
+	m_bullet = nullptr;
 }
 
 void CBulletManager::Action(){
@@ -126,7 +127,6 @@ int CBulletManager::Add(CBaseBullet *Bullet){
 //---------------------------------------------------------------------------------
 CPos CBaseBullet::m_target;
 CRect CBaseBullet::m_rect;
-//CBulletImageManager* CBaseBullet::m_imageManager = nullptr;
 CResourceManager* CBaseBullet::m_imageManager = nullptr;
 
 CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image){

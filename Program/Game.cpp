@@ -183,7 +183,7 @@ void CGame::ImageLoadByThread()
 			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 2g\\FireballExplosion2_%04d.png", ii);
 			filenames.push_back(format1);
 		}
-		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion2", 20500);
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 1, 0), "FireballExplosion2", 20500);
 	}
 	{
 		std::vector<std::string> filenames;
@@ -191,7 +191,7 @@ void CGame::ImageLoadByThread()
 			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 3g\\FireballExplosion3_%04d.png", ii);
 			filenames.push_back(format1);
 		}
-		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion3", 20501);
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 1, 0), "FireballExplosion3", 20501);
 	}
 	{
 		std::vector<std::string> filenames;
@@ -199,7 +199,7 @@ void CGame::ImageLoadByThread()
 			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 7g\\FireballExplosion7_%04d.png", ii);
 			filenames.push_back(format1);
 		}
-		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion7", 20502);
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 1, 0), "FireballExplosion7", 20502);
 	}
 	{
 		std::vector<std::string> filenames;
@@ -207,8 +207,12 @@ void CGame::ImageLoadByThread()
 			std::string format1 = MyFormat("ResourceX\\Fireball Explosion 10g\\FireballExplosion10_%04d.png", ii);
 			filenames.push_back(format1);
 		}
-		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 2, 0), "FireballExplosion10", 20503);
+		m_resourceManager.Add(new CBulletImage(filenames, 256, 256, 1, 0), "FireballExplosion10", 20503);
 	}
+	// ヒットエフェクト
+	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\0_.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect0", 20600);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\1.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect1", 20601);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\2.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect2", 20602);
 
 
 	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存

@@ -142,16 +142,24 @@ void CBaseEnemy::Die() {
 	// "FireballExplosion7", 20502
 	// "FireballExplosion10", 20503
 
-	CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
-	double ang = CFunc::RandF(0, 360);
-	CBaseEffect* eff = new CBaseEffect(EDirType::Abs, m_pos, 0.1, ang, 0, 0, 0, 0, 20500);
-	//eff->SetSize(3.0, +0.05);
-	eff->SetBlend(192, +3.0);
+	int image4[4] = { 20503 ,20501 ,20501 ,20501 };
+	for (int ii = 0; ii < 4; ii++) {
+		CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
+		double ang = (double)ii * 120 + CFunc::RandF(0, 90);
+		double speed = CFunc::RandF(200, 400) / 100.0;
+		CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, speed, ang, 0, -0.2, 0.5, 0, image4[ii]);
+		double size = 0.8 - (double)ii * 0.1;
+		eff->SetSize(size, +0.0);
+		eff->SetWaitTime(CFunc::RandI(1, 15));
+		eff->SetBlend(255, +0.0);
+		eff->SetBlendType(DX_BLENDMODE_NOBLEND);
+		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+		eff->SetRemoveCount(60);	//60frで削除
 
-	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
-	eff->SetRemoveCount(60);	//60frで削除
+		CBattleScene::m_effectManager.Add(eff);
+	}
 
-	CBattleScene::m_effectManager.Add(eff);
+	
 }
 
 void CBaseEnemy::DebugPrint()

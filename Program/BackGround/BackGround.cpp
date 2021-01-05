@@ -38,7 +38,7 @@ CBackGroundPatternA::CBackGroundPatternA()
 		m_posSpaceFarwayY = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
 	}
 
-	int spaceSpaceBaseIndex = CFunc::RandI(0, 6);
+	int spaceSpaceBaseIndex = CFunc::RandI(0, 5);
 	m_imageNearSpace = (CImage*)CGame::GetResource(fileNameSpaceBase[spaceSpaceBaseIndex]);
 	m_scrollNearY = m_scrollFarwayY * 0.5;
 	if (CFunc::RandI(0, 1)) {

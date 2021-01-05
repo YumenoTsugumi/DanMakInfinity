@@ -21,6 +21,8 @@ public:
 	CEffectManager(int m_num = 512);
 	virtual ~CEffectManager();
 
+	//メイン描画
+	virtual void Draw(int order);
 };
 
 
@@ -31,6 +33,11 @@ public:
 class CBaseEffect : public CBaseBullet{
 
 public:
+	// 待つ時間
+	int m_waitTime;
+	int m_waitCount;
+	void SetWaitTime(int waitTime);
+
 
 	//その濃さ　0～255	使用時にはintにキャストする 
 	double m_blendDepth;
@@ -56,6 +63,9 @@ public:
 	//DX_BLENDMODE_SUB　　　:　減算ブレンド
 	//DX_BLENDMODE_MULA　　　:　乗算ブレンド
 	//DX_BLENDMODE_INVSRC　　:　反転ブレンド
+
+	// 描画順
+	int m_order;
 private:
 	//削除中か
 	bool m_removeNow;
@@ -79,8 +89,8 @@ public:
 	void SetFuncP(void (*FuncP)(CBaseEffect* eff));
 
 	//コンストラクタ	弾作成
-	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
-	CBaseEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
+	CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
+	CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 
 	//デストラクタ
 	virtual ~CBaseEffect();
@@ -148,8 +158,8 @@ public:
 	int edgeCr;
 
 	//コンストラクタ	弾作成
-	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT);
-	CStringEffect(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONT);
+	CStringEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, int FONT);
+	CStringEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, char* DRAWSTR, const char* FONT);
 
 	//デストラクタ
 	virtual ~CStringEffect();
