@@ -21,6 +21,11 @@ DanMakInfinity
 　Resource
 　　image.png
   　sound.wav
+  ResourceX（著作権の都合でリポジトリに含みません）
+　　image.png
+  　sound.wav
 　Main.cpp
  
  
+🐤なんちゃってクラス図（最終更新日2020/12/28）
+https://docs.google.com/document/d/1UUqcUkgf8W-4AdypLI_pVwUPT0PRoY_P3YSoxdNn0vc/edit?usp=sharing
