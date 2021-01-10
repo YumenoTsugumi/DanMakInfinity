@@ -4,6 +4,9 @@
 #include "Resource.h"
 #include "Game.h"
 
+#include "BaseEffect.h"
+#include "BattleScene.h"
+
 //---------------------------------------------------------------------------------
 //	CBulletImageInfo
 //---------------------------------------------------------------------------------
@@ -209,8 +212,15 @@ void CBaseBullet::RectOut(){
 	}
 }
 
+// 弾が消える時の処理
 void CBaseBullet::Remove(){
-
+	// 消滅エフェクト
+	CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, 0, 0, 0, 0, 0, 0, 20801); // "BulletDeleteEffect0"
+	eff->SetSize(1.0, +0.0);
+	eff->SetBlend(255, +0.0);
+	eff->SetBlendType(DX_BLENDMODE_ADD);
+	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+	CBattleScene::m_effectManager.Add(eff);
 }
 
 void CBaseBullet::SetRect(CRect &rect){
@@ -325,5 +335,10 @@ void CBaseBullet::SetBlendType(int BlendType){
 // 弾が何かに当たった時
 void CBaseBullet::Hit()
 {
+	m_removeFlg = true;
+}
+
+// 削除フラグ立てる
+void CBaseBullet::SetRemove() {
 	m_removeFlg = true;
 }

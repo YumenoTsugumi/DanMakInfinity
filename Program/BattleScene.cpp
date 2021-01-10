@@ -10,6 +10,7 @@
 #include "HomingBullet.h"
 
 #include "Enemy000.h"
+#include "Enemy200.h"
 
 
 
@@ -17,19 +18,25 @@
 //CResourceManager* CScene::resManager;
 
 CEffectManager CBattleScene::m_effectManager;
+CItemManager CBattleScene::m_itemManager;
+CBattleScene::BulletRemoveType CBattleScene::m_bulletRemoveType;
+int CBattleScene::m_bulletRemoveTime;
+int CBattleScene::m_bulletRemoveCount;
 
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
 	m_playerBullet(256),
 	m_bulletManeger(2048),
 	m_beamManeger(128),
-	m_enemyManager(64),
+	m_enemyManager(256),
 	m_player(),
 	m_bg()
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
 	Set(InTime);
+
+	m_bulletRemoveTime = m_bulletRemoveCount = 0;
 }
 
 CBattleScene::~CBattleScene(){
@@ -48,24 +55,49 @@ void CBattleScene::Init(CGame* gameP) {
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
 
 
+	// 000敵
+	for(int ii=0;ii<16;ii++)
+	{
+		double x = CFunc::RandF(50, 400);
+		double y = CFunc::RandF(-100, -10);
+		CPos pos1(x, y);
+		CEnemy000* e1 = new CEnemy000(pos1);
 
+		CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 250), 7, 10, 180);
+		e1->SetBehaviorComponent(move, CFunc::RandI(0,60));
 
-	//// 000敵
-	//for(int ii=0;ii<6;ii++)
-	//{
-	//	double x = CFunc::RandF(50, 300);
-	//	double y = CFunc::RandF(-100, -10);
-	//	CPos pos1(x, y);
-	//	CEnemy000* e1 = new CEnemy000(pos1);
-	//	m_enemys.push_back(e1);
-	//}
+		m_enemyManager.Add(e1);
+	}
 
 	// 001敵
-	for(int ii=0;ii<120;ii++)
+	//for(int ii=0;ii<120;ii++)
+	//{
+	//	CEnemy001* e2 = new CEnemy001(CPos(-100, -100));
+
+	//	std::vector<CPos> poss = {
+	//	CPos(-100, -100), CPos(100, 100), CPos(200, 100), CPos(300, 100),
+	//	CPos(300, 100), CPos(600, 100), CPos(600, 200), CPos(300, 200),
+	//	CPos(300, 200), CPos(100, 200), CPos(0, 200), CPos(-100, 200), };
+
+	//	CBezierBehavior* move = new CBezierBehavior(poss, 5.0);
+	//	e2->SetBehaviorComponent(move, ii * 30);
+
+	//	m_enemyManager.Add(e2);
+	//}
+	// 020蛾
 	{
-		CEnemy001* e2 = new CEnemy001(CPos(-100, -100), ii);
+		CEnemy200* e2 = new CEnemy200(CPos(900, 200));
+
+		std::vector<CPos> poss = {
+		CPos(900, 50), CPos(600, 150), CPos(300, 150), CPos(-200, 50),
+		};
+
+		CBezierBehavior* move = new CBezierBehavior(poss, 1.3);
+		e2->SetBehaviorComponent(move);
+
 		m_enemyManager.Add(e2);
 	}
+
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
 }
@@ -212,31 +244,75 @@ void CBattleScene::Main(CInputAllStatus *input){
 	////どんな状態でもアクションする処理
 	m_bg.Action();
 	m_player.Action(input);
+	RemoveBullet(); // 弾消し処理
 	m_playerBullet.Action();
 	m_enemyManager.Action();
-
+	m_itemManager.Action();
 	m_bulletManeger.Action();
 	m_beamManeger.Action();
 	m_bg.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos);
+	CBaseEnemy::SetTarget(m_player.m_pos);
+	CBaseLauncher::SetTarget(m_player.m_pos);
 	m_effectManager.Action();
 
 
-	Collision_Enemy_BulyerBullet();
+
+	Collision_Enemy_PulyerBullet();
+	Collision_Item_Player();
 
 	m_bg.Draw();
 	m_effectManager.Draw(0); // 0 一番ボトム
+
 	m_enemyManager.Draw();
 	m_effectManager.Draw(10); // 10	敵よりあと
 	m_player.Draw();
+	
 	m_effectManager.Draw(20); // 20 プレイヤーより後
 	m_playerBullet.Draw();
+	m_itemManager.Draw();
 	m_effectManager.Draw(30); // 30 プレイヤーの弾より後
 	m_bulletManeger.Draw();
 	m_effectManager.Draw(40);
 	m_beamManeger.Draw();
 	m_effectManager.Draw(50); // 50 最前面
-	
 
-	
+}
+
+
+void CBattleScene::SetBulletRemoveTime(BulletRemoveType type, int time)
+{
+	m_bulletRemoveType = type;
+	m_bulletRemoveTime = time; // 1なら1fr弾けしする
+	m_bulletRemoveCount = 0;
+}
+// 弾消し処理
+void CBattleScene::RemoveBullet() 
+{
+	if (m_bulletRemoveCount >= m_bulletRemoveTime) {
+		return; // 弾消し終了
+	}
+	if(m_bulletRemoveCount)
+	for (int ii = 0; ii < m_bulletManeger.m_bulletTotalNum; ii++) {
+		if (m_bulletManeger.m_bullet[ii] == nullptr) {
+			continue;
+		}
+		CBaseBullet* bullet = m_bulletManeger.m_bullet[ii];
+		bullet->SetRemove();
+
+		// 削除時アイテムなら
+		if (m_bulletRemoveType == BulletRemoveType::Item) {
+			// アイテム
+			int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
+
+			double ang = 270.0;
+			double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+			CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
+			eff->SetSize(0.0, +0.033, 0.125);
+			CBattleScene::m_itemManager.Add(eff);
+
+		}
+	}
+
+	m_bulletRemoveCount++;
 }

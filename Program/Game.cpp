@@ -75,6 +75,8 @@ void CGame::Main() {
 		// シーンの実行
 		m_sceneManager.Main(inputData);
 
+		printfDx("%f",1000.0 / m_fpsManager.GetFPS());
+
 		ScreenFlip(); //描画範囲反映
 		
 		clsDx(); //printfDx削除
@@ -159,22 +161,16 @@ void CGame::ImageLoadByThread()
 		std::string format1 = MyFormat("ResourceX\\Enemy\\blue\\illumBlue%02d.png", ii + 1);
 		std::string format2 = MyFormat("enemy%02db", ii + 1);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20000 + ii);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumBlue01.png"), "enemy01b", 20001);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumBlue24.png"), "enemy24b", 20024);
 	}
 	for (int ii = 0; ii < 24; ii++) {
 		std::string format1 = MyFormat("ResourceX\\Enemy\\green\\illumGreen%02d.png", ii + 1);
 		std::string format2 = MyFormat("enemy%02dg", ii + 1);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20050 + ii);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumGreen01.png"), "enemy01g", 20051);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumGreen24.png"), "enemy24g", 20074);
 	}
 	for (int ii = 0; ii < 24; ii++) {
 		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\illumRed%02d.png", ii + 1);
 		std::string format2 = MyFormat("enemy%02dr", ii + 1);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20100 + ii);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed01.png"), "enemy01r", 20101);
-		//m_resourceManager.Add(new CImage("ResourceX\\Enemy\\illumRed24.png"), "enemy24r", 20124);
 	}
 
 	{
@@ -213,6 +209,18 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\0_.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect0", 20600);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\1.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect1", 20601);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\2.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect2", 20602);
+
+	//金塊
+	for (int ii = 0; ii < 6; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Item\\ingot%d.png", ii);
+		std::string format2 = MyFormat("ingot%d", ii);
+		m_resourceManager.Add(new CBulletImage(format1.c_str(), 1, 1, 1, 400, 400, 0, 0), format2.c_str(), 20700 + ii);
+	}
+
+	// 弾が消えるエフェクト
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect0", 20801);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect1.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect1", 20802);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect2.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect2", 20803);
 
 
 	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存

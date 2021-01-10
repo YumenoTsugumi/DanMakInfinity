@@ -7,6 +7,8 @@
 #include <vector>
 #include "Game.h"
 
+class CBaseLauncher;
+
 class CBaseEnemy;
 //敵を管理するクラス
 class CEnemyManager {
@@ -36,14 +38,11 @@ public:
 };
 
 
-enum EnemyType {
-	GroundS = 0, // 地上小型機
-	GroundM, // 地上中型機
-	GroundL, // 地上大型機
-	SkyS, // 空中小型機
-	SkyM, // 空中中型機
-	SkyL, // 空中大型機
-	Boss
+enum EnemySize {
+	Small = 0, // 地上小型機
+	Medium = 1, // 地上中型機
+	Large = 2, // 地上大型機
+	Boss = 3
 };
 
 
@@ -54,6 +53,15 @@ struct Launcher {
 	}
 	CBaseLauncher* m_launcher; // 発射口の実態
 	CPos m_relativePos; // 座標(敵本体の座標からの相対座標)
+};
+
+struct Collision {
+	Collision(const CPos& pos, double r) {
+		m_relationPos = pos;
+		m_rad = r;
+	}
+	CPos m_relationPos; // 当たり判定
+	double m_rad; // 当たり半径
 };
 
 class CBaseEnemy {
@@ -71,18 +79,25 @@ public:
 	void SetBehaviorComponent(CBehaviorComponent* component, int waitTime = 0);
 	void AddLauncher(const CPos& pos, CBaseLauncher* launcher);
 
-
+	void Init(int life, EnemySize size, const std::vector<Collision>& collisions);
+	std::vector<Collision> m_collisions;
 	std::vector<Launcher> m_launchers; // 発射口
 	CBehaviorComponent* m_behaviorComponent; // 移動コンポーネント
 	int m_life; // ライフ
 	bool m_removeFlg; // trueになると勝手に削除しｔくれる
 
-	EnemyType m_type; // 地上～空　小型～大型
-	CPos m_pos; // 座標
+	EnemySize m_size; // 大中小
+	
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
 	int m_count;
 
 	double m_hitSize; // 当たり判定の大きさ（半径）継承したクラスで設定する
+
+	CPos m_pos; // 座標
+	CPos GetPos() { return m_pos; }
+
+	static CPos m_target;
+	static void SetTarget(CPos target);
 };
 
 /*

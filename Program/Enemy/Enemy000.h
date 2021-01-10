@@ -14,7 +14,7 @@ public:
 
 class CEnemy001 : public CBaseEnemy {
 public:
-	CEnemy001(const CPos& pos, int formationIndex);
+	CEnemy001(const CPos& pos);
 	~CEnemy001();
 
 	virtual void Draw();

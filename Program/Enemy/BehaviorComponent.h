@@ -35,10 +35,10 @@ protected:
 // 小型機
 //-------------------------------------------------------------------------------------
 // A地点から出てきて、うって、A地点に去る
-class CInOutMotion : public CBehaviorComponent {
+class CInOutBehavior : public CBehaviorComponent {
 public:
-	CInOutMotion(const CPos& initPos, const CPos& targetPos, double inSpeed, double outSpeed, int shotTime);
-	virtual ~CInOutMotion();
+	CInOutBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed, double outSpeed, int shotTime);
+	virtual ~CInOutBehavior();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();
 	virtual double GetDirection();

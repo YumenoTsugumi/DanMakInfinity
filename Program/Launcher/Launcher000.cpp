@@ -54,3 +54,40 @@ void CLauncher001::Action(const CPos& newPos)
 
 	m_count++;
 }
+
+#include "BaseEnemy.h"
+// 等角度2wayしばらくの時間　時機狙いを撃つ　ぶっちゃけナイトメアの先頭砲台
+LANCHERCPP(CLauncher002)
+void CLauncher002::Action(const CPos& newPos)
+{
+	__super::Action(newPos);
+
+	int start = 0;
+	int end = 26;
+	int reset = 60;
+
+	if (m_count == 0) {
+		dVal[0] = CFunc::GetTwoPointAngle_180Deg(m_enemyPos, m_target);
+		dVal[1] = 1.5;
+	}
+	if (m_count > start && m_count < end) {
+		if (m_count % 2 == 0) {
+			CBaseBullet* b1 = new CBaseBullet(EDirType::Abs, m_enemyPos + m_relativePos + CPos(10.0,0), dVal[1], dVal[0], 0, 0, 0, 0, 11);
+			CBaseLauncher::m_bulletManager->Add(b1);
+
+			CBaseBullet* b2 = new CBaseBullet(EDirType::Abs, m_enemyPos + m_relativePos + CPos(-10.0, 0), dVal[1], dVal[0], 0, 0, 0, 0, 11);
+			CBaseLauncher::m_bulletManager->Add(b2);
+
+			dVal[1] += 0.4;
+		}
+		m_count++;
+		return;
+	}
+
+
+	m_count++;
+
+	if (m_count == reset) {
+		m_count = 0;
+	}
+}

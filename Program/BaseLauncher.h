@@ -2,7 +2,9 @@
 
 #include "BaseBullet.h"
 #include "BaseBeam.h"
+#include "BaseEnemy.h"
 
+class CBaseEnemy;
 const int MAX_RANK = 100;
 
 // ランクUPで　
@@ -27,6 +29,12 @@ public:
 	CPos m_relativePos; // 敵の座標を中心としたときの発射口の座標
 
 	int m_rank; // 1~100を想定
+
+	void SetParent(CBaseEnemy* parent);
+	CBaseEnemy* m_parent; // 親
+
+	static CPos m_target;
+	static void SetTarget(CPos target);
 protected:
 	int m_count; // 発射のタイミングのカウンター
 

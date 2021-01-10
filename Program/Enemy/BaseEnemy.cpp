@@ -1,6 +1,7 @@
 ﻿#include "BaseEnemy.h"
 #include "BattleScene.h"
 
+CPos CBaseEnemy::m_target;
 
 //---------------------------------------------------------------------------------
 //	CEnemyManager
@@ -97,7 +98,8 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 	m_shotTiming(false),
 	m_life(1),
 	m_hitSize(0),
-	m_removeFlg(false)
+	m_removeFlg(false),
+	m_size(EnemySize::Small)
 {
 
 }
@@ -135,13 +137,16 @@ void CBaseEnemy::Damaged(int damage) {
 
 // 死んだ時
 void CBaseEnemy::Die() {
+	if (m_removeFlg == true) {
+		return;
+	}
 	m_removeFlg = true;
 
 	// "FireballExplosion2", 20500
 	// "FireballExplosion3", 20501
 	// "FireballExplosion7", 20502
 	// "FireballExplosion10", 20503
-
+	// 爆発エフェクト
 	int image4[4] = { 20503 ,20501 ,20501 ,20501 };
 	for (int ii = 0; ii < 4; ii++) {
 		CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
@@ -159,7 +164,21 @@ void CBaseEnemy::Die() {
 		CBattleScene::m_effectManager.Add(eff);
 	}
 
-	
+	// アイテム
+	int itemCount = (m_size + 1) * 10;
+	int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
+	for (int ii = 0; ii < itemCount; ii++) {
+		double ang = CFunc::RandI(180, 360);
+		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+		CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
+		CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
+		eff->SetSize(0.0, +0.033, 0.125);
+		CBattleScene::m_itemManager.Add(eff);
+	}
+
+	if (m_size == EnemySize::Large) {
+		CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 30);
+	}
 }
 
 void CBaseEnemy::DebugPrint()
@@ -179,6 +198,18 @@ void CBaseEnemy::SetBehaviorComponent(CBehaviorComponent* component, int waitTim
 // 砲台を設定
 void CBaseEnemy::AddLauncher(const CPos& pos, CBaseLauncher* launcher)
 {
+	launcher->SetParent(this);
 	Launcher l(pos, launcher);
 	m_launchers.push_back(l);
+}
+
+void CBaseEnemy::SetTarget(CPos target) {
+	m_target = target;
+}
+
+void CBaseEnemy::Init(int life, EnemySize size, const std::vector<Collision>& collisions)
+{
+	m_life = life;
+	m_size = size;
+	m_collisions = collisions;
 }

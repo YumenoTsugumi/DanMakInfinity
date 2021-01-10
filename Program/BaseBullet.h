@@ -159,6 +159,8 @@ public:
 	double m_angle, m_speed;
 	double m_corner, m_accelerate, m_maxsp;
 
+	// 削除フラグ立てる
+	void SetRemove();
 public:
 	//-----------------------------------
 	//	メインループ

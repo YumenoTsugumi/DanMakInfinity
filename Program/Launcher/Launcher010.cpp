@@ -25,10 +25,6 @@ void CLauncher010::Action(const CPos& newEnemyPos)
 			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii,loop), ii*60, 0, 0, 0, 30, 20 + ii%3);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
-		//for (int ii = 0; ii < loop; ii++) {
-		//	CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii, loop), -45, 0, 0, 0, 30, 1);
-		//	CBaseLauncher::m_bulletManager->Add(b);
-		//}
 		m_count = 0;
 
 		return;

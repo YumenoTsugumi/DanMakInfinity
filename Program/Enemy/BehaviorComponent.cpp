@@ -25,7 +25,7 @@ void CBehaviorComponent::SetWaitTime(int waitTime) {
 // 小型機
 //-------------------------------------------------------------------------------------
 // A地点から出てきて、うって、A地点に去る
-CInOutMotion::CInOutMotion(const CPos& initPos, const CPos& targetPos, double inSpeed, double outSpeed, int shotTime) :
+CInOutBehavior::CInOutBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed, double outSpeed, int shotTime) :
 	CBehaviorComponent(),
 	m_shotTime(shotTime),
 	m_shotCount(0),
@@ -42,12 +42,12 @@ CInOutMotion::CInOutMotion(const CPos& initPos, const CPos& targetPos, double in
 	m_outMove.SetDepartureAcce(+0.1, outSpeed); // 退場するときの加速度
 }
 
-CInOutMotion::~CInOutMotion()
+CInOutBehavior::~CInOutBehavior()
 {
 
 }
 
-void CInOutMotion::Action(CPos& updatePos)
+void CInOutBehavior::Action(CPos& updatePos)
 {
 	if (m_waitTime > 0) {
 		if (m_waitCount <= m_waitTime) {
@@ -74,12 +74,12 @@ void CInOutMotion::Action(CPos& updatePos)
 	}
 }
 
-BehaviorStatus CInOutMotion::GetBehaviorStatus()
+BehaviorStatus CInOutBehavior::GetBehaviorStatus()
 {
 	return m_moveStatus;
 }
 
-double CInOutMotion::GetDirection()
+double CInOutBehavior::GetDirection()
 {
 
 	if (m_moveStatus == BehaviorStatus::Admitting) {
@@ -95,7 +95,7 @@ double CInOutMotion::GetDirection()
 	return CFunc::ToRad(90.0);
 }
 
-void CInOutMotion::DebugPrint()
+void CInOutBehavior::DebugPrint()
 {
 
 }

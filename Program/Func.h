@@ -222,6 +222,7 @@ public:
 	//2点の角度
 	static double GetTwoPointAngle(CPos, CPos);
 	static double GetTwoPointAngle(double x1, double y1, double x2, double y2);
+	static double GetTwoPointAngle_180Deg(CPos, CPos); // +180度してかつDEGに戻してあるのであるので、そのままAddBulletに入力できる版
 
 	//近似角度
 	//targetAngle:32

@@ -225,6 +225,11 @@ double CFunc::GetTwoPointAngle(CPos p1, CPos p2) {
 double CFunc::GetTwoPointAngle(double x1, double y1, double x2, double y2) {
 	return atan2((y1 - y2), (x1 - x2));
 }
+// +180度してあるので、そのままAddBulletに入力できる版
+double CFunc::GetTwoPointAngle_180Deg(CPos p1, CPos p2)
+{
+	return  CFunc::ToDeg(GetTwoPointAngle(p1.x, p1.y, p2.x, p2.y)) +(180.0);
+}
 
 // ２つの円が重なっているか
 bool CFunc::CollisionCircleToCircle(const CPos& p1, double p1Radius, const CPos& p2, double p2Radius)

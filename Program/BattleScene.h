@@ -8,7 +8,7 @@
 
 #include "Launcher.h"
 #include "BaseEnemy.h"
-
+#include "BaseItem.h"
 #include "BackGround.h"
 
 class CBattleScene : public CScene{
@@ -40,9 +40,21 @@ public:
 
 	// 参照する範囲が広いのでグローバルにした
 	static CEffectManager m_effectManager; // エフェクト
+	static CItemManager m_itemManager; // アイテムマネージャー
 
+	// 弾消し
+	enum BulletRemoveType {
+		Nothing = 0,
+		Item = 1
+	};
+	void RemoveBullet(); // 弾消し処理
+	static void SetBulletRemoveTime(BulletRemoveType type, int time);
+	static BulletRemoveType m_bulletRemoveType;
+	static int m_bulletRemoveTime;
+	static int m_bulletRemoveCount;
 
 	// BattleSceneCollision.cppにて実装
-	void Collision_Enemy_BulyerBullet(); // 敵　時機の弾
+	void Collision_Enemy_PulyerBullet(); // 敵　時機の弾
+	void Collision_Item_Player(); // アイテム　時機
 
 };

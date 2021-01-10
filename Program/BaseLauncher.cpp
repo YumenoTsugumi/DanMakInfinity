@@ -1,8 +1,10 @@
 ﻿
 #include "BaseLauncher.h"
+#include "BaseEnemy.h"
 
 CBulletManager* CBaseLauncher::m_bulletManager = nullptr;
 CBeamManager* CBaseLauncher::m_beamManager = nullptr;
+CPos CBaseLauncher::m_target;
 
 void CBaseLauncher::SetBulletManagerPointer(CBulletManager* manager) {
 	m_bulletManager = manager;
@@ -42,4 +44,13 @@ double CBaseLauncher::RankRatio() {
 double CBaseLauncher::SpeedRange(double speed, int index, int max)
 {
 	return speed + (0.1*speed * ((double)index / (double)(max)));
+}
+
+void CBaseLauncher::SetTarget(CPos target) {
+	m_target = target;
+}
+
+void CBaseLauncher::SetParent(CBaseEnemy* parent)
+{
+	m_parent = parent;
 }
