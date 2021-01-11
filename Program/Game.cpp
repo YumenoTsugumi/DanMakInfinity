@@ -156,21 +156,21 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_09.png"), "bg_planet_09", 10109);
 
 
-	// 敵
-	for (int ii = 0; ii < 24; ii++) {
-		std::string format1 = MyFormat("ResourceX\\Enemy\\blue\\illumBlue%02d.png", ii + 1);
-		std::string format2 = MyFormat("enemy%02db", ii + 1);
+	// 敵 small
+	for (int ii = 1; ii <= 7; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\s%d.png", ii);
+		std::string format2 = MyFormat("enemyS%d", ii);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20000 + ii);
 	}
-	for (int ii = 0; ii < 24; ii++) {
-		std::string format1 = MyFormat("ResourceX\\Enemy\\green\\illumGreen%02d.png", ii + 1);
-		std::string format2 = MyFormat("enemy%02dg", ii + 1);
-		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20050 + ii);
-	}
-	for (int ii = 0; ii < 24; ii++) {
-		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\illumRed%02d.png", ii + 1);
-		std::string format2 = MyFormat("enemy%02dr", ii + 1);
+	for (int ii = 1; ii <= 10; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\m%d.png", ii);
+		std::string format2 = MyFormat("enemyM%d", ii);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20100 + ii);
+	}
+	for (int ii = 1; ii <= 4; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Enemy\\red\\l%d.png", ii);
+		std::string format2 = MyFormat("enemyL%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 20200 + ii);
 	}
 
 	{

@@ -1,4 +1,4 @@
-﻿#include "Enemy200.h"
+﻿#include "EnemyMedium.h"
 #include "DXFunc.h"
 
 #include "MoveComponent.h"

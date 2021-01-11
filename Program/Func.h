@@ -199,10 +199,8 @@ public:
 	// 連続するCPos列の距離を計測する
 	static double GetCurvePointListDistance(const std::vector<CPos>& posArray);
 
-
-	//P2に対して...不明
-	//P1は結果
-	static void RotatingMatrix(CPos *P1, CPos P2, CPos P3, double angle);
+	// 回転
+	static void RotatingMatrix(CPos *resultPos, const CPos& RelationalPos, const CPos& RotationCenter, double angleRad);
 
 	//v1とv2の2次元内積
 	static double InsideProduct(CPos v1, CPos v2);

@@ -13,8 +13,12 @@ void CBattleScene::Collision_Enemy_PulyerBullet()
 		CBaseEnemy* enemy = m_enemyManager.m_enemy[jj];
 
 		for (int kk = 0; kk < enemy->m_collisions.size(); kk++) {
-			Collision* co = &enemy->m_collisions[kk];
-			CPos ep = enemy->m_pos + co->m_relationPos;
+			const Collision& co = enemy->m_collisions[kk];
+			CPos pos;
+			double size;
+			enemy->GetCollisionData(co, pos, size);
+
+			CPos ep = enemy->m_pos + pos;
 
 			for (int ii = 0; ii < m_playerBullet.m_bulletTotalNum; ii++) {
 				if (m_playerBullet.m_bullet[ii] == nullptr) {
@@ -23,7 +27,7 @@ void CBattleScene::Collision_Enemy_PulyerBullet()
 				CPlayerBullet* playerBullet = (CPlayerBullet*)m_playerBullet.m_bullet[ii];
 
 
-				if (CFunc::CollisionCircleToCircle(playerBullet->m_pos, playerBullet->m_hitSize, ep, co->m_rad)) {
+				if (CFunc::CollisionCircleToCircle(playerBullet->m_pos, playerBullet->m_hitSize, ep, size)) {
 					enemy->Damaged(playerBullet->m_damage); // 爆発エフェクトはここ
 					playerBullet->Hit(); // ヒットエフェクトはココ
 					continue;

@@ -9,8 +9,9 @@
 #include "CustomBullet.h"
 #include "HomingBullet.h"
 
-#include "Enemy000.h"
-#include "Enemy200.h"
+#include "EnemySmall.h"
+#include "EnemyMedium.h"
+#include "EnemyLarge.h"
 
 
 
@@ -56,18 +57,18 @@ void CBattleScene::Init(CGame* gameP) {
 
 
 	// 000“G
-	for(int ii=0;ii<16;ii++)
-	{
-		double x = CFunc::RandF(50, 400);
-		double y = CFunc::RandF(-100, -10);
-		CPos pos1(x, y);
-		CEnemy000* e1 = new CEnemy000(pos1);
+	//for(int ii=0;ii<16;ii++)
+	//{
+	//	double x = CFunc::RandF(50, 400);
+	//	double y = CFunc::RandF(-100, -10);
+	//	CPos pos1(x, y);
+	//	CEnemy000* e1 = new CEnemy000(pos1);
 
-		CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 250), 7, 10, 180);
-		e1->SetBehaviorComponent(move, CFunc::RandI(0,60));
+	//	CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 250), 7, 10, 180);
+	//	e1->SetBehaviorComponent(move, CFunc::RandI(0,60));
 
-		m_enemyManager.Add(e1);
-	}
+	//	m_enemyManager.Add(e1);
+	//}
 
 	// 001“G
 	//for(int ii=0;ii<120;ii++)
@@ -85,19 +86,21 @@ void CBattleScene::Init(CGame* gameP) {
 	//	m_enemyManager.Add(e2);
 	//}
 	// 020‰é
-	{
-		CEnemy200* e2 = new CEnemy200(CPos(900, 200));
+	//{
+	//	CEnemy200* e2 = new CEnemy200(CPos(900, 200));
 
-		std::vector<CPos> poss = {
-		CPos(900, 50), CPos(600, 150), CPos(300, 150), CPos(-200, 50),
-		};
+	//	std::vector<CPos> poss = {
+	//	CPos(900, 50), CPos(600, 150), CPos(300, 150), CPos(-200, 50),
+	//	};
 
-		CBezierBehavior* move = new CBezierBehavior(poss, 1.3);
-		e2->SetBehaviorComponent(move);
+	//	CBezierBehavior* move = new CBezierBehavior(poss, 1.3);
+	//	e2->SetBehaviorComponent(move);
 
-		m_enemyManager.Add(e2);
-	}
+	//	m_enemyManager.Add(e2);
+	//}
 
+	// ‘S“G•\Ž¦
+	DebugAllEnemyDirection();
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
 }
@@ -306,7 +309,7 @@ void CBattleScene::RemoveBullet()
 			int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
 
 			double ang = 270.0;
-			double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+			double speed = 1.0 + CFunc::RandF(1000, 3000) / 1000.0;
 			CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
 			eff->SetSize(0.0, +0.033, 0.125);
 			CBattleScene::m_itemManager.Add(eff);
@@ -315,4 +318,27 @@ void CBattleScene::RemoveBullet()
 	}
 
 	m_bulletRemoveCount++;
+}
+
+
+// ‘S“G•\Ž¦
+void CBattleScene::DebugAllEnemyDirection()
+{
+	static int count = 0;
+	if (count == 0) {
+		for (int ii = 0; ii < 3; ii++) {
+			CEnemyS007* e1 = new CEnemyS007(CPos(900, 200));
+
+			std::vector<CPos> poss = {
+				CPos(100, -100), CPos(300, 500), CPos(500, 500), CPos(700, -100),
+			};
+
+			CBezierBehavior* move = new CBezierBehavior(poss, 3.0);
+			e1->SetBehaviorComponent(move, ii*120);
+			e1->SetDrawSize(1.0 + ii*2);
+			m_enemyManager.Add(e1);
+		}
+
+	}
+	count++;
 }

@@ -22,7 +22,6 @@ CItemManager::CItemManager(int m_num/* = 512*/){
 CItemManager::~CItemManager()
 {
 	// 親のデストラクタで開放される
-	//delete [] m_bullet;
 }
 
 void CItemManager::Draw() {
@@ -30,9 +29,7 @@ void CItemManager::Draw() {
 		if (m_bullet[i] == nullptr) {
 			continue;
 		}
-
 		m_bullet[i]->Draw();
-		
 	}
 }
 
@@ -99,9 +96,6 @@ void CBaseItem::Action(){
 		//移動
 		Move();
 
-
-
-
 		m_pos.y += m_gravity;
 		m_gravity += 0.1;
 	}
@@ -126,9 +120,6 @@ void CBaseItem::Draw(){
 		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
 
-	//SetDrawBlendMode(DX_BLENDMODE_ADD, 196);
-	//CDxFunc::MyDrawRotaGraph(m_pos, m_size * 1.5, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
-
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
@@ -136,11 +127,15 @@ void CBaseItem::Draw(){
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
 
-
-
-//void CBaseItem::RectOut(){
-//	//何もしない
-//}
+void CBaseItem::RectOut(){
+	//領域外に出たら削除
+	if (m_pos.x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+		m_pos.x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+		m_pos.y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+		m_pos.y >	CGame::GetBattleRect().rightDown.y + m_imageInfo.m_sizeY / 2) {
+		m_removeFlg = true;
+	}
+}
 
 void CBaseItem::Remove(){
 	//何もしない
@@ -155,7 +150,6 @@ void CBaseItem::SetWaitTime(int waitTime)
 {
 	m_waitTime = waitTime;
 }
-
 
 void CBaseItem::SetSize(double size, double plusSize, double maxSize) {
 	m_size = size;

@@ -342,14 +342,14 @@ double CFunc::GetCurvePointListDistance(const std::vector<CPos>& posArray)
 	return dist;
 }
 
-
-void CFunc::RotatingMatrix(CPos* P1, CPos P2, CPos P3, double angle) {
-	double ox = P2.x - P3.x;
-	double oy = P2.y - P3.y;
-	P1->x = ox * cos(angle) + oy * sin(angle);
-	P1->y = -ox * sin(angle) + oy * cos(angle);
-	P1->x += P3.x;
-	P1->y += P3.y;
+// 回転させる
+void CFunc::RotatingMatrix(CPos* resultPos, const CPos& RelationalPos, const CPos& RotationCenter, double angleRad) {
+	double ox = RelationalPos.x - RotationCenter.x;
+	double oy = RelationalPos.y - RotationCenter.y;
+	resultPos->x = ox * cos(angleRad) + oy * sin(angleRad);
+	resultPos->y = -ox * sin(angleRad) + oy * cos(angleRad);
+	resultPos->x += RotationCenter.x;
+	resultPos->y += RotationCenter.y;
 }
 
 double CFunc::GetDistanceSqrt(const CPos& p1, const CPos& p2)

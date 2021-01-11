@@ -99,7 +99,8 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 	m_life(1),
 	m_hitSize(0),
 	m_removeFlg(false),
-	m_size(EnemySize::Small)
+	m_size(EnemySize::Small),
+	m_drawSizeRatio(1.0)
 {
 
 }
@@ -168,7 +169,7 @@ void CBaseEnemy::Die() {
 	int itemCount = (m_size + 1) * 10;
 	int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
 	for (int ii = 0; ii < itemCount; ii++) {
-		double ang = CFunc::RandI(180, 360);
+		double ang = CFunc::RandI(180+60, 360-60);
 		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
 		CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
 		CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
@@ -176,6 +177,7 @@ void CBaseEnemy::Die() {
 		CBattleScene::m_itemManager.Add(eff);
 	}
 
+	// 大型機の場合、全部弾消し
 	if (m_size == EnemySize::Large) {
 		CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 30);
 	}
@@ -203,13 +205,69 @@ void CBaseEnemy::AddLauncher(const CPos& pos, CBaseLauncher* launcher)
 	m_launchers.push_back(l);
 }
 
+// 時機の位置の設定
 void CBaseEnemy::SetTarget(CPos target) {
 	m_target = target;
 }
 
+// 共通の初期化
 void CBaseEnemy::Init(int life, EnemySize size, const std::vector<Collision>& collisions)
 {
 	m_life = life;
 	m_size = size;
 	m_collisions = collisions;
+}
+
+// 敵が向いている方向
+double CBaseEnemy::GetDirectionDeg()
+{
+	return CFunc::ToDeg(m_behaviorComponent->GetDirection());
+}
+double CBaseEnemy::GetDirectionRad()
+{
+	return m_behaviorComponent->GetDirection();
+}
+
+// 角度と大きさを考慮した、相対座標と角度を返してくれる
+void CBaseEnemy::GetCollisionData(const Collision& co, CPos& p, double& size)
+{
+	CPos p2 = co.m_relationPos * m_drawSizeRatio; // 回転中心からの相対位置
+	CPos p3 = CPos(0, 0); // 回転中心
+	CFunc::RotatingMatrix(&p, p2, p3, -GetDirectionRad() + CFunc::ToRad(90.0));
+
+	size = co.m_rad * m_drawSizeRatio;
+	return;
+}
+CPos CBaseEnemy::GetCollisionData(const CPos& launcherPos)
+{
+	CPos returnPos;
+	CPos p2 = launcherPos * m_drawSizeRatio; // 回転中心からの相対位置
+	CPos p3 = CPos(0, 0); // 回転中心
+	CFunc::RotatingMatrix(&returnPos, p2, p3, -GetDirectionRad() + CFunc::ToRad(90.0));
+	return returnPos;
+}
+
+
+
+// 当たり判定の表示
+void CBaseEnemy::DebugCollisionDraw()
+{
+	
+	for (const Collision& co : m_collisions) {
+		CPos pos; // 結果
+		double size; // 大きさ
+		GetCollisionData(co, pos, size);
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+		CDxFunc::DrawCircle(m_pos + pos, size, 32, GetColor(0, 0, 255), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		CDxFunc::DrawCircle(m_pos + pos, size, 32, GetColor(0, 0, 255), FALSE);
+	}
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+}
+
+// 表示サイズの割合手
+void CBaseEnemy::SetDrawSize(double size)
+{
+	m_drawSizeRatio = size;
 }

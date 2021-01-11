@@ -62,6 +62,8 @@ public:
 	//メイン描画
 	virtual void Draw();
 
+	virtual void RectOut();
+
 	double m_gravity; // 重力　落ちる速度
 
 	//移動制御	弾のを流用

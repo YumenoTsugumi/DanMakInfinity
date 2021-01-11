@@ -80,7 +80,13 @@ public:
 	void AddLauncher(const CPos& pos, CBaseLauncher* launcher);
 
 	void Init(int life, EnemySize size, const std::vector<Collision>& collisions);
+
+	// 当たり判定
 	std::vector<Collision> m_collisions;
+	// 角度と大きさを考慮した、相対座標と角度を返してくれる
+	void GetCollisionData(const Collision& co, CPos& p, double& size);
+	CPos GetCollisionData(const CPos& launcherPos);
+
 	std::vector<Launcher> m_launchers; // 発射口
 	CBehaviorComponent* m_behaviorComponent; // 移動コンポーネント
 	int m_life; // ライフ
@@ -91,13 +97,25 @@ public:
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
 	int m_count;
 
+	// 表示サイズの割合手
+	void SetDrawSize(double size);
+	double m_drawSizeRatio;
+
 	double m_hitSize; // 当たり判定の大きさ（半径）継承したクラスで設定する
 
 	CPos m_pos; // 座標
 	CPos GetPos() { return m_pos; }
 
+	// 敵が向いている方向
+	double GetDirectionDeg();
+	double GetDirectionRad();
+
+	// 時機の位置の設定
 	static CPos m_target;
 	static void SetTarget(CPos target);
+
+	// 当たり判定を可視化
+	void DebugCollisionDraw();
 };
 
 /*

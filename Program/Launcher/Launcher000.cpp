@@ -1,5 +1,6 @@
 ﻿
 #include "Launcher000.h"
+#include "BaseEnemy.h"
 
 // 1way　時機狙いを撃つ
 //	発射間隔が早くなる	15fr～7fr
@@ -55,7 +56,7 @@ void CLauncher001::Action(const CPos& newPos)
 	m_count++;
 }
 
-#include "BaseEnemy.h"
+
 // 等角度2wayしばらくの時間　時機狙いを撃つ　ぶっちゃけナイトメアの先頭砲台
 LANCHERCPP(CLauncher002)
 void CLauncher002::Action(const CPos& newPos)
@@ -90,4 +91,22 @@ void CLauncher002::Action(const CPos& newPos)
 	if (m_count == reset) {
 		m_count = 0;
 	}
+}
+
+
+// 敵が向いている方向にうつ 
+LANCHERCPP(CLauncher004)
+void CLauncher004::Action(const CPos& newEnemyPos)
+{
+	__super::Action(newEnemyPos);
+
+	if (m_count > 5) {
+		double angle = m_parent->GetDirectionDeg();
+		CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + m_parent->GetCollisionData(m_relativePos), 4.0, angle, 0, 0, 0, 0, 0);
+		CBaseLauncher::m_bulletManager->Add(b);
+		m_count = 0;
+		return;
+	}
+
+	m_count++;
 }

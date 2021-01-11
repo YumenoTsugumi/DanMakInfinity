@@ -93,9 +93,6 @@
     <ClCompile Include="Program\Enemy\BaseEnemy.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Enemy\Enemy000.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Program\BackGround\BackGround.cpp">
       <Filter>ソース ファイル\BackGround</Filter>
     </ClCompile>
@@ -108,14 +105,20 @@
     <ClCompile Include="Program\BaseItem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Enemy\Enemy200.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Program\Launcher\Launcher020.cpp">
       <Filter>ソース ファイル\Launcher</Filter>
     </ClCompile>
     <ClCompile Include="Program\Launcher\Launcher030.cpp">
       <Filter>ソース ファイル\Launcher</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemySmall.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemyLarge.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemyMedium.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +179,6 @@
     <ClInclude Include="Program\Enemy\BaseEnemy.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Enemy\Enemy000.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Program\Enemy\MoveComponent.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
@@ -191,14 +191,20 @@
     <ClInclude Include="Program\BaseItem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Enemy\Enemy200.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Program\Launcher\Launcher020.h">
       <Filter>ヘッダー ファイル\Launcher</Filter>
     </ClInclude>
     <ClInclude Include="Program\Launcher\Launcher030.h">
       <Filter>ヘッダー ファイル\Launcher</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemySmall.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemyLarge.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemyMedium.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

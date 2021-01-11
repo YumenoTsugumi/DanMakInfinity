@@ -57,4 +57,7 @@ public:
 	void Collision_Enemy_PulyerBullet(); // 敵　時機の弾
 	void Collision_Item_Player(); // アイテム　時機
 
+
+	// 敵出現ルーチン
+	void DebugAllEnemyDirection();
 };
