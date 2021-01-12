@@ -11,7 +11,7 @@
 // Enemy200
 //----------------------------------------------------------------------------------------------------------
 CEnemy200::CEnemy200(const CPos& pos) : CBaseEnemy(pos){
-	image = (CImage*)CGame::GetResource("enemy24b");
+	m_image = (CImage*)CGame::GetResource("enemy24b");
 
 	std::vector<Collision> collisions = { Collision(CPos(0,0), 128.0) };
 	Init(5000, Large, collisions);
@@ -26,5 +26,5 @@ CEnemy200::~CEnemy200() {
 }
 void CEnemy200::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-	CDxFunc::MyDrawRotaGraph(m_pos, 1.0, CFunc::ToRad(0.0), image->m_iamge, TRUE, FALSE);
+	CDxFunc::MyDrawRotaGraph(m_pos, 1.0, CFunc::ToRad(0.0), m_image->m_iamge, TRUE, FALSE);
 }

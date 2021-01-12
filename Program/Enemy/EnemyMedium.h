@@ -9,7 +9,5 @@ public:
 	CEnemy200(const CPos& pos);
 	~CEnemy200();
 	virtual void Draw();
-
-	CImage* image;
 };
 

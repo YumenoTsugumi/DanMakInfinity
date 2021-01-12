@@ -252,7 +252,7 @@ CPos CBaseEnemy::GetCollisionData(const CPos& launcherPos)
 // 当たり判定の表示
 void CBaseEnemy::DebugCollisionDraw()
 {
-	
+	return;
 	for (const Collision& co : m_collisions) {
 		CPos pos; // 結果
 		double size; // 大きさ

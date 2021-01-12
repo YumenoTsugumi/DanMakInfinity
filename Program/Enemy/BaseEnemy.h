@@ -97,6 +97,8 @@ public:
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
 	int m_count;
 
+	CImage* m_image;
+
 	// 表示サイズの割合手
 	void SetDrawSize(double size);
 	double m_drawSizeRatio;

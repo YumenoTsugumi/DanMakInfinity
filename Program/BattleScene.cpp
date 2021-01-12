@@ -56,19 +56,7 @@ void CBattleScene::Init(CGame* gameP) {
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
 
 
-	// 000“G
-	//for(int ii=0;ii<16;ii++)
-	//{
-	//	double x = CFunc::RandF(50, 400);
-	//	double y = CFunc::RandF(-100, -10);
-	//	CPos pos1(x, y);
-	//	CEnemy000* e1 = new CEnemy000(pos1);
 
-	//	CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 250), 7, 10, 180);
-	//	e1->SetBehaviorComponent(move, CFunc::RandI(0,60));
-
-	//	m_enemyManager.Add(e1);
-	//}
 
 	// 001“G
 	//for(int ii=0;ii<120;ii++)
@@ -100,7 +88,7 @@ void CBattleScene::Init(CGame* gameP) {
 	//}
 
 	// ‘S“G•\Ž¦
-	DebugAllEnemyDirection();
+	//DebugAllEnemyDirection();
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
 }
@@ -125,6 +113,49 @@ void CBattleScene::Main(CInputAllStatus *input){
 	//		SetBackScene();
 	//	}
 	//}
+	static int tekitouCount = 0;
+	tekitouCount++;
+
+	if (tekitouCount % 120 == 0) {
+		// 000“G
+		for (int ii = 0; ii < 1; ii++)
+		{
+			double x = CFunc::RandF(50, 750);
+			double y = CFunc::RandF(-100, -10);
+			CPos pos1(x, y);
+			CEnemyS001* e1 = new CEnemyS001(pos1);
+
+			CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 250), 7, 10, 180);
+			e1->SetBehaviorComponent(move, CFunc::RandI(0, 60));
+
+			m_enemyManager.Add(e1);
+		}
+
+		// 002“G
+		for (int ii = 0; ii < 3; ii++)
+		{
+			double x = CFunc::RandF(50, 750);
+			double y = CFunc::RandF(-100, -10);
+			CPos pos1(x, y);
+			CEnemyS002* e1 = new CEnemyS002(pos1);
+
+			CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 3000), 7, 10, 1800);
+			e1->SetBehaviorComponent(move, CFunc::RandI(0, 60));
+
+			m_enemyManager.Add(e1);
+		}
+	}
+	if (tekitouCount % 120 == 0) {
+		double x = CFunc::RandF(50, 750);
+		double y = CFunc::RandF(-100, -10);
+		CPos pos1(x, y);
+		CEnemyS003* e1 = new CEnemyS003(pos1);
+
+		CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, 3000), 1, 1, 180);
+		e1->SetBehaviorComponent(move);
+
+		m_enemyManager.Add(e1);
+	}
 
 
 	static int count = 0;

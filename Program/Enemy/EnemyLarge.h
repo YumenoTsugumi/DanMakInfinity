@@ -9,7 +9,5 @@ public:
 	CEnemyL001(const CPos& pos);
 	~CEnemyL001();
 	virtual void Draw();
-
-	CImage* image;
 };
 
