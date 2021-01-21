@@ -48,13 +48,13 @@ CBaseEffect::CBaseEffect(int order, EDirType type, CPos P, double speed, double 
 	Set();
 	SetImage(image);
 }
-CBaseEffect::CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName),
-	m_order(order)
-{
-	Set();
-	SetImage(ImageName);
-}
+//CBaseEffect::CBaseEffect(int order, EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+//						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName),
+//	m_order(order)
+//{
+//	Set();
+//	SetImage(ImageName);
+//}
 
 CBaseEffect::~CBaseEffect(){
 

@@ -37,7 +37,7 @@ class CPlayerBullet : public CBaseBullet {
 public:
 	//コンストラクタ	弾作成
 	CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
-	CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName);
+	//CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName);
 
 	double m_hitSize; // 当たり判定
 	int m_damage; // 与えるダメージ

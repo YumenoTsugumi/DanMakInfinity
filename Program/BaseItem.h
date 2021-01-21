@@ -49,7 +49,7 @@ public:
 
 	//コンストラクタ	弾作成
 	CBaseItem(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
-	CBaseItem(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
+	//CBaseItem(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 
 	//デストラクタ
 	virtual ~CBaseItem();

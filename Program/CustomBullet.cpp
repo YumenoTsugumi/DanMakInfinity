@@ -18,19 +18,19 @@ CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, 
 		m_angle = angle;
 	}
 }
-CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
-	//親のコンストラクタが呼ばれたあと（Setとかで設定）ココに来る
-	//継承クラスの設定
-	Set();
-
-	//値を引き継ぐNOTRANSの場合、そのままの値（99999）で引き継ぐか判定しているため
-	//コンストラクタで/RADされたら困る
-	//その為、ここで上書き
-	if(angle == NOTRANS){
-		m_angle = angle;
-	}
-}
+//CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+//				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
+//	//親のコンストラクタが呼ばれたあと（Setとかで設定）ココに来る
+//	//継承クラスの設定
+//	Set();
+//
+//	//値を引き継ぐNOTRANSの場合、そのままの値（99999）で引き継ぐか判定しているため
+//	//コンストラクタで/RADされたら困る
+//	//その為、ここで上書き
+//	if(angle == NOTRANS){
+//		m_angle = angle;
+//	}
+//}
 
 
 CCustomBullet::~CCustomBullet(){

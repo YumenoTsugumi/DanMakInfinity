@@ -44,13 +44,13 @@ CBaseItem::CBaseItem(EDirType type, CPos P, double speed, double angle, double c
 	Set();
 	SetImage(image);
 }
-CBaseItem::CBaseItem(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
-						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName),
-	m_gravity(0.0)
-{
-	Set();
-	SetImage(ImageName);
-}
+//CBaseItem::CBaseItem(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+//						CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName),
+//	m_gravity(0.0)
+//{
+//	Set();
+//	SetImage(ImageName);
+//}
 
 CBaseItem::~CBaseItem(){
 

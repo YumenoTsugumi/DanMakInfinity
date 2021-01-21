@@ -17,7 +17,7 @@ public:
 	virtual void Set();
 	//コンストラクタ　初期化する物が増えてる
 	CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
-	CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
+	//CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 
 	//デストラクタ
 	virtual~CCustomBullet();

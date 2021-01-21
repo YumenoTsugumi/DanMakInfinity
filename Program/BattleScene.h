@@ -38,6 +38,9 @@ public:
 
 	CBackGroundPatternA m_bg; // 背景
 
+	CPos testLauncherPos; // テスト砲台位置
+	CLauncher999* testLauncher; // テスト砲台
+
 	// 参照する範囲が広いのでグローバルにした
 	static CEffectManager m_effectManager; // エフェクト
 	static CItemManager m_itemManager; // アイテムマネージャー

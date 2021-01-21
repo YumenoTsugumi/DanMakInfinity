@@ -30,7 +30,9 @@ void CResourceManager::Add(CResource* resource, const char* name, int index) {
 
 CResource* CResourceManager::GetResource(const char* name) {
 	CResource* res = m_resource[name];
-	while (!res || !res->m_loadFlg) {
+	if (res == nullptr)return nullptr;
+
+	while (!res->m_loadFlg) {
 		ProcessMessage();
 		res = m_resource[name];
 		Sleep(16);
@@ -39,7 +41,9 @@ CResource* CResourceManager::GetResource(const char* name) {
 }
 CResource* CResourceManager::GetResource(int index) {
 	CResource* res = m_indexToMapResource[index];
-	while (!res || !res->m_loadFlg) {
+	if (res == nullptr)return nullptr;
+
+	while (!res->m_loadFlg) {
 		ProcessMessage();
 		res = m_indexToMapResource[index];
 		Sleep(16);

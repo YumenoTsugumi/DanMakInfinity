@@ -126,16 +126,13 @@ protected:
 	//-----------------------------------
 	//	画像データ関連
 	//-----------------------------------
-	//画像総合データのポインタ　コンストラクタで画像の読み込みを行う
-	static CResourceManager *m_imageManager;
-
 
 	//画像データへのポインタ　総合画像データから保存しておく
 	int *m_image;
+public:
 	//画像情報
 	CBulletImageInfo m_imageInfo;
 
-public:
 	//DX_BLENDMODE_NOBLEND　:　ノーブレンド（デフォルト）
 	//DX_BLENDMODE_ALPHA　　:　αブレンド
 	//DX_BLENDMODE_ADD　　　:　加算ブレンド
@@ -181,12 +178,12 @@ public:
 	virtual void Set(bool type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle);
 	//画像関連
 	virtual void SetImage(int image);
-	virtual void SetImage(const char* ImageName);
-	virtual void SetImageInfo(CBulletImage* bulletImage);
+	//virtual void SetImage(const char* ImageName);
+	virtual void SetImageInfo(int imageNo, CBulletImage* bulletImage);
 
 	//コンストラクタ	弾作成
 	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image);
-	CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
+	//CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName);
 	//デストラクタ
 	virtual ~CBaseBullet();
 

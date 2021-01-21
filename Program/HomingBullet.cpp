@@ -9,11 +9,11 @@ CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double 
 	m_num = NUM;
 	Set();
 }
-CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
-				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
-	m_num = NUM;
-	Set();
-}
+//CHomingLaser::CHomingLaser(EDirType type, CPos P, int NUM, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* ImageName) :
+//				CBaseBullet(type, P, speed, angle, corner, acce, maxSpeed, nearAngle, ImageName){
+//	m_num = NUM;
+//	Set();
+//}
 CHomingLaser::~CHomingLaser(){
 	free(m_posA);
 	//delete(m_limit);

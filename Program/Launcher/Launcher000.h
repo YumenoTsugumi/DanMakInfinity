@@ -10,3 +10,6 @@ LANCHERHEADER(CLauncher002) // 等角度2wayしばらくの時間　時機狙い
 LANCHERHEADER(CLauncher004) // 敵が向いている方向に打つ
 
 LANCHERHEADER(CLauncher005) // 一直線
+
+
+LANCHERHEADER(CLauncher999) // テスト

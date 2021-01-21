@@ -140,3 +140,34 @@ void CLauncher005::Action(const CPos& newEnemyPos)
 
 	m_count++;
 }
+
+
+
+
+
+// テスト
+LANCHERCPP(CLauncher999)
+void CLauncher999::Action(const CPos& newEnemyPos)
+{
+	static double sppeed = 3.0;
+	sppeed += 0.03;
+	if (sppeed > 5.0)sppeed = 3.0;
+	__super::Action(newEnemyPos);
+	if (m_count > 10) {
+		int bulletID[] = { 00,10,20,30,50, 60,70,80,90 };
+		for (int jj = 0; jj < 9; jj++) {
+			for (int ii = 0; ii < 1; ii++) {
+				CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100+jj*80, 0), sppeed, 0, 0, 0, 0, 0, bulletID[jj] + 1);
+				CBaseLauncher::m_bulletManager->Add(b1);
+
+				CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100+jj*80, 0), sppeed, 180, 0, 0, 0, 0, bulletID[jj] + 2);
+				CBaseLauncher::m_bulletManager->Add(b2);
+			}
+		}
+
+		m_count = 0;
+		return;
+	}
+
+	m_count++;
+}

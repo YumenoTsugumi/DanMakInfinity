@@ -7,6 +7,10 @@
 #include "BaseEffect.h"
 #include "BattleScene.h"
 
+CImage* m_imageRedAura = nullptr;
+CImage* m_imageBlueAura = nullptr;
+
+
 //---------------------------------------------------------------------------------
 //	CBulletImageInfo
 //---------------------------------------------------------------------------------
@@ -73,12 +77,35 @@ void CBulletManager::Action(){
 }
 
 void CBulletManager::Draw(){
+	for (int i = 0; i < m_bulletTotalNum; i++) {
+		if (m_bullet[i] == nullptr) {
+			continue;
+		}
+		// ÉIÅ[ÉâÇÃï`âÊ
+		CBaseBullet* bullet = m_bullet[i];
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+		if (bullet->m_imageInfo.m_imageNo >= 0 && bullet->m_imageInfo.m_imageNo <= 100) {
+			if (bullet->m_imageInfo.m_imageNo % 10 == 2) {
+				CDxFunc::MyDrawRotaGraph(bullet->m_pos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageBlueAura->m_iamge); // ê¬ÉIÅ[Éâ
+			}
+			else if (bullet->m_imageInfo.m_imageNo % 10 == 1) {
+				CDxFunc::MyDrawRotaGraph(bullet->m_pos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageRedAura->m_iamge); // ê‘ÉIÅ[Éâ
+			}
+		}
+	}
+
 	for(int i=0;i<m_bulletTotalNum;i++){
 		if (m_bullet[i] == nullptr) {
 			continue;
 		}
 		m_bullet[i]->Draw();
 	}
+
+	if (m_imageRedAura == nullptr) {
+		m_imageBlueAura = (CImage*)CGame::GetResource(500);
+		m_imageRedAura = (CImage*)CGame::GetResource(501);
+	}
+
 }
 
 //îzóÒÇÃãÛÇ´ÇíTÇµíeÇë„ì¸
@@ -130,16 +157,19 @@ int CBulletManager::Add(CBaseBullet *Bullet){
 //---------------------------------------------------------------------------------
 CPos CBaseBullet::m_target;
 CRect CBaseBullet::m_rect;
-CResourceManager* CBaseBullet::m_imageManager = nullptr;
 
 CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image){
 	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
 	SetImage(image);
+
 }
-CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName){
-	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
-	SetImage(imageName);
-}
+//CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName){
+//	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
+//	SetImage(imageName);
+//	if (m_imageRedAura == nullptr) {
+//		m_imageRedAura = (CImage*)CGame::GetResource(600);
+//	}
+//}
 
 
 CBaseBullet::~CBaseBullet(){
@@ -171,6 +201,8 @@ void CBaseBullet::Draw(){
 	if(m_imageInfo.m_rotationFlg == true){
 		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
+
+	SetDrawBlendMode(m_blendType, 255);
 	//ï`âÊ
 	CDxFunc::MyDrawRotaGraph(m_pos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
@@ -286,16 +318,19 @@ void CBaseBullet::SetImage(int image){
 	}
 	CBulletImage* bulletImage = (CBulletImage*)CGame::GetResource(image);
 
-	SetImageInfo(bulletImage);
+	SetImageInfo(image, bulletImage);
 }
 
-void CBaseBullet::SetImage(const char* ImageName){
-	CBulletImage* bulletImage = (CBulletImage*)CGame::GetResource(ImageName);
+//void CBaseBullet::SetImage(const char* imageName){
+//	CBulletImage* bulletImage = (CBulletImage*)CGame::GetResource(imageName);
+//
+//	SetImageInfo(bulletImage);
+//}
 
-	SetImageInfo(bulletImage);
-}
+void CBaseBullet::SetImageInfo(int imageNo, CBulletImage* bulletImage){
 
-void CBaseBullet::SetImageInfo(CBulletImage* bulletImage){
+	m_imageInfo.m_imageNo = imageNo;
+
 	//âÊëúëççáèÓïÒÇ©ÇÁidxÇ…ëŒâûÇ∑ÇÈèÓïÒÇê›íË
 	if(bulletImage->m_num > 1){
 		m_imageInfo.m_animeFlg = true;
@@ -305,7 +340,7 @@ void CBaseBullet::SetImageInfo(CBulletImage* bulletImage){
 	m_imageInfo.m_animeNum = bulletImage->m_num;
 	m_imageInfo.m_animePos = 0;
 	m_imageInfo.m_animeSpeed = bulletImage->m_animeSpeed;
-	m_imageInfo.m_imageNo = bulletImage->m_index;
+
 
 	if(bulletImage->m_rotaSpeed == 0.0){
 		m_imageInfo.m_rotationFlg = false;

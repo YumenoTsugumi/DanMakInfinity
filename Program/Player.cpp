@@ -82,16 +82,17 @@ void CPlayer::Draw()
 
 void CPlayer::Shot()
 {
+	int bulletImage = 998;
 	{
 		double speed = 32.0;
 		double angle = 270.0;
-		CPlayerBullet* b1 = new CPlayerBullet(10, m_pos, speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b1 = new CPlayerBullet(10, m_pos, speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b1);
 
-		CPlayerBullet* b2 = new CPlayerBullet(10, m_pos + CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b2 = new CPlayerBullet(10, m_pos + CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b2);
 
-		CPlayerBullet* b3 = new CPlayerBullet(10, m_pos - CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b3 = new CPlayerBullet(10, m_pos - CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b3);
 	}
 
@@ -99,13 +100,13 @@ void CPlayer::Shot()
 		CPos relativePos = m_pos + CPos(100, 50);
 		double speed = 32.0;
 		double angle = 270.0 + 15.0;
-		CPlayerBullet* b1 = new CPlayerBullet(10, relativePos, speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b1 = new CPlayerBullet(10, relativePos, speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b1);
 
-		CPlayerBullet* b2 = new CPlayerBullet(10, relativePos + CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b2 = new CPlayerBullet(10, relativePos + CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b2);
 
-		CPlayerBullet* b3 = new CPlayerBullet(10, relativePos - CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b3 = new CPlayerBullet(10, relativePos - CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b3);
 	}
 
@@ -113,13 +114,13 @@ void CPlayer::Shot()
 		CPos relativePos = m_pos + CPos(-100, 50);
 		double speed = 32.0;
 		double angle = 270.0 - 15.0;
-		CPlayerBullet* b1 = new CPlayerBullet(10, relativePos, speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b1 = new CPlayerBullet(10, relativePos, speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b1);
 
-		CPlayerBullet* b2 = new CPlayerBullet(10, relativePos + CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b2 = new CPlayerBullet(10, relativePos + CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b2);
 
-		CPlayerBullet* b3 = new CPlayerBullet(10, relativePos - CPos(30, 0), speed, angle, 0, 0, 0, 0, 998/*"playerBullet"*/);
+		CPlayerBullet* b3 = new CPlayerBullet(10, relativePos - CPos(30, 0), speed, angle, 0, 0, 0, 0, bulletImage/*"playerBullet"*/);
 		m_playerBullet->Add(b3);
 	}
 }
@@ -134,12 +135,12 @@ CPlayerBullet::CPlayerBullet(int damage, CPos P, double speed, double angle, dou
 {
 	m_hitSize = 8.0;
 }
-CPlayerBullet::CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName) :
-	CBaseBullet(EDirType::Abs, P, speed, angle, corner, acce, maxSpeed, nearAngle, imageName),
-	m_damage(damage)
-{
-	m_hitSize = 8.0;
-}
+//CPlayerBullet::CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName) :
+//	CBaseBullet(EDirType::Abs, P, speed, angle, corner, acce, maxSpeed, nearAngle, imageName),
+//	m_damage(damage)
+//{
+//	m_hitSize = 8.0;
+//}
 
 // 弾が何かに当たった時
 void CPlayerBullet::Hit()

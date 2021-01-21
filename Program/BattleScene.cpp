@@ -31,13 +31,17 @@ CBattleScene::CBattleScene(int InTime) :
 	m_beamManeger(128),
 	m_enemyManager(256),
 	m_player(),
-	m_bg()
+	m_bg(),
+	testLauncher(nullptr)
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
 	Set(InTime);
 
 	m_bulletRemoveTime = m_bulletRemoveCount = 0;
+
+	testLauncherPos = CPos(0, 200);
+	testLauncher = new CLauncher999(0, testLauncherPos, CPos(0,0));
 }
 
 CBattleScene::~CBattleScene(){
@@ -116,6 +120,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	static int tekitouCount = 0;
 	tekitouCount++;
 
+#if 0
 	if (tekitouCount % 120 == 0) {
 		// 000敵
 		for (int ii = 0; ii < 1; ii++)
@@ -156,7 +161,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 		m_enemyManager.Add(e1);
 	}
-
+#endif
 
 	static int count = 0;
 	count++;
@@ -274,6 +279,9 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	//CPos ppp(m_count % 100,m_count % 100);
 #endif
+
+
+	testLauncher->Action(testLauncherPos);
 
 	////どんな状態でもアクションする処理
 	m_bg.Action();

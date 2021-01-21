@@ -90,18 +90,53 @@ void CGame::ImageLoad()
 
 	//弾幕画像(試作型)
 	//ふぁいる、総数、X、Y、サイズX、サイズY、アニメ速度、回転速度
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet00.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet00", 00);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet01.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet01", 01);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet02.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet02", 02);
+		
 
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet10.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet10", 10);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet11", 11);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet12", 12);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet01.png", 6, 6, 1, 32, 32, 5, 0.0), "bullet01", 01);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet02.png", 6, 6, 1, 32, 32, 5, 0.0), "bullet02", 02);
 
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet20.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet20", 20);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
-	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 4, 4, 1, 16, 32, 5, 0.0), "bullet11", 11);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 4, 4, 1, 16, 32, 5, 0.0), "bullet12", 12);
 
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 4, 4, 1, 32, 48, 6, 0.0), "bullet21", 21);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 4, 4, 1, 32, 48, 6, 0.0), "bullet22", 22);
+
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet31.png", 1, 1, 1, 32, 48, 0, 4.0), "bullet31", 31);
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet32.png", 1, 1, 1, 32, 48, 0, 4.0), "bullet32", 32);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet51.png", 1, 1, 1, 15, 15, 0, 0.0), "bullet51", 51);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet52.png", 1, 1, 1, 15, 15, 0, 0.0), "bullet52", 52);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet61.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet61", 61);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet62.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet62", 62);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet71.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet71", 71);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet72.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet72", 72);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet81.png", 2, 2, 1, 16, 32, 6, 0.0), "bullet81", 81);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet82.png", 2, 2, 1, 16, 32, 6, 0.0), "bullet82", 82);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet91.png", 2, 2, 1, 37, 54, 6, 0.0), "bullet91", 91);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet92.png", 2, 2, 1, 37, 54, 6, 0.0), "bullet92", 92);
+
+
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet02.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet02", 02);
+
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet10.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet10", 10);
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet11.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet11", 11);
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet12.png", 2, 2, 1, 16, 64, 10, 0.0), "bullet12", 12);
+
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet20.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet20", 20);
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet21.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet21", 21);
+	//m_resourceManager.Add(new CBulletImage("Resource\\bullet22.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet22", 22);
+
+	m_resourceManager.Add(new CImage("Resource\\auraBlue.png"), "auraBlue", 500);
+	m_resourceManager.Add(new CImage("Resource\\auraRed.png"), "auraRed", 501);
+
+
+	//
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\playerBullet2.png", 1, 1, 1, 128, 256, 0, 0.0), "playerBullet2", 997);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
 	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
