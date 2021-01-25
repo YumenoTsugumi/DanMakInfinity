@@ -68,7 +68,7 @@ public:
 	//コンストラクタ
 	//レーザー１本の発射最大数を設定する
 	//デフォルト128で構成される
-	//800*600で端から端まで　速度10間隔1なら128で十分
+	//WindowX*WindowYで端から端まで　速度10間隔1なら128で十分
 	CBaseBeam(CPos P, double angle, int imageIndex1, int imageIndex2, int num = 128);
 	CBaseBeam(CPos P, double angle, const char* imageName1, const char* imageName2, int num = 128);
 	virtual ~CBaseBeam();
@@ -160,8 +160,8 @@ public:
 	//削除範囲は少し広めに取る
 	CBaseBeamChild::SetBigRect(CRect(	0 - 100,
 										0 - 100,
-										800 + 100,
-										600 + 100));
+										WindowX + 100,
+										WindowY + 100));
 	//画像
 	//レーザー用の画像読み込み
 	{	const char fileA[][RESOURCENAMEMAX] = {	"Image/bulletstand_b.png","Image/childLaser_b.png"	};

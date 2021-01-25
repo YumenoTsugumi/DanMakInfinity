@@ -95,7 +95,7 @@ public:
 •’Ê‚Ì’e–‹ƒNƒ‰ƒX‚Æ“¯‚¶Žg‚¢•û‚ª‚Å‚«‚é
 
 
-	CPos pp(CFunc::RandF(0,800), CFunc::RandF(0,400));
+	CPos pp(CFunc::RandF(0,WindowX), CFunc::RandF(0,400));
 	double ang = CFunc::RandF(0,360);
 	CBaseItem* eff = new CBaseItem(EDirType::Abs, pp, 2.0, ang, 0,0,0, 206);
 	eff->SetSize(3.0, +0.05);

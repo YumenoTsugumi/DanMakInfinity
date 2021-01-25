@@ -32,20 +32,24 @@ CBackGroundPatternA::CBackGroundPatternA()
 	m_imageFarwaySpace = (CImage*)CGame::GetResource(fileNameSpaceBG[spaceBGIndex]);
 	m_scrollFarwayY = 0.4;
 	if (CFunc::RandI(0, 1)) {
-		m_posSpaceFarwayY = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		//m_posSpaceFarwayY = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		m_posSpaceFarwayY = CPos(600, 300.0 - (1000.0 - 300.0));
 	}
 	else {
-		m_posSpaceFarwayY = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		//m_posSpaceFarwayY = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		m_posSpaceFarwayY = CPos(600, 300.0 - (1000.0 - 300.0));
 	}
 
 	int spaceSpaceBaseIndex = CFunc::RandI(0, 5);
 	m_imageNearSpace = (CImage*)CGame::GetResource(fileNameSpaceBase[spaceSpaceBaseIndex]);
 	m_scrollNearY = m_scrollFarwayY * 0.5;
 	if (CFunc::RandI(0, 1)) {
-		m_posSpaceNear = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		//m_posSpaceNear = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		m_posSpaceNear = CPos(600, 300.0 - (1000.0 - 300.0));
 	}
 	else {
-		m_posSpaceNear = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		//m_posSpaceNear = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
+		m_posSpaceNear = CPos(600, 300.0 - (1000.0 - 300.0));
 	}
 
 

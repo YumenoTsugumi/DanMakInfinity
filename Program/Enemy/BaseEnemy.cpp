@@ -150,7 +150,7 @@ void CBaseEnemy::Die() {
 	// 爆発エフェクト
 	int image4[4] = { 20503 ,20501 ,20501 ,20501 };
 	for (int ii = 0; ii < 4; ii++) {
-		CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
+		CPos pp(CFunc::RandF(0, WindowX), CFunc::RandF(0, WindowY));
 		double ang = (double)ii * 120 + CFunc::RandF(0, 90);
 		double speed = CFunc::RandF(200, 400) / 100.0;
 		CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, speed, ang, 0, -0.2, 0.5, 0, image4[ii]);

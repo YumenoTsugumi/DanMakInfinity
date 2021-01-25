@@ -149,10 +149,12 @@ void CLauncher005::Action(const CPos& newEnemyPos)
 LANCHERCPP(CLauncher999)
 void CLauncher999::Action(const CPos& newEnemyPos)
 {
+#if 0
 	static double sppeed = 3.0;
 	sppeed += 0.03;
 	if (sppeed > 5.0)sppeed = 3.0;
 	__super::Action(newEnemyPos);
+
 	if (m_count > 10) {
 		int bulletID[] = { 00,10,20,30,50, 60,70,80,90 };
 		for (int jj = 0; jj < 9; jj++) {
@@ -164,10 +166,41 @@ void CLauncher999::Action(const CPos& newEnemyPos)
 				CBaseLauncher::m_bulletManager->Add(b2);
 			}
 		}
+		CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(300,300), sppeed, 0, 0, 0, 0, 0, 41);
+		CBaseLauncher::m_bulletManager->Add(b2);
 
 		m_count = 0;
 		return;
 	}
+#endif
+
+	static double angle = 0;
+	static bool flag = true;
+	static double acc = 0.04;
+
+	if (angle >= 1800) {
+		flag = false;
+	}
+	if (angle <= -1800) {
+		flag = true;
+	}
+	if (flag) {
+		angle += acc;
+		acc += 0.04;
+	}
+	else {
+		angle += acc;
+		acc -= 0.04;
+	}
+
+	int bulletID[] = { 00,10,20,30,50, 60,70,80,90 };
+	int ran = rand() % 9;
+	double speed = 6.0;
+	CBaseBullet* b1 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY), speed, angle, 0, 0, 0, 0, bulletID[ran] + 1);
+	CBaseLauncher::m_bulletManager->Add(b1);
+
+	CBaseBullet* b2 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY), speed, angle + 180, 0, 0, 0, 0, bulletID[ran] + 2);
+	CBaseLauncher::m_bulletManager->Add(b2);
 
 	m_count++;
 }

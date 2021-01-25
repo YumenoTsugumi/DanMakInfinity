@@ -155,6 +155,7 @@
     <ClCompile Include="Program\BaseItem.cpp" />
     <ClCompile Include="Program\BaseLauncher.cpp" />
     <ClCompile Include="Program\BattleScene.cpp" />
+    <ClCompile Include="Program\BattleSceneUI.cpp" />
     <ClCompile Include="Program\BulletBase.cpp" />
     <ClCompile Include="Program\CustomBullet.cpp" />
     <ClCompile Include="Program\DXFunc.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Program\BaseItem.h" />
     <ClInclude Include="Program\BaseLauncher.h" />
     <ClInclude Include="Program\BattleScene.h" />
+    <ClInclude Include="Program\BattleSceneUI.h" />
     <ClInclude Include="Program\BulletBase.h" />
     <ClInclude Include="Program\CustomBullet.h" />
     <ClInclude Include="Program\DXFunc.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="Program\Enemy\MoveComponent.h" />
     <ClInclude Include="Program\Func.h" />
     <ClInclude Include="Program\Game.h" />
+    <ClInclude Include="Program\GameDefine.h" />
     <ClInclude Include="Program\HomingBullet.h" />
     <ClInclude Include="Program\Input.h" />
     <ClInclude Include="Program\Launcher\Launcher.h" />

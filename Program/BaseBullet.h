@@ -217,7 +217,7 @@ public:
 	//	’e–‹ŠÖŒW
 	//--------------
 	CBulletManager *bulletManager = new CBulletManager(4096);
-	CBaseBullet::SetRect(CRect(0,0,800,600));
+	CBaseBullet::SetRect(CRect(0,0,WindowX,WindowY));
 	CBaseBullet::SetResource(&resManager);
 	CNormalBullet::SetBulletManagerPointer(bulletManager);
 

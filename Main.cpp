@@ -5,12 +5,12 @@
 #include "DXFunc.h"
 #include "Game.h"
 
+#include "GameDefine.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	int windowX = 800;
-	int windowY = 600;
-	SetGraphMode(windowX, windowY, 32); // ウィンドウサイズ
+
+	SetGraphMode(WindowX, WindowY, 32); // ウィンドウサイズ
 	ChangeWindowMode(true); //ウィンドウモード
 	SetOutApplicationLogValidFlag(false); //ログを吐かない
 	SetAlwaysRunFlag(TRUE); //アクティブでなくても処理を行う

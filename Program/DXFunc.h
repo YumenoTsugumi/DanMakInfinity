@@ -7,6 +7,11 @@
 class CDxFunc {
 public:
 	//普通描画
+	static int MyDrawGraph(double x, double y,  int GrHandle, int TransFlag = TRUE);
+	static int MyDrawGraph(CPos p, int GrHandle, int TransFlag = TRUE);
+
+
+	//普通描画
 	static int MyDrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 	static int MyDrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 

@@ -149,7 +149,8 @@ public:
 
 	//桁を取得する
 	//ex)23456->5
-	static int GetDigit(int NUMBER);
+	static int GetDigit(int number);
+	static int GetDigit(long long number);
 
 	//数値だけの文字列に,をつけていく
 	//input:1234567

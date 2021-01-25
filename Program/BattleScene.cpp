@@ -32,7 +32,8 @@ CBattleScene::CBattleScene(int InTime) :
 	m_enemyManager(256),
 	m_player(),
 	m_bg(),
-	testLauncher(nullptr)
+	testLauncher(nullptr),
+	m_ui()
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
@@ -42,6 +43,7 @@ CBattleScene::CBattleScene(int InTime) :
 
 	testLauncherPos = CPos(0, 200);
 	testLauncher = new CLauncher999(0, testLauncherPos, CPos(0,0));
+
 }
 
 CBattleScene::~CBattleScene(){
@@ -95,6 +97,8 @@ void CBattleScene::Init(CGame* gameP) {
 	//DebugAllEnemyDirection();
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
+
+	m_ui.Init();
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -177,7 +181,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	if (count > 0 && count <= 100) {
 		if (count % 10 == 0) {
-			CPos p(CFunc::RandF(0, 800), CFunc::RandF(0, 600));
+			CPos p(CFunc::RandF(0, WindowX), CFunc::RandF(0, WindowY));
 			CBaseBeam* m_beam = new CBaseBeam(p, CFunc::RandF(0,360), 100);
 
 			//長さ設定 1～64まで	ピクセルで言うと*10まで伸びる
@@ -319,6 +323,9 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_beamManeger.Draw();
 	m_effectManager.Draw(50); // 50 最前面
 
+
+
+	m_ui.Draw();
 }
 
 
@@ -381,3 +388,4 @@ void CBattleScene::DebugAllEnemyDirection()
 	}
 	count++;
 }
+

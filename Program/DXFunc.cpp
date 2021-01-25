@@ -1,6 +1,18 @@
 ﻿#include "DXFunc.h"
 #include "DxLib.h"
 
+
+int CDxFunc::MyDrawGraph(double x, double y, int GrHandle, int TransFlag)
+{
+	return DrawGraph(x, y, GrHandle, TRUE);
+}
+int CDxFunc::MyDrawGraph(CPos p, int GrHandle, int TransFlag)
+{
+	//↑のをコール
+	return MyDrawGraph(p.x, p.y, GrHandle, TransFlag);
+}
+
+
 int CDxFunc::MyDrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag) {
 	return DrawRotaGraphF((float)x, (float)y, ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
 }

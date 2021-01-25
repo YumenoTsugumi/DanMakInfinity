@@ -10,7 +10,8 @@
 #include "BaseEnemy.h"
 #include "BaseItem.h"
 #include "BackGround.h"
-
+#include "GameDefine.h"
+#include "BattleSceneUI.h"
 class CBattleScene : public CScene{
 public:
 	//------------------
@@ -37,6 +38,11 @@ public:
 	CBeamManager m_beamManeger; // 敵のビーム
 
 	CBackGroundPatternA m_bg; // 背景
+
+	CBattleSceneUI m_ui;
+
+	// その他
+
 
 	CPos testLauncherPos; // テスト砲台位置
 	CLauncher999* testLauncher; // テスト砲台

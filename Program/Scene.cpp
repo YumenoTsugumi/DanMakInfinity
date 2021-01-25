@@ -114,7 +114,7 @@ void CScene::FeedIn(){
 		int alpha = (int)((double)255 * m_inBlend);
 		SetDrawBlendMode( DX_BLENDMODE_ALPHA , alpha );
 
-		CDxFunc::DrawBox2(0,0,800,600, 0x000000);
+		CDxFunc::DrawBox2(0,0, WindowX, WindowY, 0x000000);
 	}
 	if(m_inNowTime >= m_inTime){
 		m_inStatus = ENDFEED;
@@ -134,7 +134,7 @@ void CScene::FeedOut(){
 		int alpha = (int)((double)255 * m_outBlend);
 		SetDrawBlendMode( DX_BLENDMODE_ALPHA , alpha );
 
-		CDxFunc::DrawBox2(0,0,800,600, 0x000000);
+		CDxFunc::DrawBox2(0,0,WindowX,WindowY, 0x000000);
 	}
 	if(m_outNowTime >= m_outTime){
 		m_outStatus = ENDFEED;
@@ -244,7 +244,7 @@ void CSceneExMain::Main(CInputAllStatus *input){
 
 
 	//if(m_count % 20 == 0){
-	//	CPos pp(CFunc::RandF(0,800), CFunc::RandF(0,600));
+	//	CPos pp(CFunc::RandF(0,WindowX), CFunc::RandF(0,WindowY));
 	//	double ang = CFunc::RandF(0,360);
 	//	CBaseEffect* eff = new CBaseEffect(EDirType::Abs, pp, 2.0, ang, 0,0,0, 200);
 	//	eff->SetSize(1.0, +0.05);

@@ -47,7 +47,7 @@ void CGame::Init()
 	ImageLoad();
 
 	// ゲーム弾が見える範囲
-	CGame::SetBattleRect(CRect(0, 0, 800, 600));
+	CGame::SetBattleRect(CRect(0, 0, WindowX, WindowY));
 
 }
 
@@ -104,6 +104,8 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet31.png", 1, 1, 1, 32, 48, 0, 4.0), "bullet31", 31);
 	m_resourceManager.Add(new CBulletImage("Resource\\bullet32.png", 1, 1, 1, 32, 48, 0, 4.0), "bullet32", 32);
 
+	m_resourceManager.Add(new CBulletImage("Resource\\bullet41.png", 1, 1, 1, 16, 32, 0, 0.0), "bullet41", 41);
+
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet51.png", 1, 1, 1, 15, 15, 0, 0.0), "bullet51", 51);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet52.png", 1, 1, 1, 15, 15, 0, 0.0), "bullet52", 52);
 
@@ -113,7 +115,7 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet71.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet71", 71);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet72.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet72", 72);
 
-	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet81.png", 2, 2, 1, 16, 32, 6, 0.0), "bullet81", 81);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet81.png", 2, 2, 1, 16, 64, 6, 0.0), "bullet81", 81);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet82.png", 2, 2, 1, 16, 32, 6, 0.0), "bullet82", 82);
 
 	m_resourceManager.Add(new CBulletImage("ResourceX\\bullet91.png", 2, 2, 1, 37, 54, 6, 0.0), "bullet91", 91);
@@ -153,6 +155,34 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 201);
 	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 202);
 
+#if 1
+	// UI関連 1000～
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd\\%d.png", ii);
+		std::string format2 = MyFormat("%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1000+ii);
+	}
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\0g.png"), "0g", 1010);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\comma.png"), "comma", 1011);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\commag.png"), "commag", 1012);
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\TextScore.png"), "TextScore", 1050);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\TextHiScore.png"), "TextHiScore", 1051);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\UIFoundation.png"), "UIFoundation", 1500);
+#else
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\%d.png", ii);
+		std::string format2 = MyFormat("%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1000 + ii);
+	}
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\0g.png"), "0g", 1010);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\comma.png"), "comma", 1011);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\commag.png"), "commag", 1012);
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1050);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1051);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
+#endif
 }
 void CGame::ImageLoadByThread()
 {
@@ -256,6 +286,8 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect0", 20801);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect1.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect1", 20802);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect2.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect2", 20803);
+
+
 
 
 	auto end = std::chrono::system_clock::now();       // 計測終了時刻を保存

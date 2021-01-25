@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Resource.h"
 #include "Scene.h"
+#include "GameDefine.h"
 
 class CGame {
 public:

@@ -154,7 +154,7 @@ void CPlayerBullet::Hit()
 	// "FireballExplosion7", 20502
 	// "FireballExplosion10", 20503
 
-	CPos pp(CFunc::RandF(0, 800), CFunc::RandF(0, 400));
+	CPos pp(CFunc::RandF(0, WindowX), CFunc::RandF(0, 400));
 	double ang = CFunc::RandF(0, 360);
 	CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_pos, 0.1, ang, 0, 0, 0, 0, 20600);
 	eff->SetSize(0.35, +0.0);

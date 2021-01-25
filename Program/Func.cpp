@@ -198,6 +198,27 @@ double CFunc::GetNearAngle(double targetAngle, double nearAngle) {
 	return returnAng;
 }
 
+//桁を取得する
+//ex)23456->5
+int CFunc::GetDigit(int number)
+{
+	unsigned digit = 0;
+	while (number != 0) {
+		number /= 10;
+		digit++;
+	}
+	return digit;
+	//return log10(number) + 1;
+}
+int CFunc::GetDigit(long long number)
+{
+	unsigned digit = 0;
+	while (number != 0) {
+		number /= 10;
+		digit++;
+	}
+	return digit;
+}
 
 //1ベクトルの角度
 double CFunc::GetOneVectorAngle(CPos p)
