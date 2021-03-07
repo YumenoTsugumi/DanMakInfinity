@@ -188,10 +188,10 @@ void CBaseBeam::Action() {
 
 	//回転とかで毎フレーム参照されると落ちるので
 	//ビームは管理側がSetRemoveしないと削除しない
-	if (m_pos.x <	CGame::GetBattleRect().leftUp.x ||
-		m_pos.x >	CGame::GetBattleRect().rightDown.x ||
-		m_pos.y <	CGame::GetBattleRect().leftUp.y ||
-		m_pos.y >	CGame::GetBattleRect().rightDown.y) {
+	if (m_pos.x <	CGame::GetGameRect().leftUp.x ||
+		m_pos.x >	CGame::GetGameRect().rightDown.x ||
+		m_pos.y <	CGame::GetGameRect().leftUp.y ||
+		m_pos.y >	CGame::GetGameRect().rightDown.y) {
 		m_removeFlg = true;
 	}
 
@@ -205,10 +205,10 @@ void CBaseBeam::Action() {
 				m_bullet[i]->m_removeFlg = true;
 			}
 
-			if (m_bullet[i]->m_pos.x <	CGame::GetBattleRect().leftUp.x ||
-				m_bullet[i]->m_pos.x >	CGame::GetBattleRect().rightDown.x ||
-				m_bullet[i]->m_pos.y <	CGame::GetBattleRect().leftUp.y ||
-				m_bullet[i]->m_pos.y >	CGame::GetBattleRect().rightDown.y) {
+			if (m_bullet[i]->m_pos.x <	CGame::GetGameRect().leftUp.x ||
+				m_bullet[i]->m_pos.x >	CGame::GetGameRect().rightDown.x ||
+				m_bullet[i]->m_pos.y <	CGame::GetGameRect().leftUp.y ||
+				m_bullet[i]->m_pos.y >	CGame::GetGameRect().rightDown.y) {
 				m_bullet[i]->m_removeFlg = true;
 			}
 

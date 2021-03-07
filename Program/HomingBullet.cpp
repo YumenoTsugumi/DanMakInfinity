@@ -105,16 +105,16 @@ void CHomingLaser::Move(){
 
 void CHomingLaser::RectOut(){
 	//óÃàÊäOÇ…èoÇΩÇÁçÌèú
-	if(	m_posA[0].x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
-		m_posA[0].x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
-		m_posA[0].y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
-		m_posA[0].y >	CGame::GetBattleRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
+	if(	m_posA[0].x <	CGame::GetGameRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+		m_posA[0].x >	CGame::GetGameRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+		m_posA[0].y <	CGame::GetGameRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+		m_posA[0].y >	CGame::GetGameRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
 
 		int lastidx = m_num-1;
-		if(	m_posA[lastidx].x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
-			m_posA[lastidx].x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
-			m_posA[lastidx].y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
-			m_posA[lastidx].y >	CGame::GetBattleRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
+		if(	m_posA[lastidx].x <	CGame::GetGameRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+			m_posA[lastidx].x >	CGame::GetGameRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+			m_posA[lastidx].y <	CGame::GetGameRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+			m_posA[lastidx].y >	CGame::GetGameRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
 			m_removeFlg = true;
 		}
 	}

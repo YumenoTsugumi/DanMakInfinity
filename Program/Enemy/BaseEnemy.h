@@ -17,7 +17,7 @@ public:
 	//コンストラクタ
 	//敵の最大数を設定する
 	//デフォルト1024
-	CEnemyManager(int m_num = 64);
+	CEnemyManager(int m_num = 1024);
 	virtual ~CEnemyManager();
 
 	//最大数	64ぐらいあれば弾幕できるんじゃないか

@@ -12,6 +12,8 @@
 #include "BackGround.h"
 #include "GameDefine.h"
 #include "BattleSceneUI.h"
+#include "StageManager.h"
+
 class CBattleScene : public CScene{
 public:
 	//------------------
@@ -32,10 +34,11 @@ public:
 	CPlayer m_player; // ƒvƒŒƒCƒ„[©g
 	CBulletManager m_playerBullet; // ƒvƒŒƒCƒ„[‚Ì’e
 
-	//std::vector<CBaseEnemy*> m_enemys; // “G
-	CEnemyManager m_enemyManager; // “G
-	CBulletManager m_bulletManeger; // “G‚Ì’e
-	CBeamManager m_beamManeger; // “G‚Ìƒr[ƒ€
+	static CEnemyManager m_enemyManager; // “G
+	static CBulletManager m_bulletManager; // “G‚Ì’e
+	static CBeamManager m_beamManager; // “G‚Ìƒr[ƒ€
+
+	StageManager m_stageManager; // “G‚ÌƒXƒ|ƒi[
 
 	CBackGroundPatternA m_bg; // ”wŒi
 

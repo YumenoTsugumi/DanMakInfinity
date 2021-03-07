@@ -129,10 +129,10 @@ void CBaseItem::Draw(){
 
 void CBaseItem::RectOut(){
 	//óÃàÊäOÇ…èoÇΩÇÁçÌèú
-	if (m_pos.x <	CGame::GetBattleRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
-		m_pos.x >	CGame::GetBattleRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
-		m_pos.y <	CGame::GetBattleRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
-		m_pos.y >	CGame::GetBattleRect().rightDown.y + m_imageInfo.m_sizeY / 2) {
+	if (m_pos.x <	CGame::GetGameRect().leftUp.x - m_imageInfo.m_sizeX / 2 ||
+		m_pos.x >	CGame::GetGameRect().rightDown.x + m_imageInfo.m_sizeX / 2 ||
+		m_pos.y <	CGame::GetGameRect().leftUp.y - m_imageInfo.m_sizeY / 2 ||
+		m_pos.y >	CGame::GetGameRect().rightDown.y + m_imageInfo.m_sizeY / 2) {
 		m_removeFlg = true;
 	}
 }

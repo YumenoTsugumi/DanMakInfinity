@@ -12,10 +12,10 @@ void CBackGround::Draw() {
 }
 
 
-char fileNameSpaceBG[11][20] = {
+char fileNameSpaceBG[10][20] = {
 	"X_bg_space_00",	"X_bg_space_01",	"X_bg_space_02",	"X_bg_space_03",
 	"X_bg_space_04",	"X_bg_space_05",	"X_bg_space_06",	"X_bg_space_07",
-	"X_bg_space_08",	"X_bg_space_09",	"X_bg_space_10"
+	"X_bg_space_08",	"X_bg_space_09"
 };
 char fileNameSpaceBase[6][20] = {
 	"X_bg_space_b00",	"X_bg_space_b01",	"X_bg_space_b02",
@@ -28,30 +28,29 @@ char fileNamePlanet[10][20] = {
 
 CBackGroundPatternA::CBackGroundPatternA()
 {
-	int spaceBGIndex = CFunc::RandI(0, 10);
+	int spaceBGIndex = CFunc::RandI(0, 9);
 	m_imageFarwaySpace = (CImage*)CGame::GetResource(fileNameSpaceBG[spaceBGIndex]);
-	m_scrollFarwayY = 0.4;
-	if (CFunc::RandI(0, 1)) {
-		//m_posSpaceFarwayY = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
-		m_posSpaceFarwayY = CPos(600, 300.0 - (1000.0 - 300.0));
+	m_scrollFarwayY = 1.0;
+	if (CFunc::RandI(0, 0)) {
+		m_posSpaceFarwayY[0] = CPos(1500 - 200, 100); // 200はズレの分
+		m_SpaceFarwayLR = CBackGroundPatternA::ImagePosLR::L; // イメージの左側
+	} else {
+		m_posSpaceFarwayY[0] = CPos(500 + 200, 100); // 200はズレの分
+		m_SpaceFarwayLR = CBackGroundPatternA::ImagePosLR::R; // イメージの右側
 	}
-	else {
-		//m_posSpaceFarwayY = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
-		m_posSpaceFarwayY = CPos(600, 300.0 - (1000.0 - 300.0));
-	}
+	m_posSpaceFarwayY[1] = CPos(500 + 200, 100-2000); // 200はズレの分
 
 	int spaceSpaceBaseIndex = CFunc::RandI(0, 5);
 	m_imageNearSpace = (CImage*)CGame::GetResource(fileNameSpaceBase[spaceSpaceBaseIndex]);
-	m_scrollNearY = m_scrollFarwayY * 0.5;
-	if (CFunc::RandI(0, 1)) {
-		//m_posSpaceNear = CPos(400.0 - (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
-		m_posSpaceNear = CPos(600, 300.0 - (1000.0 - 300.0));
+	m_scrollNearY = m_scrollFarwayY * 2;
+	if (CFunc::RandI(0, 0)) {
+		m_posSpaceNear[0] = CPos(1500 - 200, 100); // 200はズレの分
+		m_SpaceNearLR = CBackGroundPatternA::ImagePosLR::L; // イメージの左側
+	} else {
+		m_posSpaceNear[0] = CPos(500 + 200, 100); // 200はズレの分
+		m_SpaceNearLR = CBackGroundPatternA::ImagePosLR::R; // イメージの右側
 	}
-	else {
-		//m_posSpaceNear = CPos(400.0 + (1000.0 - 500.0), 300.0 - (1000.0 - 300.0));
-		m_posSpaceNear = CPos(600, 300.0 - (1000.0 - 300.0));
-	}
-
+	m_posSpaceNear[1] = CPos(500 + 200, 100-2000);
 
 	m_initPlayerPos = CPos(0,0);
 	m_movedPlayerPos = CPos(0, 0);
@@ -62,24 +61,47 @@ CBackGroundPatternA::~CBackGroundPatternA()
 }
 void CBackGroundPatternA::Action() 
 {
-	m_posSpaceFarwayY.y += m_scrollFarwayY;
-	m_posSpaceNear.y += m_scrollNearY;
-
+	m_posSpaceFarwayY[0].y += m_scrollFarwayY;
+	m_posSpaceFarwayY[1].y += m_scrollFarwayY;
+	if (m_posSpaceFarwayY[0].y >= 100 + 2000) {
+		m_posSpaceFarwayY[0].y = 100 - 2000;
+	}
+	if (m_posSpaceFarwayY[1].y >= 100 + 2000) {
+		m_posSpaceFarwayY[1].y = 100 - 2000;
+	}
+	m_posSpaceNear[0].y += m_scrollNearY;
+	m_posSpaceNear[1].y += m_scrollNearY;
+	if (m_posSpaceNear[0].y >= 100 + 2000) {
+		m_posSpaceNear[0].y = 100-2000;
+	}
+	if (m_posSpaceNear[1].y >= 100 + 2000) {
+		m_posSpaceNear[1].y = 100 - 2000;
+	}
 }
 
 void CBackGroundPatternA::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
+
 	CPos subPos; // 背景とプレイヤーの位置の位相
 	subPos.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 5.0;
-	subPos.y = (m_initPlayerPos.y - m_movedPlayerPos.y) / 5.0;
-	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY.x + subPos.x, m_posSpaceFarwayY.y + subPos.y, 1.0, 0.0, m_imageFarwaySpace->m_iamge, TRUE, FALSE);
-	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY.x + subPos.x, m_posSpaceFarwayY.y - 2000.0 + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageFarwaySpace->m_iamge, TRUE, TRUE);
+	subPos.y = 0;
 
+	CDxFunc::MyDrawRotaGraph(m_posSpaceNear[0].x + subPos.x, m_posSpaceNear[0].y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
+	CDxFunc::MyDrawRotaGraph(m_posSpaceNear[1].x + subPos.x, m_posSpaceNear[1].y + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageNearSpace->m_iamge, TRUE, TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
-	CDxFunc::MyDrawRotaGraph(m_posSpaceNear.x + subPos.x, m_posSpaceNear.y - 2000.0 + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageNearSpace->m_iamge, TRUE, FALSE);
+
+	CPos subPos2; // 背景とプレイヤーの位置の位相
+	subPos2.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 10.0;
+	subPos2.y = 0;
+	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[0].x + subPos2.x, m_posSpaceFarwayY[0].y + subPos2.y, 1.0, 0.0, m_imageFarwaySpace->m_iamge, TRUE, FALSE);
+	if (m_SpaceFarwayLR == CBackGroundPatternA::ImagePosLR::R) {
+		CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[1].x + subPos2.x, m_posSpaceFarwayY[1].y + subPos2.y, 1.0, 180.0 / CFunc::RAD, m_imageFarwaySpace->m_iamge, TRUE, TRUE);
+	}
+	else {
+		CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[1].x + subPos2.x, m_posSpaceFarwayY[1].y + subPos2.y, 1.0, 180.0 / CFunc::RAD, m_imageFarwaySpace->m_iamge, TRUE, TRUE);
+	}
 
 }
 

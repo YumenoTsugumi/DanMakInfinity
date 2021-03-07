@@ -8,8 +8,11 @@
 #include <chrono>
 
 CResourceManager CGame::m_resourceManager;
-CRect CGame::m_battleRect;
 
+CPos CGame::m_allGameRect; // 全体　(1920,1080)
+CPos CGame::m_gameRectLT; // ゲーム内 (480,20)
+CPos CGame::m_gameRectRB; // ゲーム内 (1440,1060)
+double CGame::m_windowRatio;
 CGame::CGame() :
 	m_fpsManager(),
 	m_input(),
@@ -47,7 +50,7 @@ void CGame::Init()
 	ImageLoad();
 
 	// ゲーム弾が見える範囲
-	CGame::SetBattleRect(CRect(0, 0, WindowX, WindowY));
+	//CGame::SetAllGameRect(0.5);
 
 }
 
@@ -138,8 +141,13 @@ void CGame::ImageLoad()
 
 	//
 
-	m_resourceManager.Add(new CBulletImage("ResourceX\\playerBullet2.png", 1, 1, 1, 128, 256, 0, 0.0), "playerBullet2", 997);
-	m_resourceManager.Add(new CBulletImage("ResourceX\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\playerA.png"), "playerA", 800);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\BitR.png"), "BitR", 801);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\playerB.png"), "playerB", 810);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\playerC.png"), "playerC", 820);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBulletM.png", 1, 1, 1, 100, 200, 0, 0.0), "playerBulletM", 997);
 	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
 	//画像
@@ -155,34 +163,30 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("Resource\\h01.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser02", 201);
 	m_resourceManager.Add(new CBulletImage("Resource\\h02.png", 1, 1, 1, 64, 576, 0, 0.0), "hLaser03", 202);
 
-#if 1
-	// UI関連 1000～
-	for (int ii = 0; ii < 10; ii++) {
-		std::string format1 = MyFormat("Resource\\UI_fullhd\\%d.png", ii);
-		std::string format2 = MyFormat("%d", ii);
-		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1000+ii);
-	}
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\0g.png"), "0g", 1010);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\comma.png"), "comma", 1011);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\commag.png"), "commag", 1012);
 
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\TextScore.png"), "TextScore", 1050);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\TextHiScore.png"), "TextHiScore", 1051);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd\\UIFoundation.png"), "UIFoundation", 1500);
-#else
+	// UI関連 1000～
 	for (int ii = 0; ii < 10; ii++) {
 		std::string format1 = MyFormat("Resource\\UI_fullhd2\\%d.png", ii);
 		std::string format2 = MyFormat("%d", ii);
-		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1000 + ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1000+ii);	
 	}
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\0g.png"), "0g", 1010);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\comma.png"), "comma", 1011);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\commag.png"), "commag", 1012);
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\b%d.png", ii);
+		std::string format2 = MyFormat("b%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1010 + ii);
+	}
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\0g.png"), "0g", 1110);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\comma.png"), "comma", 1111);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\commag.png"), "commag", 1112);
 
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1050);
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1051);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1150);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1151);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku.png"), "RankWaku", 1152);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWakuAura.png"), "RankWakuAura", 1153);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku2.png"), "RankWaku2", 1154);
+
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
-#endif
+
 }
 void CGame::ImageLoadByThread()
 {

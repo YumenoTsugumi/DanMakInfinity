@@ -6,22 +6,26 @@
 
 class CDxFunc {
 public:
+	static double m_windowRatio;
+	static void SetWindowRatio(double windowRatio) {
+		m_windowRatio = windowRatio;
+	}
+
 	//普通描画
 	static int MyDrawGraph(double x, double y,  int GrHandle, int TransFlag = TRUE);
 	static int MyDrawGraph(CPos p, int GrHandle, int TransFlag = TRUE);
-
 
 	//普通描画
 	static int MyDrawRotaGraph(double x, double y, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 	static int MyDrawRotaGraph(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 
-	//回転中心指示
-	static int MyDrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
-	static int MyDrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	////回転中心指示
+	//static int MyDrawRotaGraph2(double x1, double y1, double x2, double y2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	//static int MyDrawRotaGraph2(CPos p1, CPos p2, double ExtRate, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 
-	//回転中心指示3
-	static int MyDrawRotaGraph3(double x1, double y1, double x2, double y2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
-	static int MyDrawRotaGraph3(CPos p1, CPos p2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	////回転中心指示3
+	//static int MyDrawRotaGraph3(double x1, double y1, double x2, double y2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
+	//static int MyDrawRotaGraph3(CPos p1, CPos p2, double ExtRateX, double ExtRateY, double Angle, int GrHandle, int TransFlag = TRUE, int TurnFlag = FALSE);
 
 	//四角
 	static int DrawBox2(double x1, double y1, double x2, double y2, int cr, int FillFlag = TRUE);

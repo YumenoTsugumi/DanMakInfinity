@@ -4,7 +4,8 @@
 
 CBattleSceneUI::CBattleSceneUI() :
 	m_score(0),
-	m_hiScore(0)
+	m_hiScore(0),
+	m_rank(1)
 {
 
 }
@@ -15,22 +16,20 @@ CBattleSceneUI::~CBattleSceneUI(){
 
 void CBattleSceneUI::Init() {
 	// 内側
-	m_textScore = (CImage*)CGame::GetResource(1050);
-	m_textHiScore = (CImage*)CGame::GetResource(1051);
-	m_text0g = (CImage*)CGame::GetResource(1010);
-	m_textComma = (CImage*)CGame::GetResource(1011);
-	m_textCommag = (CImage*)CGame::GetResource(1012);
-	m_numberMaxSize = CPos(0, 0);
+	m_textScore = (CImage*)CGame::GetResource(1150);
+	m_textHiScore = (CImage*)CGame::GetResource(1151);
+	m_rankWaku = (CImage*)CGame::GetResource(1152);
+	m_rankWaku2 = (CImage*)CGame::GetResource(1154);
+	m_text0g = (CImage*)CGame::GetResource(1110);
+	m_textComma = (CImage*)CGame::GetResource(1111);
+	m_textCommag = (CImage*)CGame::GetResource(1112);
 	for (int ii = 0; ii < 10; ii++) {
 		CImage* img = (CImage*)CGame::GetResource(1000 + ii);
 		m_textNumber.push_back(img);
-
-		if (img->m_sizeX > m_numberMaxSize.x) {
-			m_numberMaxSize.x = img->m_sizeX;
-		}
-		if (img->m_sizeY > m_numberMaxSize.y) {
-			m_numberMaxSize.y = img->m_sizeY;
-		}
+	}
+	for (int ii = 0; ii < 10; ii++) {
+		CImage* img = (CImage*)CGame::GetResource(1010 + ii);
+		m_textBigNumber.push_back(img);
 	}
 
 	// 外側
@@ -47,6 +46,9 @@ void CBattleSceneUI::Draw() {
 // 画面内のUI描画
 void CBattleSceneUI::DrawGameAreaUI() {
 	m_score += rand()*20;
+	//if (rand() < 300)m_rank++;
+	if(m_rank<999)m_rank++;
+
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
 	//GameWindowAreaLeft
@@ -85,7 +87,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		}
 
 		// スコアテキストの終点から　文字の幅*1~8
-		int drawWigth = m_numberMaxSize.x * 0.65;
+		int drawWigth = drawImage->m_sizeX * 0.65;
 		double textNumber_x = textScore_endX + 10 + drawWigth * (maxDrawDigit - ii);
 		double gap = (drawWigth - drawImage->m_sizeX) / 2;
 
@@ -105,7 +107,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 	//--------------------------------------------------------------------------
 	// HiScoreの表示位置
 	//--------------------------------------------------------------------------
-	double textHiScore_x = GameWindowCenterX + 32 + 3;
+	double textHiScore_x = GameWindowCenterX + 32 + 3 +15;
 	CDxFunc::MyDrawGraph(textHiScore_x, textScore_y, m_textHiScore->m_iamge);
 	double textHiScore_endX = textHiScore_x + m_textHiScore->m_sizeX;
 
@@ -127,7 +129,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		}
 
 		// スコアテキストの終点から　文字の幅*1~8
-		int drawWigth = m_numberMaxSize.x * 0.65;
+		int drawWigth = drawImage->m_sizeX * 0.65;
 		double textNumber_x = textHiScore_endX + 10 + drawWigth * (maxDrawDigit - ii);
 		double gap = (drawWigth - drawImage->m_sizeX) / 2;
 
@@ -143,6 +145,36 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		}
 		CDxFunc::MyDrawGraph(textNumber_x + gap + hiCommaGap, textScore_y, drawImage->m_iamge);
 	}
+
+	//--------------------------------------------------------------------------
+	// ランク
+	//--------------------------------------------------------------------------
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 196);
+	double rankPosX = GameWindowCenterX - m_rankWaku2->m_sizeX + 40+7;
+	CDxFunc::MyDrawGraph(rankPosX, 20, m_rankWaku2->m_iamge);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	if (m_rank < 100) {
+		int low = m_rank % 10;
+		int high = m_rank / 10;
+		int sx = m_textBigNumber[0]->m_sizeX;
+		int sy = m_textBigNumber[0]->m_sizeY;
+		double rankNumberY = 20 + (m_rankWaku2->m_sizeY - sy) / 2;
+		CDxFunc::MyDrawGraph(rankPosX + 25, rankNumberY, m_textBigNumber[high]->m_iamge);
+		CDxFunc::MyDrawGraph(rankPosX + 25 +sx*1.1, rankNumberY, m_textBigNumber[low]->m_iamge);
+	}
+	else {
+		int low = m_rank % 10; // 987%10=7
+		int middle = (m_rank  / 10) % 10; // 987/10 98%10=8
+		int high = m_rank / 100; // 987/100=9
+
+		int sx = m_textBigNumber[0]->m_sizeX;
+		int sy = m_textBigNumber[0]->m_sizeY;
+		double rankNumberY = 20 + (m_rankWaku2->m_sizeY - sy) / 2;
+		CDxFunc::MyDrawGraph(rankPosX + 43 - sx * 0.95, rankNumberY, m_textBigNumber[high]->m_iamge);
+		CDxFunc::MyDrawGraph(rankPosX + 43 + sx * 0, rankNumberY, m_textBigNumber[middle]->m_iamge);
+		CDxFunc::MyDrawGraph(rankPosX + 43 + sx * 0.95, rankNumberY, m_textBigNumber[low]->m_iamge);
+	}
+
 }
 
 // 画面外の描画

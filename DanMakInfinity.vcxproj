@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\;.\Program\Spawner\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableSpecificWarnings>26451</DisableSpecificWarnings>
     </ClCompile>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\DXLib\;.\Program\;.\Program\Launcher\;.\Program\Enemy\;.\Program\BackGround\;.\Program\Spawner\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>26451</DisableSpecificWarnings>
     </ClCompile>
@@ -162,6 +162,7 @@
     <ClCompile Include="Program\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Program\Enemy\BehaviorComponent.cpp" />
     <ClCompile Include="Program\Enemy\EnemyMedium.cpp" />
+    <ClCompile Include="Program\Enemy\EnemyS01.cpp" />
     <ClCompile Include="Program\Enemy\EnemySmall.cpp" />
     <ClCompile Include="Program\Enemy\EnemyLarge.cpp" />
     <ClCompile Include="Program\Enemy\MoveComponent.cpp" />
@@ -177,6 +178,8 @@
     <ClCompile Include="Program\Player.cpp" />
     <ClCompile Include="Program\Resource.cpp" />
     <ClCompile Include="Program\Scene.cpp" />
+    <ClCompile Include="Program\Spawner\Spawner.cpp" />
+    <ClCompile Include="Program\StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program\BackGround\BackGround.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="Program\Enemy\BaseEnemy.h" />
     <ClInclude Include="Program\Enemy\BehaviorComponent.h" />
     <ClInclude Include="Program\Enemy\EnemyMedium.h" />
+    <ClInclude Include="Program\Enemy\EnemyS01.h" />
     <ClInclude Include="Program\Enemy\EnemySmall.h" />
     <ClInclude Include="Program\Enemy\EnemyLarge.h" />
     <ClInclude Include="Program\Enemy\MoveComponent.h" />
@@ -209,6 +213,8 @@
     <ClInclude Include="Program\Player.h" />
     <ClInclude Include="Program\Resource.h" />
     <ClInclude Include="Program\Scene.h" />
+    <ClInclude Include="Program\Spawner\Spawner.h" />
+    <ClInclude Include="Program\StageManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

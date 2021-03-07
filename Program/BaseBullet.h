@@ -84,8 +84,8 @@ public:
 
 	//コンストラクタ
 	//弾幕の発射最大数を設定する
-	//デフォルト1024
-	CBulletManager(int m_num = 1024);
+	//デフォルト2048
+	CBulletManager(int m_num = 2048);
 	virtual ~CBulletManager();
 
 	//発射最大数	1024ぐらいあれば弾幕できるんじゃないか

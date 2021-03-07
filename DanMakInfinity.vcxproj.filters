@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\BackGorund">
       <UniqueIdentifier>{bccd3b81-4140-4438-b88a-b14a03e97e49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Spawner">
+      <UniqueIdentifier>{07b46e3b-9eb6-49a8-90c7-1cd0f8b20378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Spawner">
+      <UniqueIdentifier>{9fbbf1a2-7a4c-430e-b360-22a27e976598}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -123,6 +129,15 @@
     <ClCompile Include="Program\BattleSceneUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Program\StageManager.cpp">
+      <Filter>ソース ファイル\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Spawner\Spawner.cpp">
+      <Filter>ソース ファイル\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemyS01.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program\BulletBase.h">
@@ -214,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="Program\GameDefine.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\StageManager.h">
+      <Filter>ヘッダー ファイル\Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Spawner\Spawner.h">
+      <Filter>ヘッダー ファイル\Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemyS01.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,12 +24,13 @@ CBattleScene::BulletRemoveType CBattleScene::m_bulletRemoveType;
 int CBattleScene::m_bulletRemoveTime;
 int CBattleScene::m_bulletRemoveCount;
 
+CEnemyManager CBattleScene::m_enemyManager; // “G
+CBulletManager CBattleScene::m_bulletManager; // “G‚Ì’e
+CBeamManager CBattleScene::m_beamManager; // “G‚Ìƒr[ƒ€
+
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
 	m_playerBullet(256),
-	m_bulletManeger(2048),
-	m_beamManeger(128),
-	m_enemyManager(256),
 	m_player(),
 	m_bg(),
 	testLauncher(nullptr),
@@ -57,9 +58,9 @@ void CBattleScene::Init(CGame* gameP) {
 	m_game = gameP;
 
 	// •Ï‰»’e‚Ì’è‹`‚É•K—v
-	CCustomBullet::SetBulletManagerPointer(&m_bulletManeger);
-	CBaseLauncher::SetBulletManagerPointer(&m_bulletManeger);
-	CBaseLauncher::SetBeamManagerPointer(&m_beamManeger);
+	CCustomBullet::SetBulletManagerPointer(&m_bulletManager);
+	CBaseLauncher::SetBulletManagerPointer(&m_bulletManager);
+	CBaseLauncher::SetBeamManagerPointer(&m_beamManager);
 
 
 
@@ -191,7 +192,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 			//íœŠÔ
 			m_beam->SetRemoveTime(300);
 
-			m_beamManeger.Add(m_beam);
+			m_beamManager.Add(m_beam);
 		}
 	}
 	else if (count > 300) {
@@ -208,7 +209,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 				hl->AddLimitInfo(30, 5.0);						//30fr‚Ü‚Å‚ÍŠp“x§ŒÀ5.0
 				hl->AddLimitInfo(60, 3.0);						//60fr‚Ü‚Å‚ÍŠp“x§ŒÀ3.0
 				hl->AddLimitInfo(MAXINT, 0.5);					//ˆÈ~‚ÍŠp“x§ŒÀ0.5
-				m_bulletManeger.Add(hl);
+				m_bulletManager.Add(hl);
 			}
 		}
 
@@ -219,14 +220,14 @@ void CBattleScene::Main(CInputAllStatus *input){
 			static int cr = 0;
 			cr++;
 			CBaseBullet* bu = new CBaseBullet(EDirType::Abs, CPos(400, 50), 5.0, 90.0, 0, 0, 0, cr%3);
-			m_bulletManeger.Add(bu);
+			m_bulletManager.Add(bu);
 		}
 	} else if (count > 100 && count <= 200) {
 		if (count % 10 == 0) {
 			static int cr = 0;
 			cr++;
 			CBaseBullet* bu = new CBaseBullet(EDirType::Player, CPos(400, 50), 5.0, 0.0, 0, 0, 0, cr % 3);
-			m_bulletManeger.Add(bu);
+			m_bulletManager.Add(bu);
 		}
 	}
 	else if (count > 200 && count <= 300) {
@@ -234,7 +235,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 			static int cr = 0;
 			cr++;
 			CBaseBullet* bu = new CBaseBullet(EDirType::Abs, CPos(400, 50), 5.0, 90.0, 0.3, 0, 0, 10 + cr % 3);
-			m_bulletManeger.Add(bu);
+			m_bulletManager.Add(bu);
 		}
 	}
 	else if (count > 300 && count <= 400) {
@@ -243,8 +244,8 @@ void CBattleScene::Main(CInputAllStatus *input){
 			cr++;
 			CBaseBullet* bu = new CBaseBullet(EDirType::Abs, CPos(400, 50), 1.0, 90+-30.0, 0.0, 0.15, 20, 10 + cr % 3);
 			CBaseBullet* bu2 = new CBaseBullet(EDirType::Abs, CPos(400, 50), 1.0, 90 + 30.0, 0.0, 0.15, 20, 10 + cr % 3);
-			m_bulletManeger.Add(bu);
-			m_bulletManeger.Add(bu2);
+			m_bulletManager.Add(bu);
+			m_bulletManager.Add(bu2);
 		}
 	}
 	else if (count > 400 && count <= 500) {
@@ -263,7 +264,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 			Trans->SetTransBullet(trans2, 60);
 
 			//ã‹L‚ğİ’èŒãm_bullet‚ğ”­Ë
-			m_bulletManeger.Add(m_bullet);
+			m_bulletManager.Add(m_bullet);
 		}
 	}
 	else if (count > 500 && count <= 600) {
@@ -275,7 +276,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 			ppp->SetAddBullet(addFuncA, 20);
 
 			//’e‚ğ’Ç‰Á‚·‚é
-			m_bulletManeger.Add(ppp);
+			m_bulletManager.Add(ppp);
 		}
 	}
 #endif
@@ -285,17 +286,19 @@ void CBattleScene::Main(CInputAllStatus *input){
 #endif
 
 
-	testLauncher->Action(testLauncherPos);
+	//testLauncher->Action(testLauncherPos);
 
 	////‚Ç‚ñ‚Èó‘Ô‚Å‚àƒAƒNƒVƒ‡ƒ“‚·‚éˆ—
+	m_stageManager.Main(); //“GƒXƒ|[ƒ“
+
 	m_bg.Action();
 	m_player.Action(input);
 	RemoveBullet(); // ’eÁ‚µˆ—
 	m_playerBullet.Action();
 	m_enemyManager.Action();
 	m_itemManager.Action();
-	m_bulletManeger.Action();
-	m_beamManeger.Action();
+	m_bulletManager.Action();
+	m_beamManager.Action();
 	m_bg.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos);
 	CBaseEnemy::SetTarget(m_player.m_pos);
@@ -318,12 +321,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_playerBullet.Draw();
 	m_itemManager.Draw();
 	m_effectManager.Draw(30); // 30 ƒvƒŒƒCƒ„[‚Ì’e‚æ‚èŒã
-	m_bulletManeger.Draw();
+	m_bulletManager.Draw();
 	m_effectManager.Draw(40);
-	m_beamManeger.Draw();
+	m_beamManager.Draw();
 	m_effectManager.Draw(50); // 50 Å‘O–Ê
-
-
 
 	m_ui.Draw();
 }
@@ -342,11 +343,11 @@ void CBattleScene::RemoveBullet()
 		return; // ’eÁ‚µI—¹
 	}
 	if(m_bulletRemoveCount)
-	for (int ii = 0; ii < m_bulletManeger.m_bulletTotalNum; ii++) {
-		if (m_bulletManeger.m_bullet[ii] == nullptr) {
+	for (int ii = 0; ii < m_bulletManager.m_bulletTotalNum; ii++) {
+		if (m_bulletManager.m_bullet[ii] == nullptr) {
 			continue;
 		}
-		CBaseBullet* bullet = m_bulletManeger.m_bullet[ii];
+		CBaseBullet* bullet = m_bulletManager.m_bullet[ii];
 		bullet->SetRemove();
 
 		// íœƒAƒCƒeƒ€‚È‚ç

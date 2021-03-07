@@ -104,7 +104,7 @@ public:
 	eff->SetAnimeEndDelFlg(false);	//アニメーション終了後削除するか
 	eff->SetRemoveCount(60);	//60frで削除
 
-	effectManeger1->Add(eff);
+	effectManager1->Add(eff);
 
 
 */

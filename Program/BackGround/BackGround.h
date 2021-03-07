@@ -25,9 +25,14 @@ public:
 	double m_scrollNearY; // 近い背景
 	double m_scrollFarwayY; // 遠く背景
 
-	CPos m_posSpaceNear; // 近くの背景の座標
-	CPos m_posSpaceFarwayY; // 遠くの背景の座標
-
+	enum ImagePosLR {
+		L = 0,
+		R = 1,
+	};
+	ImagePosLR m_SpaceNearLR; // 背景がLかR
+	ImagePosLR m_SpaceFarwayLR; // 背景がLかR
+	CPos m_posSpaceNear[2]; // 近くの背景の座標
+	CPos m_posSpaceFarwayY[2]; // 遠くの背景の座標
 	CImage* m_imageNearSpace; // 近くの背景のイメージ(星だけのシンプルな方)
 	CImage* m_imageFarwaySpace; // 遠くの背景のイメージ(もやもやしている方)
 

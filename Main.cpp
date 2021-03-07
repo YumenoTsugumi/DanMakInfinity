@@ -10,7 +10,11 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
-	SetGraphMode(WindowX, WindowY, 32); // ウィンドウサイズ
+	double gameRatio = 0.5;
+	CGame::SetAllGameRect(gameRatio);
+	CDxFunc::SetWindowRatio(gameRatio);
+
+	SetGraphMode(WindowX * gameRatio, WindowY * gameRatio, 32); // ウィンドウサイズ
 	ChangeWindowMode(true); //ウィンドウモード
 	SetOutApplicationLogValidFlag(false); //ログを吐かない
 	SetAlwaysRunFlag(TRUE); //アクティブでなくても処理を行う

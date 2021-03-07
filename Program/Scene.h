@@ -159,7 +159,7 @@ public:
 	int font1;
 	int font2;
 
-	//CEffectManager *effectManeger1;
+	//CEffectManager *effectManager1;
 
 	int selectPos;
 
@@ -181,7 +181,7 @@ public:
 
 	int m_font;
 
-	//CBulletManager *bulletManeger1;
+	//CBulletManager *bulletManager1;
 
 	int selectPos;
 };

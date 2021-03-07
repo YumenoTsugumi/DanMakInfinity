@@ -13,7 +13,11 @@ class CPlayer {
 public:
 	CPos m_pos;
 
+	double m_posBitAngleL[2];
+	double m_posBitAngleR[2];
+
 	CImage* m_playerImage;
+	CImage* m_bitRImage;
 	int m_slowMove;	//0(MOVE_HI)通常　1(MOVE_SLOW)低速
 
 	int m_bulletShotCount;

@@ -27,14 +27,34 @@ public:
 	static void* GetResource(const char* name) {
 		return m_resourceManager.GetResource(name);
 	}
-	// ゲームのエリアサイズ（弾が消える範囲）
-	static CRect m_battleRect;
-	static CRect GetBattleRect() {
-		return m_battleRect;
+	// ゲームのエリアサイズ（弾が消える範囲） あとで消したい
+	//static CRect m_battleRect;
+	//static CRect GetGameRect() {
+	//	return m_battleRect;
+	//}
+	//static CRect SetBattleRect(const CRect rect) {
+	//	return m_battleRect = rect;
+	//}
+
+	// FullHD(1920*1080)なら
+	static CPos m_allGameRect; // 全体　(1920,1080)
+	static CPos m_gameRectLT; // ゲーム内 (480,20)
+	static CPos m_gameRectRB; // ゲーム内 (1440,1060)
+	static double m_windowRatio;
+	static void SetAllGameRect(double ratio) {
+		m_windowRatio = ratio;
+		m_allGameRect = CPos(WindowX * ratio, WindowY * ratio); //1920 1080
+		m_gameRectLT = CPos(GameWindowAreaLeft* ratio,  // 480
+							GameWindowAreaTop * ratio); // 20
+		m_gameRectRB = CPos(GameWindowAreaRight * ratio,  // 1440
+							GameWindowAreaBottom * ratio); // 1060
 	}
-	static CRect SetBattleRect(const CRect rect) {
-		return m_battleRect = rect;
-	}
+	static double GetWindowRatio() { return m_windowRatio; }; // 画面サイズの割合
+	static CPos GetAllGameRect(){ return m_allGameRect; } // 全体　(1920,1080)
+	static CPos GetGamePosLT(){ return m_gameRectLT; } // ゲーム内 (480,20)
+	static CPos GetGamePosRB(){ return m_gameRectRB; } // ゲーム内 (1440,1060)
+	//static CRect GetGameRect() { return CRect(m_gameRectLT, m_gameRectRB); }
+	static CRect GetGameRect() { return CRect(CPos(GameWindowAreaLeft, GameWindowAreaTop), CPos(GameWindowAreaRight, GameWindowAreaBottom)); }
 
 	//--------------------------------------------------------------
 	// めんどくさいので共通化

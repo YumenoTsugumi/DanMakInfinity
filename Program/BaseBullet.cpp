@@ -236,10 +236,10 @@ void CBaseBullet::Move(){
 
 void CBaseBullet::RectOut(){
 	//領域外に出たら削除
-	if(	m_pos.x <	CGame::GetBattleRect().leftUp.x		- m_imageInfo.m_sizeX/2	|| 
-		m_pos.x >	CGame::GetBattleRect().rightDown.x	+ m_imageInfo.m_sizeX/2	|| 
-		m_pos.y <	CGame::GetBattleRect().leftUp.y		- m_imageInfo.m_sizeY/2	|| 
-		m_pos.y >	CGame::GetBattleRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
+	if(	m_pos.x <	CGame::GetGameRect().leftUp.x		- m_imageInfo.m_sizeX/2	|| 
+		m_pos.x >	CGame::GetGameRect().rightDown.x	+ m_imageInfo.m_sizeX/2	|| 
+		m_pos.y <	CGame::GetGameRect().leftUp.y		- m_imageInfo.m_sizeY/2	|| 
+		m_pos.y >	CGame::GetGameRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
 		m_removeFlg = true;
 	}
 }
@@ -269,7 +269,7 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 	//座標
 	m_pos = P;
 	//速度
-	m_speed = speed;
+	m_speed = speed * CGame::GetWindowRatio(); //　ウィンドウサイズ考慮
 
 	//----------
 	//狙い方向
@@ -298,9 +298,9 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 	m_corner = corner / CFunc::RAD;
 
 	//加速度
-	m_accelerate = acce; 
+	m_accelerate = acce * CGame::GetWindowRatio(); //　ウィンドウサイズ考慮
 	//最大速度
-	m_maxsp = maxSpeed;
+	m_maxsp = maxSpeed * CGame::GetWindowRatio(); //　ウィンドウサイズ考慮
 
 	//カウント　毎フレーム刻む　いろいろ使う
 	m_count = 0;

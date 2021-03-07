@@ -16,7 +16,7 @@ void CLauncher000::Action(const CPos& newEnemyPos)
 	int loop = (int)(1 + 2 * RankRatio());
 	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 0,0);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, SpeedRange(speed, ii,loop), 0.0, 0, 0, 0, 0, 1);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
 		m_count = 0;
@@ -159,14 +159,14 @@ void CLauncher999::Action(const CPos& newEnemyPos)
 		int bulletID[] = { 00,10,20,30,50, 60,70,80,90 };
 		for (int jj = 0; jj < 9; jj++) {
 			for (int ii = 0; ii < 1; ii++) {
-				CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100+jj*80, 0), sppeed, 0, 0, 0, 0, 0, bulletID[jj] + 1);
+				CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100 + jj * 80, 0), sppeed, 0, 0, 0, 0, 0, bulletID[jj] + 1);
 				CBaseLauncher::m_bulletManager->Add(b1);
 
-				CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100+jj*80, 0), sppeed, 180, 0, 0, 0, 0, bulletID[jj] + 2);
+				CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(100 + jj * 80, 0), sppeed, 180, 0, 0, 0, 0, bulletID[jj] + 2);
 				CBaseLauncher::m_bulletManager->Add(b2);
 			}
 		}
-		CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(300,300), sppeed, 0, 0, 0, 0, 0, 41);
+		CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos + CPos(300, 300), sppeed, 0, 0, 0, 0, 0, 41);
 		CBaseLauncher::m_bulletManager->Add(b2);
 
 		m_count = 0;
@@ -195,12 +195,25 @@ void CLauncher999::Action(const CPos& newEnemyPos)
 
 	int bulletID[] = { 00,10,20,30,50, 60,70,80,90 };
 	int ran = rand() % 9;
-	double speed = 6.0;
-	CBaseBullet* b1 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY), speed, angle, 0, 0, 0, 0, bulletID[ran] + 1);
-	CBaseLauncher::m_bulletManager->Add(b1);
 
-	CBaseBullet* b2 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY), speed, angle + 180, 0, 0, 0, 0, bulletID[ran] + 2);
-	CBaseLauncher::m_bulletManager->Add(b2);
+	static int count = 0;
+	count++;
+	if (count == 20) {
+		
+		for (int i = 0; i < 60; i++) {
+			double speed = 6.0 + CFunc::RandF(-1000,1000)/1000.0;
+			double angle2 = CFunc::RandF(-1000, 1000) / 100.0;
+			CBaseBullet* b1 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY * 0.3), speed, angle + angle2, 0, 0, 0, 0, bulletID[ran] + 1);
+			CBaseLauncher::m_bulletManager->Add(b1);
+		}
+		for (int i = 0; i < 60; i++) {
+			double speed = 6.0 + CFunc::RandF(-1000, 1000) / 1000.0;
+			double angle2 = CFunc::RandF(-1000, 1000) / 100.0;
+			CBaseBullet* b2 = new CBaseBullet(EDirType::Abs, CPos(GameWindowCenterX, GameWindowCenterY * 0.3), speed, angle + 180 + angle2, 0, 0, 0, 0, bulletID[ran] + 2);
+			CBaseLauncher::m_bulletManager->Add(b2);
+		}
+		count = 0;
+	}
 
 	m_count++;
 }

@@ -82,15 +82,6 @@ public:
 	}
 
 
-
-
-
-
-
-
-
-
-
 	void Unit(){
 		double len;
 		len = sqrt(x*x + y*y);
@@ -136,7 +127,7 @@ public:
 	//乱数取得
 	static int RandI(int MIN,int MAX);
 	static double RandF(int MIN,int MAX);
-
+	static double RandD(double MIN, double MAX);
 	//MINMAXの取得
 	static double GetMax(double value1, double value2);
 	static double GetMin(double value1, double value2);
@@ -251,6 +242,7 @@ public:
 class CRect{
 public:
 	CRect();
+	CRect(CPos lt, CPos rb);
 	CRect(const double &x1, const double &y1, const double &x2, const double &y2);
 	void Set(const double &x1, const double &y1, const double &x2, const double &y2);
 

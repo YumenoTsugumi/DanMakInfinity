@@ -38,6 +38,14 @@ int CFunc::RandI(int MIN, int MAX) {
 double CFunc::RandF(int MIN, int MAX) {
 	return MIN + (double)(rand() * (MAX - MIN + 1) / (1 + RAND_MAX));
 }
+double CFunc::RandD(double MIN, double MAX) {
+	int min = MIN * 1000;
+	int max = MAX * 1000;
+	int result = min + (double)(rand() * (max - min + 1) / (1 + RAND_MAX));
+	if (result < min)result = min;
+	if (result > max)result = max;
+	return (double)result / 1000.0;
+}
 
 double CFunc::GetMax(double value1, double value2) {
 	return value1 > value2 ? value1 : value2;
@@ -385,6 +393,9 @@ double CFunc::GetDistance(const CPos& p1, const CPos& p2)
 
 CRect::CRect() {
 	Set(0, 0, 0, 0);
+}
+CRect::CRect(CPos lt, CPos rb) {
+	Set(lt.x, lt.y, rb.x, rb.y);
 }
 CRect::CRect(const double& x1, const double& y1, const double& x2, const double& y2) {
 	Set(x1, y1, x2, y2);

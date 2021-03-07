@@ -24,15 +24,19 @@ protected:
 	// UI関連
 	long long m_hiScore;
 	long long m_score;
+	int m_rank;
 
 	// 内側
 	CImage* m_textScore;
 	CImage* m_textHiScore;
 	std::vector<CImage*> m_textNumber;
-	CPos m_numberMaxSize; // 数値の中で一番大きいサイズを覚えておく
+	std::vector<CImage*> m_textBigNumber;
 	CImage* m_text0g;
 	CImage* m_textComma;
 	CImage* m_textCommag;
+
+	CImage* m_rankWaku;
+	CImage* m_rankWaku2;
 
 	// 外側
 	CImage* m_UIFoundation;

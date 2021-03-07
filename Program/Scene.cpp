@@ -200,13 +200,13 @@ CSceneExMain::CSceneExMain(int InTime) : CScene(InTime){
 	font2 = wrkFontP->m_font;
 
 	m_count = 0;
-	//effectManeger1 = new CEffectManager(256);
+	//effectManager1 = new CEffectManager(256);
 
 	selectPos = 0;
 }
 
 CSceneExMain::~CSceneExMain(){
-	//delete(effectManeger1);
+	//delete(effectManager1);
 }
 
 void CSceneExMain::Main(CInputAllStatus *input){
@@ -251,10 +251,10 @@ void CSceneExMain::Main(CInputAllStatus *input){
 	//	eff->SetBlend(30, +1.0);
 	//	eff->SetAnimeEndDelFlg(false);
 	//	eff->SetRemoveCount(60);
-	//	effectManeger1->Add(eff);
+	//	effectManager1->Add(eff);
 	//}
-	//effectManeger1->Action();
-	//effectManeger1->Draw();
+	//effectManager1->Action();
+	//effectManager1->Draw();
 
 
 	//どんな状態でもアクションする処理
@@ -294,7 +294,7 @@ CSceneExSub1::CSceneExSub1(int InTime) :
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
 	Set(InTime);
 
-	//bulletManeger1 = new CBulletManager(256);
+	//bulletManager1 = new CBulletManager(256);
 
 	CFont* wrkFontP;
 	wrkFontP = (CFont*)CGame::GetResource(1000);
@@ -302,7 +302,7 @@ CSceneExSub1::CSceneExSub1(int InTime) :
 }
 
 CSceneExSub1::~CSceneExSub1(){
-	//delete(bulletManeger1);
+	//delete(bulletManager1);
 }
 
 void CSceneExSub1::Main(CInputAllStatus *input){
@@ -321,10 +321,10 @@ void CSceneExSub1::Main(CInputAllStatus *input){
 
 	//CPos ppp(CFunc::RandF(0,360),CFunc::RandF(0,360));
 	//CCustomBullet *bu = new CCustomBullet(EDirType::Abs, ppp, 4, m_count, 0,0,0, 1);
-	//bulletManeger1->Add(bu);
+	//bulletManager1->Add(bu);
 	////どんな状態でもアクションする処理
-	//bulletManeger1->Action();
-	//bulletManeger1->Draw();
+	//bulletManager1->Action();
+	//bulletManager1->Draw();
 
 	//SetDrawBlendMode( DX_BLENDMODE_ALPHA , 128 ) ;
 	//CPos center = CPos(400,400);
