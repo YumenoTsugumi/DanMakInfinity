@@ -102,7 +102,7 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 	m_size(EnemySize::Small),
 	m_drawSizeRatio(1.0)
 {
-
+	m_rank = CBattleScene::GetRank();
 }
 CBaseEnemy::~CBaseEnemy() {
 
@@ -122,8 +122,9 @@ void CBaseEnemy::Draw() {
 
 void CBaseEnemy::Shot()
 {
-	for (Launcher& l : m_launchers) {
-		l.m_launcher->Action(m_pos);
+	for (CBaseLauncher* l : m_launchers) {
+		CPos nowRelativePos = GetCollisionData(l->m_relativePos);
+		l->Action(m_pos, nowRelativePos);
 	}
 }
 
@@ -198,11 +199,10 @@ void CBaseEnemy::SetBehaviorComponent(CBehaviorComponent* component, int waitTim
 	}
 }
 // 砲台を設定
-void CBaseEnemy::AddLauncher(const CPos& pos, CBaseLauncher* launcher)
+void CBaseEnemy::AddLauncher(CBaseLauncher* launcher)
 {
 	launcher->SetParent(this);
-	Launcher l(pos, launcher);
-	m_launchers.push_back(l);
+	m_launchers.push_back(launcher);
 }
 
 // 時機の位置の設定
@@ -227,13 +227,19 @@ double CBaseEnemy::GetDirectionRad()
 {
 	return m_behaviorComponent->GetDirection();
 }
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CBaseEnemy::GetFinalDirectionRad()
+{
+	return m_behaviorComponent->GetDirection();
+}
+
 
 // 角度と大きさを考慮した、相対座標と角度を返してくれる
 void CBaseEnemy::GetCollisionData(const Collision& co, CPos& p, double& size)
 {
 	CPos p2 = co.m_relationPos * m_drawSizeRatio; // 回転中心からの相対位置
 	CPos p3 = CPos(0, 0); // 回転中心
-	CFunc::RotatingMatrix(&p, p2, p3, -GetDirectionRad() + CFunc::ToRad(90.0));
+	CFunc::RotatingMatrix(&p, p2, p3, -GetFinalDirectionRad() + CFunc::ToRad(90.0));
 
 	size = co.m_rad * m_drawSizeRatio;
 	return;
@@ -243,7 +249,7 @@ CPos CBaseEnemy::GetCollisionData(const CPos& launcherPos)
 	CPos returnPos;
 	CPos p2 = launcherPos * m_drawSizeRatio; // 回転中心からの相対位置
 	CPos p3 = CPos(0, 0); // 回転中心
-	CFunc::RotatingMatrix(&returnPos, p2, p3, -GetDirectionRad() + CFunc::ToRad(90.0));
+	CFunc::RotatingMatrix(&returnPos, p2, p3, -GetFinalDirectionRad() + CFunc::ToRad(90.0));
 	return returnPos;
 }
 
@@ -252,7 +258,7 @@ CPos CBaseEnemy::GetCollisionData(const CPos& launcherPos)
 // 当たり判定の表示
 void CBaseEnemy::DebugCollisionDraw()
 {
-	return;
+	if(!CBattleScene::GetEnemyHitSizeDraw())return;
 	for (const Collision& co : m_collisions) {
 		CPos pos; // 結果
 		double size; // 大きさ
@@ -264,6 +270,19 @@ void CBaseEnemy::DebugCollisionDraw()
 		CDxFunc::DrawCircle(m_pos + pos, size, 32, GetColor(0, 0, 255), FALSE);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+}
+void CBaseEnemy::DebugLauncherDraw()
+{
+	if (!CBattleScene::GetEnemyLauncherDraw())return;
+
+	for (CBaseLauncher* laun : m_launchers) {
+		CPos pos = GetCollisionData(laun->m_relativePos);
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+		CDxFunc::DrawCircle(m_pos + pos, 8, 32, GetColor(255, 0, 255), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+		CDxFunc::DrawCircle(m_pos + pos, 8, 32, GetColor(255, 0, 255), FALSE);
+	}
 }
 
 // 表示サイズの割合手

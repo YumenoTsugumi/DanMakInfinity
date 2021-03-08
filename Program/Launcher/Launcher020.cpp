@@ -19,9 +19,9 @@ CLauncher020::CLauncher020(int rank, const CPos& enemyPos, const CPos& relativeP
 CLauncher020::~CLauncher020(){
 
 };
-void CLauncher020::Action(const CPos& newEnemyPos)
+void CLauncher020::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	if (bVal[0] == true) {
 		dVal[0] += dVal[1];
@@ -39,10 +39,10 @@ void CLauncher020::Action(const CPos& newEnemyPos)
 		for (int ii = 0; ii < rendanLoop; ii++) {
 			double speed = 1.5 + ii*0.1;
 			double angle = dVal[0];
-			CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, speed, angle+ii, 0, 0, 0, 0, 01);
+			CBaseBullet* b1 = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle+ii, 0, 0, 0, 0, 01);
 			CBaseLauncher::m_bulletManager->Add(b1);
 
-			CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + m_relativePos, speed, angle-ii + 180.0, 0, 0.05, speed*1.5, 0, 01);
+			CBaseBullet* b2 = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle-ii + 180.0, 0, 0.05, speed*1.5, 0, 01);
 			CBaseLauncher::m_bulletManager->Add(b2);
 		}
 

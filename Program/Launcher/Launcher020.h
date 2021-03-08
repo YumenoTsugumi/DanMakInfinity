@@ -8,7 +8,7 @@ class CLauncher020 : public CBaseLauncher {
 public:
 	CLauncher020(int rank, const CPos& enemyPos, const CPos& relativePos, bool left);
 	virtual ~CLauncher020() override;
-	virtual void Action(const CPos& newEnemyPos) override;
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 

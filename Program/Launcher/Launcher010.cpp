@@ -13,9 +13,9 @@ CLauncher010::CLauncher010(int rank, const CPos& enemyPos, const CPos& relativeP
 CLauncher010::~CLauncher010(){
 
 };
-void CLauncher010::Action(const CPos& newEnemyPos)
+void CLauncher010::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	int span = (int)(12.0 - 4.0 * RankRatio());
 	double speed = 4.0 + 3.0 * RankRatio();

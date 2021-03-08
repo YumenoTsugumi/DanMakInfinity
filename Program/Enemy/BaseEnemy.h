@@ -45,16 +45,6 @@ enum EnemySize {
 	Boss = 3
 };
 
-
-struct Launcher {
-	Launcher(const CPos& pos, CBaseLauncher* launcher) {
-		m_relativePos = pos;
-		m_launcher = launcher;
-	}
-	CBaseLauncher* m_launcher; // 発射口の実態
-	CPos m_relativePos; // 座標(敵本体の座標からの相対座標)
-};
-
 struct Collision {
 	Collision(const CPos& pos, double r) {
 		m_relationPos = pos;
@@ -77,7 +67,7 @@ public:
 	virtual void DebugPrint();
 
 	void SetBehaviorComponent(CBehaviorComponent* component, int waitTime = 0);
-	void AddLauncher(const CPos& pos, CBaseLauncher* launcher);
+	void AddLauncher(CBaseLauncher* launcher);
 
 	void Init(int life, EnemySize size, const std::vector<Collision>& collisions);
 
@@ -87,7 +77,7 @@ public:
 	void GetCollisionData(const Collision& co, CPos& p, double& size);
 	CPos GetCollisionData(const CPos& launcherPos);
 
-	std::vector<Launcher> m_launchers; // 発射口
+	std::vector<CBaseLauncher*> m_launchers; // 発射口
 	CBehaviorComponent* m_behaviorComponent; // 移動コンポーネント
 	int m_life; // ライフ
 	bool m_removeFlg; // trueになると勝手に削除しｔくれる
@@ -108,9 +98,13 @@ public:
 	CPos m_pos; // 座標
 	CPos GetPos() { return m_pos; }
 
+	int m_rank; // シーンからもらった値
+
 	// 敵が向いている方向
-	double GetDirectionDeg();
-	double GetDirectionRad();
+	double GetDirectionDeg(); // 移動コンポーネントでの向き
+	double GetDirectionRad(); // 移動コンポーネントでの向き
+	virtual double GetFinalDirectionRad(); // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+
 
 	// 時機の位置の設定
 	static CPos m_target;
@@ -118,6 +112,8 @@ public:
 
 	// 当たり判定を可視化
 	void DebugCollisionDraw();
+	// ランチャーの位置を可視化
+	void DebugLauncherDraw();
 };
 
 /*

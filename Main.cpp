@@ -10,7 +10,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
-	double gameRatio = 0.5;
+	double gameRatio = 1.0;
 	CGame::SetAllGameRect(gameRatio);
 	CDxFunc::SetWindowRatio(gameRatio);
 

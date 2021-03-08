@@ -14,9 +14,9 @@ CEnemyS001::CEnemyS001(const CPos& pos) : CBaseEnemy(pos){
 	std::vector<Collision> collisions = { Collision(CPos(0,-18), 39.0) };
 	Init(100, Small, collisions);
 
-	AddLauncher(CPos(0, 0), new CLauncher000(0, m_pos, CPos(21, 31)));
-	AddLauncher(CPos(0, 0), new CLauncher000(0, m_pos, CPos(-21, 31)));
-	AddLauncher(CPos(0, 0), new CLauncher000(0, m_pos, CPos(0, 14)));
+	AddLauncher(new CLauncher000(0, m_pos, CPos(21, 31)));
+	AddLauncher(new CLauncher000(0, m_pos, CPos(-21, 31)));
+	AddLauncher(new CLauncher000(0, m_pos, CPos(0, 14)));
 }
 CEnemyS001::~CEnemyS001() {
 }
@@ -41,7 +41,7 @@ CEnemyS002::CEnemyS002(const CPos& pos) : CBaseEnemy(pos) {
 
 	this->m_shotTiming = true; // 動いていても弾をうつ
 
-	AddLauncher(CPos(0, 0), new CLauncher005(0, m_pos, CPos(0, 26)));
+	AddLauncher(new CLauncher005(0, m_pos, CPos(0, 26)));
 }
 CEnemyS002::~CEnemyS002() {
 }
@@ -72,8 +72,8 @@ CEnemyS003::CEnemyS003(const CPos& pos) : CBaseEnemy(pos) {
 
 	this->m_shotTiming = true; // 動いていても弾をうつ
 	//AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(0, 7)));
-	AddLauncher(CPos(0, 0), new CLauncher001(0, m_pos, CPos(22, 30)));
-	AddLauncher(CPos(0, 0), new CLauncher001(0, m_pos, CPos(-22, 30)));
+	AddLauncher(new CLauncher001(0, m_pos, CPos(22, 30)));
+	AddLauncher(new CLauncher001(0, m_pos, CPos(-22, 30)));
 }
 CEnemyS003::~CEnemyS003() {
 }
@@ -96,9 +96,9 @@ CEnemyS004::CEnemyS004(const CPos& pos) : CBaseEnemy(pos) {
 	std::vector<Collision> collisions = { Collision(CPos(14,2), 24.0), Collision(CPos(-14,0), 24.0) };
 	Init(1000, Small, collisions);
 
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(0, 13)));
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(20, 41)));
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(-20, 41)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(0, 13)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(20, 41)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(-20, 41)));
 }
 CEnemyS004::~CEnemyS004() {
 }
@@ -122,7 +122,7 @@ CEnemyS005::CEnemyS005(const CPos& pos) : CBaseEnemy(pos) {
 	int yAry[3] = { 7,13,19 };
 	for (int ii = 0; ii < 4; ii++) {
 		for (int jj = 0; jj < 3; jj++) {
-			AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(ii, jj)));
+			AddLauncher(new CLauncher004(0, m_pos, CPos(ii, jj)));
 		}
 	}
 
@@ -145,9 +145,9 @@ CEnemyS006::CEnemyS006(const CPos& pos) : CBaseEnemy(pos) {
 	std::vector<Collision> collisions = { Collision(CPos(0,-2), 18.0), Collision(CPos(36,24), 12.0), Collision(CPos(-36,24), 12.0) };
 	Init(1000, Small, collisions);
 
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(0, 13)));
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(20, 41)));
-	AddLauncher(CPos(0, 0), new CLauncher004(0, m_pos, CPos(-20, 41)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(0, 13)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(20, 41)));
+	AddLauncher(new CLauncher004(0, m_pos, CPos(-20, 41)));
 }
 CEnemyS006::~CEnemyS006() {
 }
@@ -169,9 +169,9 @@ CEnemyS007::CEnemyS007(const CPos& pos) : CBaseEnemy(pos) {
 	std::vector<Collision> collisions = { Collision(CPos(0,5), 25.0) ,Collision(CPos(33,0), 9.0), Collision(CPos(-33,0), 9.0), Collision(CPos(45,-8), 5.0), Collision(CPos(-45,-8), 5.0) };
 	Init(100000, Small, collisions);
 
-	AddLauncher(CPos(0, 0), new CLauncher004(1, m_pos, CPos(0, 29)));
-	AddLauncher(CPos(0, 0), new CLauncher004(1, m_pos, CPos(22, 22)));
-	AddLauncher(CPos(0, 0), new CLauncher004(1, m_pos, CPos(-22, 22)));
+	AddLauncher(new CLauncher004(1, m_pos, CPos(0, 29)));
+	AddLauncher(new CLauncher004(1, m_pos, CPos(22, 22)));
+	AddLauncher(new CLauncher004(1, m_pos, CPos(-22, 22)));
 }
 CEnemyS007::~CEnemyS007() {
 }

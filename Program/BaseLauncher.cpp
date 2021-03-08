@@ -30,14 +30,16 @@ CBaseLauncher::~CBaseLauncher() {
 };
 
 
-void CBaseLauncher::Action(const CPos& newEnemyPos) {
+void CBaseLauncher::Action(const CPos& newEnemyPos, const CPos& nowRelativePos) {
 	m_enemyPos = newEnemyPos;
 }
 
 
 // 現在のランクの割合を返す 0.0～1.0
 double CBaseLauncher::RankRatio() {
-	return ((double)m_rank / (double)MAX_RANK);
+	int flor = m_rank;
+	if (flor >= MAX_RANK)flor = MAX_RANK; // 100以上は1.0とみなす
+	return ((double)flor / (double)MAX_RANK);
 }
 // 連弾の速度差を生成する(speedの10％までをindexで等分割する)
 // 10連弾なら　indexは0～9 maxIndexは10

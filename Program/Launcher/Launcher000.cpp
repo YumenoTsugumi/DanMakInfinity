@@ -7,9 +7,9 @@
 //	速度が速くなる		5～8
 //	連弾になる			1~3弾
 LANCHERCPP(CLauncher000)
-void CLauncher000::Action(const CPos& newEnemyPos)
+void CLauncher000::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	int span = (int)(30.0 - 8.0 * RankRatio());
 	double speed = 5.0 + 3.0 * RankRatio();
@@ -32,9 +32,9 @@ void CLauncher000::Action(const CPos& newEnemyPos)
 //	速度が速くなる		3～4
 //	連弾になる			1~3弾
 LANCHERCPP(CLauncher001)
-void CLauncher001::Action(const CPos& newPos)
+void CLauncher001::Action(const CPos& newPos, const CPos& nowRelativePos)
 {
-	__super::Action(newPos);
+	__super::Action(newPos, nowRelativePos);
 	// ずっとループするゲームなんで、ランク（難易度）を導入
 	int span = 60;
 	double speed = 3.0;
@@ -59,9 +59,9 @@ void CLauncher001::Action(const CPos& newPos)
 
 // 等角度2wayしばらくの時間　時機狙いを撃つ　ぶっちゃけナイトメアの先頭砲台
 LANCHERCPP(CLauncher002)
-void CLauncher002::Action(const CPos& newPos)
+void CLauncher002::Action(const CPos& newPos, const CPos& nowRelativePos)
 {
-	__super::Action(newPos);
+	__super::Action(newPos, nowRelativePos);
 
 	int start = 0;
 	int end = 26;
@@ -96,13 +96,13 @@ void CLauncher002::Action(const CPos& newPos)
 
 // 敵が向いている方向にうつ 
 LANCHERCPP(CLauncher004)
-void CLauncher004::Action(const CPos& newEnemyPos)
+void CLauncher004::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	if (m_count > 5) {
 		double angle = m_parent->GetDirectionDeg();
-		CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + m_parent->GetCollisionData(m_relativePos), 4.0, angle, 0, 0, 0, 0, 0);
+		CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + m_parent->GetCollisionData(m_relativePos), 4.0, angle, 0, 0, 0, 0, 1);
 		CBaseLauncher::m_bulletManager->Add(b);
 		m_count = 0;
 		return;
@@ -115,9 +115,9 @@ void CLauncher004::Action(const CPos& newEnemyPos)
 
 // 敵が向いている方向にうつ 
 LANCHERCPP(CLauncher005)
-void CLauncher005::Action(const CPos& newEnemyPos)
+void CLauncher005::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	if (m_count > 20) { // 1s 60ms  5fr
 		for (int ii = 0; ii < 4; ii++) {
@@ -147,7 +147,7 @@ void CLauncher005::Action(const CPos& newEnemyPos)
 
 // テスト
 LANCHERCPP(CLauncher999)
-void CLauncher999::Action(const CPos& newEnemyPos)
+void CLauncher999::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 #if 0
 	static double sppeed = 3.0;

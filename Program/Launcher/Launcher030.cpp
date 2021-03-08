@@ -9,9 +9,9 @@ CLauncher030::CLauncher030(int rank, const CPos& enemyPos, const CPos& relativeP
 CLauncher030::~CLauncher030(){
 
 };
-void CLauncher030::Action(const CPos& newEnemyPos)
+void CLauncher030::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos);
+	__super::Action(newEnemyPos, nowRelativePos);
 
 	if (bVal[0] == true) {
 		dVal[0] += dVal[1];

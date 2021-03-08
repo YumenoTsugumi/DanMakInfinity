@@ -17,7 +17,7 @@ public:
 	CBaseLauncher(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CBaseLauncher();
 
-	virtual void Action(const CPos& newEnemyPos);
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos);
 
 	//弾幕管理をしているマネージャ
 	static CBulletManager* m_bulletManager;
@@ -33,8 +33,9 @@ public:
 	void SetParent(CBaseEnemy* parent);
 	CBaseEnemy* m_parent; // 親
 
+	// ゲームシーンで毎フレーム時機の位置を更新してくれてる
 	static CPos m_target;
-	static void SetTarget(CPos target);
+	static void SetTarget(CPos target); 
 protected:
 	int m_count; // 発射のタイミングのカウンター
 
@@ -68,7 +69,7 @@ class ClassName : public CBaseLauncher { \
 public:  \
 	ClassName(int rank, const CPos& enemyPos, const CPos& relativePos);  \
 	virtual ~ClassName() override;  \
-	virtual void Action(const CPos& newEnemyPos) override;  \
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;  \
 };  \
 
 ////CLauncher001::CLauncher001(int rank, const CPos& enemyPos, const CPos& relativePos) : CBaseLauncher(rank, enemyPos, relativePos){}

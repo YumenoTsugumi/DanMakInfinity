@@ -18,9 +18,9 @@ CEnemyL001::CEnemyL001(const CPos& pos) : CBaseEnemy(pos){
 
 	CPos targetPos = pos - CPos(-1000, 100);
 
-	AddLauncher(CPos(0, 0), new CLauncher020(0, m_pos, CPos(-30, 0), false));
-	AddLauncher(CPos(0, 0), new CLauncher020(0, m_pos, CPos(+30, 0), true));
-	AddLauncher(CPos(0, 0), new CLauncher002(0, m_pos, CPos(+0, 50)));
+	AddLauncher(new CLauncher020(0, m_pos, CPos(-30, 0), false));
+	AddLauncher(new CLauncher020(0, m_pos, CPos(+30, 0), true));
+	AddLauncher(new CLauncher002(0, m_pos, CPos(+0, 50)));
 }
 CEnemyL001::~CEnemyL001() {
 }

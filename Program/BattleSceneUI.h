@@ -21,10 +21,7 @@ public:
 	void Draw();
 
 protected:
-	// UIŠÖ˜A
-	long long m_hiScore;
-	long long m_score;
-	int m_rank;
+
 
 	// “à‘¤
 	CImage* m_textScore;

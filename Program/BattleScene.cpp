@@ -13,7 +13,9 @@
 #include "EnemyMedium.h"
 #include "EnemyLarge.h"
 
-
+bool CBattleScene::m_enemyHitSizeDraw = false;
+bool CBattleScene::m_enemyLauncherDraw = false;
+bool CBattleScene::m_enableDebugCommand = true;
 
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
@@ -28,6 +30,11 @@ CEnemyManager CBattleScene::m_enemyManager; // 敵
 CBulletManager CBattleScene::m_bulletManager; // 敵の弾
 CBeamManager CBattleScene::m_beamManager; // 敵のビーム
 
+// スコア
+long long CBattleScene::m_hiScore;
+long long CBattleScene::m_score;
+int CBattleScene::m_rank;
+
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
 	m_playerBullet(256),
@@ -40,7 +47,7 @@ CBattleScene::CBattleScene(int InTime) :
 	//			フェードイン濃淡0.0, フェードアウト濃淡0.0
 	Set(InTime);
 
-	m_bulletRemoveTime = m_bulletRemoveCount = 0;
+	
 
 	testLauncherPos = CPos(0, 200);
 	testLauncher = new CLauncher999(0, testLauncherPos, CPos(0,0));
@@ -54,6 +61,11 @@ CBattleScene::~CBattleScene(){
 void CBattleScene::Init(CGame* gameP) {
 	m_player.Init();
 	m_player.SetBulletManager(&m_playerBullet); // プレイヤーにプレイヤ弾管理を設定
+
+	m_hiScore = 0;
+	m_score = 0;
+	m_rank = 1;
+	m_bulletRemoveTime = m_bulletRemoveCount = 0;
 
 	m_game = gameP;
 
@@ -94,7 +106,7 @@ void CBattleScene::Init(CGame* gameP) {
 	//	m_enemyManager.Add(e2);
 	//}
 
-	// 全敵表示
+	// デバッグ用の全敵表示
 	//DebugAllEnemyDirection();
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
@@ -327,8 +339,18 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_effectManager.Draw(50); // 50 最前面
 
 	m_ui.Draw();
+
+	// デバッグコマンド
+	DebugCommand();
 }
 
+// ランクUP
+void CBattleScene::AddRank(int delta)
+{
+	m_rank += delta;
+	if (m_rank < 1)m_rank = 1;
+	if (m_rank > 999)m_rank = 999;
+}
 
 void CBattleScene::SetBulletRemoveTime(BulletRemoveType type, int time)
 {
@@ -390,3 +412,37 @@ void CBattleScene::DebugAllEnemyDirection()
 	count++;
 }
 
+// デバッグコマンド
+void CBattleScene::DebugCommand()
+{
+	if (!m_enableDebugCommand)return;
+
+	// ランクDOWN
+	static int qc = 0;
+	if (CheckHitKey(KEY_INPUT_Q) != 0) {
+		if (qc++ % 10 == 0) {
+			AddRank(-1);
+		};
+	}
+
+	// ランクUP
+	if (CheckHitKey(KEY_INPUT_W) != 0) {
+		if (qc++ % 10 == 0) {
+			AddRank(1);
+		};
+	}
+
+	// ランクDOWN
+	if (CheckHitKey(KEY_INPUT_A) != 0) {
+		if (qc++ % 10 == 0) {
+			AddRank(-10);
+		};
+	}
+
+	// ランクUP
+	if (CheckHitKey(KEY_INPUT_S) != 0) {
+		if (qc++ % 10 == 0) {
+			AddRank(10);
+		};
+	}
+}

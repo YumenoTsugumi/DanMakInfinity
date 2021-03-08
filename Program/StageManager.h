@@ -17,6 +17,7 @@ public:
 	void Main();
 	void AddSpawner();
 	SpawnerBase* GetRandomSpawner();
+	SpawnerBase* GetTestSpawner();
 };
 
 class SpawnerBase {
@@ -41,7 +42,7 @@ public:
 	int ToSecond(int millSecond);
 	double ToSecond(double millSecond);
 
-	double ToSpeed(double spped);
+
 	// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 	// FulHDなら (480,20)(1440,1060)の範囲
 	CPos ToGamePos(CPos ratioPos);

@@ -1,12 +1,8 @@
 #include "BattleSceneUI.h"
 #include "Game.h"
 #include "GameDefine.h"
-
-CBattleSceneUI::CBattleSceneUI() :
-	m_score(0),
-	m_hiScore(0),
-	m_rank(1)
-{
+#include "BattleScene.h"
+CBattleSceneUI::CBattleSceneUI(){
 
 }
 
@@ -34,9 +30,6 @@ void CBattleSceneUI::Init() {
 
 	// 外側
 	m_UIFoundation = (CImage*)CGame::GetResource(1500);
-
-	m_score = 123456;
-	m_hiScore = 123456789012;
 }
 void CBattleSceneUI::Draw() {
 	DrawGameAreaUI();
@@ -45,9 +38,15 @@ void CBattleSceneUI::Draw() {
 
 // 画面内のUI描画
 void CBattleSceneUI::DrawGameAreaUI() {
-	m_score += rand()*20;
-	//if (rand() < 300)m_rank++;
-	if(m_rank<999)m_rank++;
+	// UI関連
+	long long hiScore = CBattleScene::GetHiScore();
+	long long score = CBattleScene::GetScore();
+	int rank = CBattleScene::GetRank();
+
+
+	//score += rand()*20;
+	//if (rand() < 300)rank++;
+	//if(rank<999)rank++;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
@@ -65,7 +64,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 	double textScore_endX = textScore_x + m_textScore->m_sizeX;
 
 	// スコアの値の表示
-	int digit = CFunc::GetDigit(m_score); // 12345 なら 5
+	int digit = CFunc::GetDigit(score); // 12345 なら 5
 	
 	// 12なら 3の倍数にしよう！
 	// 210987654321
@@ -78,7 +77,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		if (digit >= ii) {
 			// 桁がある場合　数値を表示
 			// 4444 で3桁目なら 4444 / 10^2 % 10
-			long long number = (m_score / (long long)(pow(10, (ii-1)))) % 10;
+			long long number = (score / (long long)(pow(10, (ii-1)))) % 10;
 			drawImage = m_textNumber[number];
 		}
 		else {
@@ -112,7 +111,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 	double textHiScore_endX = textHiScore_x + m_textHiScore->m_sizeX;
 
 	// スコアの値の表示
-	int hiDigit = CFunc::GetDigit(m_hiScore); // 12345 なら 5
+	int hiDigit = CFunc::GetDigit(hiScore); // 12345 なら 5
 
 	double hiCommaGap = 0;
 	for (int ii = maxDrawDigit; ii > 0; ii--) {
@@ -120,7 +119,7 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		if (hiDigit >= ii) {
 			// 桁がある場合　数値を表示
 			// 4444 で3桁目なら 4444 / 10^2 % 10
-			long long number = (m_hiScore / (long long)(pow(10, (ii - 1)))) % 10;
+			long long number = (hiScore / (long long)(pow(10, (ii - 1)))) % 10;
 			drawImage = m_textNumber[number];
 		}
 		else {
@@ -153,9 +152,9 @@ void CBattleSceneUI::DrawGameAreaUI() {
 	double rankPosX = GameWindowCenterX - m_rankWaku2->m_sizeX + 40+7;
 	CDxFunc::MyDrawGraph(rankPosX, 20, m_rankWaku2->m_iamge);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-	if (m_rank < 100) {
-		int low = m_rank % 10;
-		int high = m_rank / 10;
+	if (rank < 100) {
+		int low = rank % 10;
+		int high = rank / 10;
 		int sx = m_textBigNumber[0]->m_sizeX;
 		int sy = m_textBigNumber[0]->m_sizeY;
 		double rankNumberY = 20 + (m_rankWaku2->m_sizeY - sy) / 2;
@@ -163,9 +162,9 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		CDxFunc::MyDrawGraph(rankPosX + 25 +sx*1.1, rankNumberY, m_textBigNumber[low]->m_iamge);
 	}
 	else {
-		int low = m_rank % 10; // 987%10=7
-		int middle = (m_rank  / 10) % 10; // 987/10 98%10=8
-		int high = m_rank / 100; // 987/100=9
+		int low = rank % 10; // 987%10=7
+		int middle = (rank  / 10) % 10; // 987/10 98%10=8
+		int high = rank / 100; // 987/100=9
 
 		int sx = m_textBigNumber[0]->m_sizeX;
 		int sy = m_textBigNumber[0]->m_sizeY;

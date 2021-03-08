@@ -44,9 +44,21 @@ public:
 
 	CBattleSceneUI m_ui;
 
+
+
+
+	// スコア
+	static long long m_hiScore;
+	static long long m_score;
+	static int m_rank;
+	static long long GetHiScore() {	return m_hiScore;	}
+	static long long GetScore() { return m_score; }
+	static int GetRank() { return m_rank; }
+	static void AddRank(int delta);
+	
+
+
 	// その他
-
-
 	CPos testLauncherPos; // テスト砲台位置
 	CLauncher999* testLauncher; // テスト砲台
 
@@ -72,4 +84,17 @@ public:
 
 	// 敵出現ルーチン
 	void DebugAllEnemyDirection();
+
+	// デバッグコマンド
+	void DebugCommand();
+
+	static bool m_enemyHitSizeDraw; // 敵の当たり判定を表示する
+	static bool GetEnemyHitSizeDraw() {
+		return m_enemyHitSizeDraw;
+	}
+	static bool m_enemyLauncherDraw; // 敵の砲台の位置を表示する
+	static bool GetEnemyLauncherDraw() {
+		return m_enemyLauncherDraw;
+	}
+	static bool m_enableDebugCommand; // デバッグコマンドを有効にする
 };
