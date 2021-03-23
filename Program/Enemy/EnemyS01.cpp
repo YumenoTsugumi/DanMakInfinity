@@ -12,7 +12,7 @@ CEnemyS01::CEnemyS01(const CPos& pos) : CBaseEnemy(pos){
 	m_image = (CImage*)CGame::GetResource("enemyS1");
 
 	std::vector<Collision> collisions = { Collision(CPos(0,-18), 39.0) };
-	Init(100, Small, collisions);
+	Init(200, Small, collisions);
 
 	AddLauncher(new CLauncherS01(m_rank, m_pos, CPos(21, 31), ShotTypeS01::Slow));
 	AddLauncher(new CLauncherS01(m_rank, m_pos, CPos(-21, 31), ShotTypeS01::Slow));

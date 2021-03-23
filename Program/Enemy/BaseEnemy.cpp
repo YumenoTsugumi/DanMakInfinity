@@ -104,6 +104,7 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 {
 	m_rank = CBattleScene::GetRank();
 }
+
 CBaseEnemy::~CBaseEnemy() {
 
 }
@@ -114,6 +115,9 @@ void CBaseEnemy::Action() {
 	BehaviorStatus behaviorStatus = m_behaviorComponent->GetBehaviorStatus();
 	if (BehaviorStatus::Shot == behaviorStatus || m_shotTiming) {
 		Shot();
+	}
+	if (BehaviorStatus::Finish == behaviorStatus) {
+		m_removeFlg = true;
 	}
 }
 void CBaseEnemy::Draw() {

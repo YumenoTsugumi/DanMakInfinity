@@ -5,6 +5,10 @@
 
 class SpawnerBase;
 
+const int FormationSpawneTiming = 3; // 3秒ごとに編隊をスポーンする間隔
+const int FormationSpawneFinishTiming = 2; // 1編隊の全敵をスポーンする時間
+
+
 class StageManager {
 public:
 	StageManager();
@@ -13,6 +17,9 @@ public:
 	int m_maxCount;
 	int m_spawneTiming;
 	std::vector<SpawnerBase*> m_spawners;
+
+	// 編隊を強さに振り分けるやつ
+	int m_strengthCounter;
 
 	void Main();
 	void AddSpawner();
@@ -25,13 +32,17 @@ public:
 	int m_count;
 	int m_maxCount;
 	int m_spawneTiming;
+	int m_spawneCount;
 	bool m_deleteFlg;
+
 	SpawnerBase();
 	virtual ~SpawnerBase();
 	virtual void Spawne();
 
 	// 1-10段階ぐらいにしとく
+	// ランクで参照して、特定ランク未満だと出てこないようにするため
 	virtual int GetPower(); // 編隊の強さ（ざっくり）
+
 
 	// 各クラスでそれぞれ変数を定義するのがめんどくさいので、適当に定義しておく
 	int iVal[10];
@@ -51,6 +62,11 @@ public:
 	double ToGamePosX(double ratioPosX); 
 	// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 	double ToGamePosY(double ratioPosY);
+
+	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+	double ToGameSizeX(double ratioPosX);
+	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+	double ToGameSizeY(double ratioPosY);
 };
 
 

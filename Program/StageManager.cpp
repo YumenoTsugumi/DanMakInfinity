@@ -2,9 +2,9 @@
 #include "StageManager.h"
 #include "BattleScene.h"
 
-#include "EnemySmall.h"
-#include "EnemyMedium.h"
-#include "EnemyLarge.h"
+//#include "EnemySmall.h"
+//#include "EnemyMedium.h"
+//#include "EnemyLarge.h"
 
 #include "Spawner.h"
 #include "Game.h"
@@ -13,7 +13,8 @@ StageManager::StageManager()
 {
 	m_count = 0;
 	m_maxCount = 60*120; // 120s
-	m_spawneTiming = 60 * 3; // n秒毎に敵スポーン
+	m_spawneTiming = 60 * FormationSpawneTiming; // n秒毎に敵スポーン
+	m_strengthCounter = 0;
 }
 
 StageManager::~StageManager() 
@@ -27,7 +28,11 @@ void StageManager::Main()
 		return;
 	}
 
-	if (m_count % m_spawneTiming == 0) {
+	static bool debugMode = false;
+	static int debugOnce = 0;
+	// 編隊の出現順番
+	if (m_count % m_spawneTiming == 0 && (debugOnce == 0 || !debugMode)) {
+		debugOnce++;
 		AddSpawner();
 	}
 
@@ -45,30 +50,33 @@ void StageManager::Main()
 	m_count++;
 }
 
+
 void StageManager::AddSpawner()
 {
-	SpawnerBase* spawner = GetRandomSpawner();
-	//SpawnerBase* spawner = GetTestSpawner();
+	//SpawnerBase* spawner = GetRandomSpawner();
+	SpawnerBase* spawner = GetTestSpawner();
 	m_spawners.push_back(spawner);
 }
 
 SpawnerBase* StageManager::GetRandomSpawner()
 {
-	return new Spawner001();
+	return new SpawnerS01();
 }
 
 SpawnerBase* StageManager::GetTestSpawner()
 {
-	return new TestSpawner001();
+	//return new SpawnerM02();
+	return new SpawnerS01();
 }
 
 
 
-SpawnerBase::SpawnerBase() : 
+SpawnerBase::SpawnerBase() :
 	m_count(0),
 	m_maxCount(0),
 	m_spawneTiming(0),
-	m_deleteFlg(0)
+	m_deleteFlg(0),
+	m_spawneCount(0)
 {
 
 }
@@ -100,15 +108,30 @@ CPos SpawnerBase::ToGamePos(double ratioPosX, double ratioPosY)
 // FulHDなら (480～1440)の範囲
 double SpawnerBase::ToGamePosX(double ratioPosX)
 {
-	int min = GameWindowAreaLeft * 1.0;
-	int max = GameWindowAreaRight * 1.0;
+	int min = GameWindowAreaLeft * CGame::GetWindowRatio();
+	int max = GameWindowAreaRight * CGame::GetWindowRatio();
 	return 	min + (max - min) * (ratioPosX);
 }
 // 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 // FulHDなら (20～1060)の範囲
 double SpawnerBase::ToGamePosY(double ratioPosY)
 {
-	int min = GameWindowAreaTop * 1.0;
-	int max = GameWindowAreaBottom * 1.0;
+	int min = GameWindowAreaTop * CGame::GetWindowRatio();
+	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
 	return 	min + (max - min) * (ratioPosY);
+}
+
+// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+double SpawnerBase::ToGameSizeX(double ratioPosX)
+{
+	int min = GameWindowAreaLeft * CGame::GetWindowRatio();
+	int max = GameWindowAreaRight * CGame::GetWindowRatio();
+	return (max - min) * (ratioPosX);
+}
+// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+double SpawnerBase::ToGameSizeY(double ratioPosY)
+{
+	int min = GameWindowAreaTop * CGame::GetWindowRatio();
+	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
+	return 	(max - min) * (ratioPosY);
 }

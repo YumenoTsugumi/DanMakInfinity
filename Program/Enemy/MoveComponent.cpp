@@ -141,10 +141,14 @@ void CCVLM_CertainAmountStop::SetArrivalAcce(double outAcce, double outMinSpeed,
 // ベジエ曲線
 //-------------------------------------------------------------------------------------
 CBezierMotion::CBezierMotion(const CPos& st, const CPos& p1, const CPos& p2, const CPos& ed, double speed) : CMoveComponent(),
-m_speed(speed)
+	m_speed(speed),
+	m_maxDistance(0.0),
+	m_moveDistance(0.0)
 {
 	m_divide = 32;
 	m_vezier = CFunc::GetBezierCurvePointList(st, p1, p2, ed, m_divide);
+
+	m_maxDistance = CFunc::GetCurvePointListDistance(m_vezier);
 
 	m_nowPos = m_vezier[0];
 	m_nextPosIndex = 1;
@@ -153,7 +157,7 @@ m_speed(speed)
 // 4,8,12みたいに4点毎
 // 0～3と4~7のべじえは連続的ではないので、いいように入力すること
 CBezierMotion::CBezierMotion(const std::vector<CPos>& posArray, double speed) : CMoveComponent(),
-m_speed(speed)
+	m_speed(speed)
 {
 	if (posArray.size() % 4 != 0) {
 		assert(0);
@@ -167,19 +171,76 @@ m_speed(speed)
 		copy(pos.begin(), pos.end(), back_inserter(m_vezier));
 	}
 
+	m_maxDistance = CFunc::GetCurvePointListDistance(m_vezier);
 	m_nowPos = m_vezier[0];
 	m_nextPosIndex = 1;
 }
 
+// 動き始めのための、再セット
+void CBezierMotion::ResetArray(const CPos& newPos)
+{
+	if (m_controlPointArray.size() % 4 != 0) {
+		assert(0);
+	}
+	m_divide = 32;
+
+	m_vezier.clear();
+	int loopCount = m_controlPointArray.size() / 4;
+	for (int ii = 0; ii < loopCount; ii++) {
+		if (ii == 0) {
+			m_controlPointArray[0] = newPos;
+		}
+
+		std::vector<CPos> pos = CFunc::GetBezierCurvePointList(m_controlPointArray[ii * 4 + 0], m_controlPointArray[ii * 4 + 1], m_controlPointArray[ii * 4 + 2], m_controlPointArray[ii * 4 + 3], m_divide);
+		copy(pos.begin(), pos.end(), back_inserter(m_vezier));
+	}
+
+	m_maxDistance = CFunc::GetCurvePointListDistance(m_vezier);
+	m_nowPos = newPos;
+	m_nextPosIndex = 1;
+}
 
 
 CBezierMotion::~CBezierMotion(){}
 
 ArrivalStatus CBezierMotion::Action(CPos& updatePos)
-{
+{	
 	if (m_arrival) {
 		return ArrivalStatus::Arrival;
 	}
+	if (m_moveDistance >= m_maxDistance) {
+		return ArrivalStatus::Arrival; // 目的地までの距離を移動したら、これ以上移動しない
+	}
+
+	if (m_departureAcceFlag) {
+		// 加速度未満なら、加速する
+		if (m_speed < m_departureMaxSpeed) {
+			m_speed += m_departureAcce;
+		}
+		else {
+			m_speed = m_departureMaxSpeed;
+			m_departureAcceFlag = false;
+		}
+	}
+	if (!m_departureAcceFlag && m_arrivalAcceFlag && m_moveDistance >= m_arrivalAcceDistance) {
+		// 減速距離に到達していて、減速していれば
+		if (m_speed > m_arrivalMinSpeed) {
+			m_speed += m_arrivalAcce;
+			if (m_departureMaxSpeed == 0.0) { // 減速方向なら
+				if (m_speed < 0.0) {
+					m_moveDistance = DBL_MAX;
+					m_speed = 0.0;
+				}
+			}
+		}
+		else {
+			m_speed = m_departureMaxSpeed;
+			m_moveDistance = DBL_MAX;
+			m_arrivalAcceFlag = false;
+		}
+	}
+
+
 	//①現在地から、speedを超える値を探す
 	// speed6なら
 	//  12345|
@@ -195,6 +256,8 @@ ArrivalStatus CBezierMotion::Action(CPos& updatePos)
 			m_vel.x = m_speed * cos(angle);
 			m_vel.y = m_speed * sin(angle);
 			m_nowPos += m_vel;
+
+			m_moveDistance += m_vel.Length();
 			break;
 		}
 		else {
@@ -204,8 +267,9 @@ ArrivalStatus CBezierMotion::Action(CPos& updatePos)
 			m_nextPosIndex++;
 
 			if (m_nextPosIndex >= m_vezier.size()) { // 最後の点を超えてしまった
-				m_nowPos = m_vezier[m_vezier.size() - 1];
+				//m_nowPos = m_vezier[m_vezier.size() - 1];
 				arrivalStatus = ArrivalStatus::Arrival; // 到着！
+				m_moveDistance = DBL_MAX;
 				m_arrival = true;
 				break;
 			}
@@ -227,6 +291,12 @@ double CBezierMotion::GetDirection()
 	return m_saveDirection;
 }
 
+CPos CBezierMotion::GetNowPos()
+{
+	return m_nowPos;
+}
+
+
 void CBezierMotion::DebugPrint()
 {
 	unsigned int cr = GetColor(255, 0, 0); 
@@ -239,4 +309,16 @@ void CBezierMotion::DebugPrint()
 	for (int ii = 0; ii < m_controlPointArray.size(); ii++) {
 		DrawCircle(m_controlPointArray[ii].x, m_controlPointArray[ii].y, 6, cr);    // 線を描画
 	}
+}
+void CBezierMotion::SetDepartureAcce(double inAcce, double inMaxSpeed) {
+	m_departureAcceFlag = true;
+	m_departureAcce = inAcce;
+	m_departureMaxSpeed = inMaxSpeed;
+}
+void CBezierMotion::SetArrivalAcce(double outAcce, double outMinSpeed, double outAcceTimingRatio/*=0.1*/)
+{
+	m_arrivalAcceFlag = true;
+	m_arrivalAcceDistance = m_maxDistance * outAcceTimingRatio;
+	m_arrivalAcce = outAcce;
+	m_arrivalMinSpeed = outMinSpeed;
 }

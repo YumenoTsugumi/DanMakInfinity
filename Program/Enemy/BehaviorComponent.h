@@ -13,7 +13,8 @@ enum BehaviorStatus {
 	Wait = 0, // 待機
 	Admitting , // 入場中
 	Shot, // 発射準備OK
-	Leaving, // 退場（不要かも）
+	Leaving, // 退場中（不要かも）
+	Finish, // 退場済
 };
 
 class CBehaviorComponent {
@@ -34,10 +35,10 @@ protected:
 //-------------------------------------------------------------------------------------
 // 小型機
 //-------------------------------------------------------------------------------------
-// A地点から出てきて、うって、A地点に去る
+// A地点から出てきて、うって、B地点にいく
 class CInOutBehavior : public CBehaviorComponent {
 public:
-	CInOutBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed, double outSpeed, int shotTime);
+	CInOutBehavior(const CPos& initPos, const CPos& targetPos, const CPos& endTargetPos, double inSpeed, double outSpeed, int shotTime);
 	virtual ~CInOutBehavior();
 	virtual void Action(CPos& updatePos);
 	virtual void DebugPrint();
@@ -50,6 +51,7 @@ protected:
 
 	CPos m_initPos;
 	CPos m_targetPos;
+	CPos m_endTargetPos;
 
 	double m_inSpeed;
 	double m_outSpeed;
@@ -58,6 +60,37 @@ protected:
 	CCVLM_CertainAmountStop m_inMove;
 	CCVLM_CertainAmountStop m_outMove;
 };
+
+
+//-------------------------------------------------------------------------------------
+// 小型機
+//-------------------------------------------------------------------------------------
+// 撃ちつつ、A地点から出てきてB地点に向かう(ノンストップ)
+class CGoTargetBehavior : public CBehaviorComponent {
+public:
+	CGoTargetBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed, int shotTime);
+	virtual ~CGoTargetBehavior();
+	virtual void Action(CPos& updatePos);
+	virtual void DebugPrint();
+	virtual double GetDirection();
+	virtual BehaviorStatus GetBehaviorStatus();
+protected:
+
+	int m_shotTime; // 撃つ時間
+	int m_shotCount;  // 撃つ時間の計測
+
+	CPos m_initPos;
+	CPos m_targetPos;
+	CPos m_endTargetPos;
+
+	double m_inSpeed;
+	double m_outSpeed;
+
+	BehaviorStatus m_moveStatus; // 移動状態
+	CCVLM_CertainAmountStop m_inMove;
+};
+
+
 
 //-------------------------------------------------------------------------------------
 // ベジエ曲線
@@ -74,4 +107,38 @@ public:
 	virtual BehaviorStatus GetBehaviorStatus();
 protected:
 	CBezierMotion m_move;
+};
+
+
+// A地点から出てきて、うって、B地点にいく(ベジエ版)
+//std::vector<CPos> poss = {
+//CPos(-100, -100), CPos(100, 100), CPos(200, 100), CPos(300, 100),
+//CPos(300, 100), CPos(600, 100), CPos(600, 200), CPos(300, 200),
+//CPos(300, 200), CPos(100, 200), CPos(0, 200), CPos(-100, 200), };
+class CBezierInOutBehavior : public CBehaviorComponent {
+public:
+	CBezierInOutBehavior(const std::vector<CPos>& inArray, const std::vector<CPos>& outArray, double inSpeed, double outSpeed, int shotTime);
+
+	virtual ~CBezierInOutBehavior();
+	virtual void Action(CPos& updatePos);
+	virtual void DebugPrint();
+	virtual double GetDirection();
+	virtual BehaviorStatus GetBehaviorStatus();
+protected:
+
+	int m_shotTime; // 撃つ時間
+	int m_shotCount;  // 撃つ時間の計測
+
+	CPos m_initPos;
+	CPos m_targetPos;
+	CPos m_endTargetPos;
+
+	double m_inSpeed;
+	double m_outSpeed;
+
+	BehaviorStatus m_moveStatus; // 移動状態
+
+	CBezierMotion m_inMove;
+	CBezierMotion m_outMove;
+	bool m_outStart; // 動き始めた瞬間に座標を補正するよう
 };

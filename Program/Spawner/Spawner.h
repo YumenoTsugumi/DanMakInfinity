@@ -3,8 +3,7 @@
 #include "resource.h"
 #include "StageManager.h"
 
-SPAWNEHEADER(TestSpawner001)
-
-SPAWNEHEADER(Spawner001)
+SPAWNEHEADER(SpawnerS01)
 
 
+SPAWNEHEADER(SpawnerM02)

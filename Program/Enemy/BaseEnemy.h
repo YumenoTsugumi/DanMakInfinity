@@ -85,6 +85,10 @@ public:
 	EnemySize m_size; // 大中小
 	
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
+	void SetMovingShot() { // 動いていても打つ
+		m_shotTiming = true;
+	}
+
 	int m_count;
 
 	CImage* m_image;

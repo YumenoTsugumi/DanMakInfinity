@@ -86,15 +86,26 @@ protected:
 //-------------------------------------------------------------------------------------
 // ベジエ曲線
 //-------------------------------------------------------------------------------------
-
+//std::vector<CPos> poss = {
+//CPos(-100, -100), CPos(100, 100), CPos(200, 100), CPos(300, 100),
+//CPos(300, 100), CPos(600, 100), CPos(600, 200), CPos(300, 200),
+//CPos(300, 200), CPos(100, 200), CPos(0, 200), CPos(-100, 200), };
 class CBezierMotion : public CMoveComponent {
 public:
 	CBezierMotion(const CPos& st, const CPos& p1, const CPos& p2, const CPos& ed, double speed);
-	CBezierMotion(const std::vector<CPos>& posArray, double speed); // 4,8,12みたいに4点毎
+	CBezierMotion(const std::vector<CPos>& posArray, double speed); // vector<CPos>は4,8,12みたいに4点毎
+	void ResetArray(const CPos& newPos); // 動き始めのための位置ずれ調整用
+
 	virtual ~CBezierMotion();
 	virtual ArrivalStatus Action(CPos& updatePos);
 	virtual void DebugPrint();
 	virtual double GetDirection();
+
+
+	void SetDepartureAcce(double departureAcce, double departureMaxSpeed);
+	void SetArrivalAcce(double arrivalAcce, double arrivalMinSpeed, double arrivalAcceTimingRatio = 0.8);
+
+	CPos GetNowPos();
 protected:
 	double m_speed;
 	CPos m_vel;
@@ -107,6 +118,22 @@ protected:
 	bool m_arrival; // 到着済みか
 	std::vector<CPos> m_controlPointArray; // 制御点
 	std::vector<CPos> m_vezier; // ベジエ曲線近似点
+
+	double m_maxDistance; // 目的地までの距離
+	double m_moveDistance; // 現在動いた距離
+
+protected:
+	// 加速度
+	bool m_departureAcceFlag; // これが有効だったら、最初加速する
+	double m_departureAcce; // 加速度
+	double m_departureMaxSpeed; // 加速度の最大値
+
+	// 減速度
+	bool m_arrivalAcceFlag; // これが有効だったら、目的地に到着する前に減速する
+	double m_arrivalAcceDistance; // 減速し始める残りの距離　初期位置A　目的地Bの距離が100で、残り距離が10なら減速開始する
+	double m_arrivalAcce; // 減速度
+	double m_arrivalMinSpeed; // 減速の最低速度
+
 private:
 	double m_saveDirection; // 速度が0になった時に方向が安定しないので、0になる直前の値を覚えておく
 };

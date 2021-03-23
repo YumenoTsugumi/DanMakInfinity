@@ -9,9 +9,9 @@
 #include "CustomBullet.h"
 #include "HomingBullet.h"
 
-#include "EnemySmall.h"
-#include "EnemyMedium.h"
-#include "EnemyLarge.h"
+//#include "EnemySmall.h"
+//#include "EnemyMedium.h"
+//#include "EnemyLarge.h"
 
 bool CBattleScene::m_enemyHitSizeDraw = false;
 bool CBattleScene::m_enemyLauncherDraw = false;
@@ -40,7 +40,7 @@ CBattleScene::CBattleScene(int InTime) :
 	m_playerBullet(256),
 	m_player(),
 	m_bg(),
-	testLauncher(nullptr),
+	//testLauncher(nullptr),
 	m_ui()
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
@@ -49,8 +49,8 @@ CBattleScene::CBattleScene(int InTime) :
 
 	
 
-	testLauncherPos = CPos(0, 200);
-	testLauncher = new CLauncher999(0, testLauncherPos, CPos(0,0));
+	//testLauncherPos = CPos(0, 200);
+	//testLauncher = new CLauncher999(0, testLauncherPos, CPos(0,0));
 
 }
 
@@ -393,23 +393,23 @@ void CBattleScene::RemoveBullet()
 // 全敵表示
 void CBattleScene::DebugAllEnemyDirection()
 {
-	static int count = 0;
-	if (count == 0) {
-		for (int ii = 0; ii < 3; ii++) {
-			CEnemyS007* e1 = new CEnemyS007(CPos(900, 200));
+	//static int count = 0;
+	//if (count == 0) {
+	//	for (int ii = 0; ii < 3; ii++) {
+	//		CEnemyS007* e1 = new CEnemyS007(CPos(900, 200));
 
-			std::vector<CPos> poss = {
-				CPos(100, -100), CPos(300, 500), CPos(500, 500), CPos(700, -100),
-			};
+	//		std::vector<CPos> poss = {
+	//			CPos(100, -100), CPos(300, 500), CPos(500, 500), CPos(700, -100),
+	//		};
 
-			CBezierBehavior* move = new CBezierBehavior(poss, 3.0);
-			e1->SetBehaviorComponent(move, ii*120);
-			e1->SetDrawSize(1.0 + ii*2);
-			m_enemyManager.Add(e1);
-		}
+	//		CBezierBehavior* move = new CBezierBehavior(poss, 3.0);
+	//		e1->SetBehaviorComponent(move, ii*120);
+	//		e1->SetDrawSize(1.0 + ii*2);
+	//		m_enemyManager.Add(e1);
+	//	}
 
-	}
-	count++;
+	//}
+	//count++;
 }
 
 // デバッグコマンド

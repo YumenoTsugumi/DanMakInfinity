@@ -59,8 +59,8 @@ public:
 
 
 	// その他
-	CPos testLauncherPos; // テスト砲台位置
-	CLauncher999* testLauncher; // テスト砲台
+	//CPos testLauncherPos; // テスト砲台位置
+	//CLauncher999* testLauncher; // テスト砲台
 
 	// 参照する範囲が広いのでグローバルにした
 	static CEffectManager m_effectManager; // エフェクト

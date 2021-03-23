@@ -84,12 +84,6 @@
     <ClCompile Include="Program\HomingBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Launcher\Launcher000.cpp">
-      <Filter>ソース ファイル\Launcher</Filter>
-    </ClCompile>
-    <ClCompile Include="Program\Launcher\Launcher010.cpp">
-      <Filter>ソース ファイル\Launcher</Filter>
-    </ClCompile>
     <ClCompile Include="Program\BaseLauncher.cpp">
       <Filter>ソース ファイル\Launcher</Filter>
     </ClCompile>
@@ -111,21 +105,6 @@
     <ClCompile Include="Program\BaseItem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Launcher\Launcher020.cpp">
-      <Filter>ソース ファイル\Launcher</Filter>
-    </ClCompile>
-    <ClCompile Include="Program\Launcher\Launcher030.cpp">
-      <Filter>ソース ファイル\Launcher</Filter>
-    </ClCompile>
-    <ClCompile Include="Program\Enemy\EnemySmall.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Program\Enemy\EnemyLarge.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Program\Enemy\EnemyMedium.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Program\BattleSceneUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -136,6 +115,9 @@
       <Filter>ソース ファイル\Spawner</Filter>
     </ClCompile>
     <ClCompile Include="Program\Enemy\EnemyS01.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemyM02.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,12 +164,6 @@
     <ClInclude Include="Program\HomingBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Launcher\Launcher000.h">
-      <Filter>ヘッダー ファイル\Launcher</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Launcher\Launcher010.h">
-      <Filter>ヘッダー ファイル\Launcher</Filter>
-    </ClInclude>
     <ClInclude Include="Program\Launcher\Launcher.h">
       <Filter>ヘッダー ファイル\Launcher</Filter>
     </ClInclude>
@@ -209,21 +185,6 @@
     <ClInclude Include="Program\BaseItem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Launcher\Launcher020.h">
-      <Filter>ヘッダー ファイル\Launcher</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Launcher\Launcher030.h">
-      <Filter>ヘッダー ファイル\Launcher</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Enemy\EnemySmall.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Enemy\EnemyLarge.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Program\Enemy\EnemyMedium.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Program\BattleSceneUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -237,6 +198,9 @@
       <Filter>ヘッダー ファイル\Spawner</Filter>
     </ClInclude>
     <ClInclude Include="Program\Enemy\EnemyS01.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemyM02.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
