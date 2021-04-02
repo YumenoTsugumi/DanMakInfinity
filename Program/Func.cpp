@@ -4,6 +4,7 @@
 #include "DxLib.h"
 #include "Func.h"
 
+#include <random>
 const double CFunc::PI = 3.1415926535897932384626433832795;
 const double CFunc::RAD = 57.295779513082320876798154814105;
 const double CFunc::TOL1 = 0.01;
@@ -33,18 +34,52 @@ double CFunc::ToDeg(double angle) {
 }
 
 int CFunc::RandI(int MIN, int MAX) {
+	if (MIN > MAX) {
+		using std::swap;
+		swap(MIN, MAX);
+	}
 	return MIN + (int)(rand() * (MAX - MIN + 1) / (1 + RAND_MAX));
 }
 double CFunc::RandF(int MIN, int MAX) {
+	if (MIN > MAX) {
+		using std::swap;
+		swap(MIN, MAX);
+	}
 	return MIN + (double)(rand() * (MAX - MIN + 1) / (1 + RAND_MAX));
 }
 double CFunc::RandD(double MIN, double MAX) {
-	int min = MIN * 1000;
-	int max = MAX * 1000;
-	int result = min + (double)(rand() * (max - min + 1) / (1 + RAND_MAX));
-	if (result < min)result = min;
-	if (result > max)result = max;
-	return (double)result / 1000.0;
+	if (MIN > MAX) {
+		using std::swap;
+		swap(MIN, MAX);
+	}
+
+
+	int min = MIN * 1000000;
+	int max = MAX * 1000000;
+	bool minus = false;
+	int sub = 0;
+	if (min < 0) {
+		minus = true;
+		sub = - min;
+
+		min += sub;
+		max += sub;
+	}
+
+	std::random_device rnd;     // 非決定的な乱数生成器を生成
+	std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
+	std::uniform_int_distribution<> rand100(min, max); 
+
+	int result = rand100(mt);
+
+	return (rand100(mt) - sub) / 1000000.0;
+
+	//int min = MIN * 1000;
+	//int max = MAX * 1000;
+	//int result = min + (double)(rand() * (max - min + 1) / (1 + RAND_MAX));
+	//if (result < min)result = min;
+	//if (result > max)result = max;
+	//return (double)result / 1000.0;
 }
 
 double CFunc::GetMax(double value1, double value2) {

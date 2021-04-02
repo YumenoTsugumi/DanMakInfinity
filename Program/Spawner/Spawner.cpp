@@ -14,7 +14,8 @@ SpawnerSmallTop_Stop::SpawnerSmallTop_Stop()
 	m_spawneCount = 12;
 	m_spawneTiming = m_maxCount / m_spawneCount;
 	m_appearancePosition = CFunc::RandD(-0.15, +0.15); // 出現位置の誤差
-	returnPettern = CFunc::RandI(0, 3); // 元の場所に戻る、対角に進む、時機狙い１、時機狙い２
+	m_returnPettern = CFunc::RandI(0, 4); // 47896の方向、時機狙い１、時機狙い２
+	m_returnAngle = CFunc::RandD(180, 360);
 }
 
 SpawnerSmallTop_Stop::~SpawnerSmallTop_Stop(){}
@@ -36,20 +37,22 @@ void SpawnerSmallTop_Stop::Spawne()
 		CBaseEnemy* enemy = GetSmallEnemy(pos);
 		CInOutBehavior* move = nullptr;
 
-		if (returnPettern == 0) {
-			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 9, 180);
-		}
-		else if (returnPettern == 1) {
-			double returnGoalAddY = ToGamePosY(1.20);
-			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos + CPos(0, returnGoalAddY), 7, 9, 180);
-		}
-		else if (returnPettern == 2) {
-			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 8, 180);
+		CPos targetPos = pos + CPos(0, goalAddY);
+		
+		if (m_returnPettern == 0) {
+			move = new CInOutBehavior(pos, targetPos, pos, 7, 8, 180);
 			move->SetLeaveDirToPlayer();
 		}
-		else if (returnPettern == 3) {
-			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 7, 180);
+		else if (m_returnPettern == 1) {
+			move = new CInOutBehavior(pos, targetPos, pos, 7, 7, 180);
 			move->SetLeaveDirToPlayer2();
+		}
+		else if (m_returnPettern >= 2 && m_returnPettern <= 4) {
+			CPos returnPos;
+			double returnAngle = m_returnAngle + CFunc::RandD(-5, 5);
+			returnPos.x = targetPos.x + cos(returnAngle / CFunc::RAD) * 1920;
+			returnPos.y = targetPos.y + sin(returnAngle / CFunc::RAD) * 1920;
+			move = new CInOutBehavior(pos, targetPos, returnPos, 7, 9, 180);
 		}
 		else {
 			assert(0);
@@ -67,19 +70,19 @@ SpawnerSmallLeftRight_Stop::SpawnerSmallLeftRight_Stop()
 	m_maxCount = ToSecond(FormationSpawneFinishTiming);
 	m_spawneCount = 12;
 	m_spawneTiming = m_maxCount / m_spawneCount;
-	spawnerPettern = CFunc::RandI(0, 1); // 出現位置パターン
-	returnPettern = CFunc::RandI(0, 3); // 元の場所に戻る、対角に進む、時機狙い１、時機狙い２
-
-	if (spawnerPettern == 0) {
-		spawnerTargetPosX = CFunc::RandD(0.35, 1.1);
+	m_spawnerPettern = CFunc::RandI(0, 1); // 出現位置パターン
+	m_spawnerPettern = 0;
+	if (m_spawnerPettern == 0) {
+		m_spawnerTargetPosX = CFunc::RandD(0.35, 0.9);
 	}
 	else {
-		spawnerTargetPosX = CFunc::RandD(-0.1, 0.65);
+		m_spawnerTargetPosX = CFunc::RandD(0.1, 0.65);
 	}
 
 	m_appearancePosition = CFunc::RandD(-0.15, +0.15); // 出現位置の誤差
 
-	
+	m_returnPettern = CFunc::RandI(0, 4); // 47896の方向、時機狙い１、時機狙い２
+	m_returnAngle = CFunc::RandD(180, 360);
 }
 
 SpawnerSmallLeftRight_Stop::~SpawnerSmallLeftRight_Stop() {}
@@ -97,14 +100,14 @@ void SpawnerSmallLeftRight_Stop::Spawne()
 		double x = 0;
 		double tartgetAddX = 0;
 		double goalAddX = 0;
-		if (spawnerPettern == 0) {
+		if (m_spawnerPettern == 0) {
 			x = ToGamePosX(CFunc::RandD(-0.1, -0.2));
-			tartgetAddX = ToGamePosX(spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
+			tartgetAddX = ToGamePosX(m_spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
 			goalAddX = ToGamePosX(1.40);
 		}
-		else if (spawnerPettern == 1) {
+		else if (m_spawnerPettern == 1) {
 			x = ToGamePosX(CFunc::RandD(1.1, 1.2));
-			tartgetAddX = ToGamePosX(spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
+			tartgetAddX = ToGamePosX(m_spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
 			goalAddX = ToGamePosX(-0.4);
 		}
 		double y1 = ToGamePosY(CFunc::RandD(0.1, 0.4));
@@ -114,19 +117,22 @@ void SpawnerSmallLeftRight_Stop::Spawne()
 
 		CInOutBehavior* move = nullptr;
 
-		if (returnPettern == 0) {
-			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), pos, 7, 10, 180);
-		}
-		else if (returnPettern == 1) {
-			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
-		}
-		else if (returnPettern == 2) {
-			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
+		CPos targetPos = CPos(tartgetAddX, y2);
+
+		if (m_returnPettern == 0) {
+			move = new CInOutBehavior(pos, targetPos, CPos(goalAddX, y1), 7, 10, 180);
 			move->SetLeaveDirToPlayer();
 		}
-		else if (returnPettern == 3) {
-			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
+		else if (m_returnPettern == 1) {
+			move = new CInOutBehavior(pos, targetPos, CPos(goalAddX, y1), 7, 10, 180);
 			move->SetLeaveDirToPlayer2();
+		} 
+		else if (m_returnPettern >= 2 && m_returnPettern <= 4) {
+			CPos returnPos;
+			double returnAngle = m_returnAngle + CFunc::RandD(-5, 5);
+			returnPos.x = targetPos.x + cos(returnAngle / CFunc::RAD) * 1920;
+			returnPos.y = targetPos.y + sin(returnAngle / CFunc::RAD) * 1920;
+			move = new CInOutBehavior(pos, targetPos, returnPos, 7, 10, 180);
 		}
 		else {
 			assert(0);

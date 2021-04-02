@@ -228,7 +228,7 @@ void CPlayerBullet::Hit()
 	__super::Hit(); // リムーブフラグON
 
 	m_removeFlg = true;
-
+	m_enableRemoveEffect = false; // エフェクトなし
 	// "FireballExplosion2", 20500
 	// "FireballExplosion3", 20501
 	// "FireballExplosion7", 20502

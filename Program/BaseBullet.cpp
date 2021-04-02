@@ -246,13 +246,15 @@ void CBaseBullet::RectOut(){
 
 // 弾が消える時の処理
 void CBaseBullet::Remove(){
-	// 消滅エフェクト
-	CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, 0, 0, 0, 0, 0, 0, 20801); // "BulletDeleteEffect0"
-	eff->SetSize(1.0, +0.0);
-	eff->SetBlend(255, +0.0);
-	eff->SetBlendType(DX_BLENDMODE_ADD);
-	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
-	CBattleScene::m_effectManager.Add(eff);
+	if (m_enableRemoveEffect) {
+		// 消滅エフェクト
+		CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, 0, 0, 0, 0, 0, 0, 20801); // "BulletDeleteEffect0"
+		eff->SetSize(1.0, +0.0);
+		eff->SetBlend(255, +0.0);
+		eff->SetBlendType(DX_BLENDMODE_ADD);
+		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+		CBattleScene::m_effectManager.Add(eff);
+	}
 }
 
 void CBaseBullet::SetRect(CRect &rect){
@@ -309,7 +311,8 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 
 	//弾を消す時にtrueにする
 	m_removeFlg = false;	
-
+	// 削除時のエフェクトアリ
+	m_enableRemoveEffect = true;
 }
 void CBaseBullet::SetImage(int image){
 	if(image == -1){
