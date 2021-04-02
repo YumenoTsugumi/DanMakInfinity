@@ -16,6 +16,7 @@
 bool CBattleScene::m_enemyHitSizeDraw = false;
 bool CBattleScene::m_enemyLauncherDraw = false;
 bool CBattleScene::m_enableDebugCommand = true;
+CPos CBattleScene::m_playerPos;
 
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
@@ -306,15 +307,18 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_bg.Action();
 	m_player.Action(input);
 	RemoveBullet(); // 弾消し処理
+
+	m_bg.SetPlayerMovedPos(m_player.m_pos);
+	CBaseBullet::SetTarget(m_player.m_pos);
+	CBaseEnemy::SetTarget(m_player.m_pos);
+	CBaseLauncher::SetTarget(m_player.m_pos);
+	SetPlayerPos(m_player.m_pos);
+
 	m_playerBullet.Action();
 	m_enemyManager.Action();
 	m_itemManager.Action();
 	m_bulletManager.Action();
 	m_beamManager.Action();
-	m_bg.SetPlayerMovedPos(m_player.m_pos);
-	CBaseBullet::SetTarget(m_player.m_pos);
-	CBaseEnemy::SetTarget(m_player.m_pos);
-	CBaseLauncher::SetTarget(m_player.m_pos);
 	m_effectManager.Action();
 
 

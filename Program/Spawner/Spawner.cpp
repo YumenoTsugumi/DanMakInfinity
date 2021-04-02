@@ -1,34 +1,26 @@
 ﻿#include "StageManager.h"
 #include "BattleScene.h"
 
-//#include "EnemySmall.h"
-//#include "EnemyMedium.h"
-//#include "EnemyLarge.h"
+
 #include "EnemyS01.h"
 #include "EnemyM02.h"
 
 #include "Spawner.h"
 
-SPAWNECPP(SpawnerS01)
-void SpawnerS01::Spawne()
+
+SpawnerSmallTop_Stop::SpawnerSmallTop_Stop()
 {
-	if (m_count == 0) {
-		m_maxCount = ToSecond(FormationSpawneFinishTiming);
-		m_spawneCount = 12;
-		m_spawneTiming = m_maxCount / m_spawneCount;
-		//iVal[0] = CFunc::RandI(0, 7); // 出現位置パターン
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneCount = 12;
+	m_spawneTiming = m_maxCount / m_spawneCount;
+	m_appearancePosition = CFunc::RandD(-0.15, +0.15); // 出現位置の誤差
+	returnPettern = CFunc::RandI(0, 3); // 元の場所に戻る、対角に進む、時機狙い１、時機狙い２
+}
 
-		static int once = -1;
-		once++;
-		iVal[0] = once;
+SpawnerSmallTop_Stop::~SpawnerSmallTop_Stop(){}
 
-		if (iVal[0] == 5 || iVal[0] == 6 || iVal[0] == 7) {
-			// 同時に3体出すのでスポーン回数を/3する
-			m_spawneCount = 12/3;
-			m_spawneTiming = m_maxCount / m_spawneCount;
-			dVal[0] = CFunc::RandD(-0.1, +0.1); // 出現位置の誤差
-		}
-	}
+void SpawnerSmallTop_Stop::Spawne()
+{
 	if (m_count >= m_maxCount) {
 		m_deleteFlg = true;
 		return;
@@ -36,87 +28,144 @@ void SpawnerS01::Spawne()
 	m_count++;
 
 	if (m_count % m_spawneTiming == 0) {
-		if (iVal[0] == 0 || iVal[0] == 1 || iVal[0] == 2) { // 上から出てきて帰る
-			double x = 0;
-			if (iVal[0] == 0) {
-				x = ToGamePosX(CFunc::RandD(0.05, 0.4));
-			}
-			else if (iVal[0] == 1) {
-				x = ToGamePosX(CFunc::RandD(0.3, 0.7));
-			}
-			else if (iVal[0] == 2) {
-				x = ToGamePosX(CFunc::RandD(0.6, 0.95));
-			}
 
-			double y = ToGamePosY(-0.1);
-			double goalAddY = ToGamePosY(0.20) + ToGamePosY(CFunc::RandD(0.05, 0.4));
-			CPos pos1(x, y);
-			CEnemyS01* e1 = new CEnemyS01(pos1);
-			CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, goalAddY), pos1, 7, 10, 180);
-			e1->SetBehaviorComponent(move);
-			CBattleScene::m_enemyManager.Add(e1);
-		}
-		else if (iVal[0] == 3 || iVal[0] == 4) { // 左右から出てきて、真ん中3割地点で減速して、うって、そのまま直進
-			double x = 0;
-			double tartgetAddX = 0;
-			double goalAddX = 0;
-			if (iVal[0] == 3) {
-				x = ToGamePosX(CFunc::RandD(-0.1, -0.1));
-				tartgetAddX = ToGamePosX(CFunc::RandD(0.15, 0.6));
-				goalAddX = ToGamePosX(1.40);
-			}
-			else if (iVal[0] == 4) {
-				x = ToGamePosX(CFunc::RandD(1.1, 1.2));
-				tartgetAddX = ToGamePosX(CFunc::RandD(0.3, 0.85));
-				goalAddX = ToGamePosX(-0.4);
-			}
-			double y1 = ToGamePosY(CFunc::RandD(0.1, 0.4));
-			double y2 = ToGamePosY(CFunc::RandD(0.1, 0.3));
-			CPos pos1(x, y1);
-			CEnemyS01* e1 = new CEnemyS01(pos1);
-			CInOutBehavior* move = new CInOutBehavior(pos1, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
-			e1->SetBehaviorComponent(move);
-			CBattleScene::m_enemyManager.Add(e1);
-		}
-		else if (iVal[0] == 5 || iVal[0] == 6 || iVal[0] == 7) { // 上からそのまま画面下にゆっくり進行
-			double x = 0;
-			if (iVal[0] == 5) {
-				x = ToGamePosX(0.3 + dVal[0]);
-			}
-			else if (iVal[0] == 6) {
-				x = ToGamePosX(0.5 + dVal[0]);
-			}
-			else if (iVal[0] == 7) {
-				x = ToGamePosX(0.7 + dVal[0]);
-			}
-			double y = ToGamePosY(-0.1);
+		double x = ToGamePosX(CFunc::RandD(0.20, 0.70) + m_appearancePosition);
+		double y = ToGamePosY(-0.1);
+		double goalAddY = ToGamePosY(0.20) + ToGamePosY(CFunc::RandD(0.05, 0.4));
+		CPos pos(x, y);
+		CBaseEnemy* enemy = GetSmallEnemy(pos);
+		CInOutBehavior* move = nullptr;
 
-			for (int ii = -1; ii <= 1; ii++) {
-				CPos pos1(x + (ToGameSizeX(0.1)*ii), y);
-				CEnemyS01* e1 = new CEnemyS01(pos1);
-				CGoTargetBehavior* move = new CGoTargetBehavior(pos1, pos1 + CPos(0, ToGamePosY(1.2)), 3.2, 10);
-				e1->SetBehaviorComponent(move);
-				e1->SetMovingShot();
-				CBattleScene::m_enemyManager.Add(e1);
-			}
+		if (returnPettern == 0) {
+			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 9, 180);
 		}
+		else if (returnPettern == 1) {
+			double returnGoalAddY = ToGamePosY(1.20);
+			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos + CPos(0, returnGoalAddY), 7, 9, 180);
+		}
+		else if (returnPettern == 2) {
+			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 8, 180);
+			move->SetLeaveDirToPlayer();
+		}
+		else if (returnPettern == 3) {
+			move = new CInOutBehavior(pos, pos + CPos(0, goalAddY), pos, 7, 7, 180);
+			move->SetLeaveDirToPlayer2();
+		}
+		else {
+			assert(0);
+		}
+			
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
 	}
 }
 
-int SpawnerS01::GetPower(){	return 1; }
+//-----------------------------------------------------------------------
 
-
-
-
-SPAWNECPP(SpawnerM02)
-void SpawnerM02::Spawne()
+SpawnerSmallLeftRight_Stop::SpawnerSmallLeftRight_Stop()
 {
-	if (m_count == 0) {
-		m_maxCount = ToSecond(2.5);
-		m_spawneTiming = ToSecond(0.4);
-		iVal[0] = CFunc::RandI(0, 1); // 出現位置
-		bVal[0] = true; // init
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneCount = 12;
+	m_spawneTiming = m_maxCount / m_spawneCount;
+	spawnerPettern = CFunc::RandI(0, 1); // 出現位置パターン
+	returnPettern = CFunc::RandI(0, 3); // 元の場所に戻る、対角に進む、時機狙い１、時機狙い２
+
+	if (spawnerPettern == 0) {
+		spawnerTargetPosX = CFunc::RandD(0.35, 1.1);
 	}
+	else {
+		spawnerTargetPosX = CFunc::RandD(-0.1, 0.65);
+	}
+
+	m_appearancePosition = CFunc::RandD(-0.15, +0.15); // 出現位置の誤差
+
+	
+}
+
+SpawnerSmallLeftRight_Stop::~SpawnerSmallLeftRight_Stop() {}
+
+void SpawnerSmallLeftRight_Stop::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
+
+	if (m_count % m_spawneTiming == 0) {
+		// 左右から出てきて、真ん中3割地点で減速して、うって、そのまま直進
+		double x = 0;
+		double tartgetAddX = 0;
+		double goalAddX = 0;
+		if (spawnerPettern == 0) {
+			x = ToGamePosX(CFunc::RandD(-0.1, -0.2));
+			tartgetAddX = ToGamePosX(spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
+			goalAddX = ToGamePosX(1.40);
+		}
+		else if (spawnerPettern == 1) {
+			x = ToGamePosX(CFunc::RandD(1.1, 1.2));
+			tartgetAddX = ToGamePosX(spawnerTargetPosX + CFunc::RandD(-0.15, +0.15));
+			goalAddX = ToGamePosX(-0.4);
+		}
+		double y1 = ToGamePosY(CFunc::RandD(0.1, 0.4));
+		double y2 = ToGamePosY(CFunc::RandD(0.1, 0.3));
+		CPos pos(x, y1);
+		CBaseEnemy* enemy = GetSmallEnemy(pos);
+
+		CInOutBehavior* move = nullptr;
+
+		if (returnPettern == 0) {
+			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), pos, 7, 10, 180);
+		}
+		else if (returnPettern == 1) {
+			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
+		}
+		else if (returnPettern == 2) {
+			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
+			move->SetLeaveDirToPlayer();
+		}
+		else if (returnPettern == 3) {
+			move = new CInOutBehavior(pos, CPos(tartgetAddX, y2), CPos(goalAddX, y1), 7, 10, 180);
+			move->SetLeaveDirToPlayer2();
+		}
+		else {
+			assert(0);
+		}
+
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+CBaseEnemy* SpawnerMedium::GetEnemy(const CPos& pos)
+{
+	return new CEnemyS01(pos);
+}
+
+
+SpawnerMedium::SpawnerMedium() {
+	m_maxCount = ToSecond(2.5);
+	m_spawneTiming = ToSecond(0.4);
+	spawnerPettern = CFunc::RandI(0, 1); // 出現位置
+
+	m_appearancePosition = -0.1;
+}
+
+SpawnerMedium::~SpawnerMedium() {
+
+}
+void SpawnerMedium::Spawne()
+{
+
 	if (m_count >= m_maxCount) {
 		m_deleteFlg = true;
 		return;
@@ -124,16 +173,12 @@ void SpawnerM02::Spawne()
 	m_count++;
 
 	// 左上から１体ずつ4帯
-	if (iVal[0] == 0 || 1) {
+	if (spawnerPettern == 0 || 1) {
 		double x;
-		if (bVal[0]) {
-			x = dVal[0] = -0.1; // 出現X座標
-			bVal[0] = false; // init
-		}
 
 		if (m_count % m_spawneTiming == 0) {
-			x = ToGamePosX(dVal[0]);
-			dVal[0] += 0.2;
+			x = ToGamePosX(m_appearancePosition);
+			m_appearancePosition += 0.2;
 		
 			double y = ToGamePosY(-0.1);
 			CPos pos1(x, y);
@@ -169,5 +214,4 @@ void SpawnerM02::Spawne()
 	//}
 }
 
-int SpawnerM02::GetPower() { return 1; }
 

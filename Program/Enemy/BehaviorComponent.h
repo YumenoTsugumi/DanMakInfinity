@@ -44,6 +44,17 @@ public:
 	virtual void DebugPrint();
 	virtual double GetDirection();
 	virtual BehaviorStatus GetBehaviorStatus();
+
+	enum LeaveDirToPlayer {
+		Invalid = 0,
+		DirToPlayer,
+		DirToPlayer2,
+	};
+	void SetLeaveDirToPlayer() { m_leaveDirToPlayer = DirToPlayer; }; // endTargetPosを無視して、離れる時に、プレイヤーが居た位置を対象とする
+	void SetLeaveDirToPlayer2() { 
+		m_leaveDirToPlayer = DirToPlayer2;
+		m_outMove.SetNoArrival(true);
+	}; // endTargetPosを無視して、離れる時に、プレイヤーが居る場所を参照し続ける（時期狙い）
 protected:
 
 	int m_shotTime; // 撃つ時間
@@ -59,6 +70,10 @@ protected:
 	BehaviorStatus m_moveStatus; // 移動状態
 	CCVLM_CertainAmountStop m_inMove;
 	CCVLM_CertainAmountStop m_outMove;
+
+	LeaveDirToPlayer m_leaveDirToPlayer;// endTargetPosを無視して、離れる時に、プレイヤーが居た位置を対象とする
+
+	bool m_leaveStart; // 動き始めた瞬間に座標を補正するよう
 };
 
 
@@ -140,5 +155,5 @@ protected:
 
 	CBezierMotion m_inMove;
 	CBezierMotion m_outMove;
-	bool m_outStart; // 動き始めた瞬間に座標を補正するよう
+	bool m_leaveStart; // 動き始めた瞬間に座標を補正するよう
 };

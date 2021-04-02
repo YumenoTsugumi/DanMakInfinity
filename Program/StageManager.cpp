@@ -60,13 +60,13 @@ void StageManager::AddSpawner()
 
 SpawnerBase* StageManager::GetRandomSpawner()
 {
-	return new SpawnerS01();
+	return new SpawnerSmallLeftRight_Stop();
 }
 
 SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
-	return new SpawnerS01();
+	return new SpawnerSmallLeftRight_Stop();
 }
 
 
@@ -134,4 +134,11 @@ double SpawnerBase::ToGameSizeY(double ratioPosY)
 	int min = GameWindowAreaTop * CGame::GetWindowRatio();
 	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
 	return 	(max - min) * (ratioPosY);
+}
+
+#include "EnemyS01.h"
+#include "EnemyM02.h"
+CBaseEnemy* SpawnerBase::GetSmallEnemy(const CPos& pos)
+{
+	return new CEnemyS01(pos);
 }

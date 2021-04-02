@@ -71,7 +71,8 @@ CCVLM_CertainAmountStop::CCVLM_CertainAmountStop(const CPos& initPos, const CPos
 	m_arrivalAcceFlag(false),
 	m_arrivalAcceDistance(0.0),
 	m_arrivalAcce(0.0),
-	m_arrivalMinSpeed(0.0)
+	m_arrivalMinSpeed(0.0),
+	m_noArrival(false)
 {
 	m_angle = (CFunc::GetTwoPointAngle(m_initPos, m_targetPos) + (180.0 / CFunc::RAD));
 	m_maxDistance = CFunc::GetDistanceSqrt(m_initPos, m_targetPos);
@@ -81,9 +82,21 @@ CCVLM_CertainAmountStop::CCVLM_CertainAmountStop(const CPos& initPos, const CPos
 CCVLM_CertainAmountStop::~CCVLM_CertainAmountStop() {
 
 }
+
+void CCVLM_CertainAmountStop::ResetTargetPos(const CPos& nowPos, const CPos& targetPos, bool speedUpdate, double departureSpeed)
+{
+	if (speedUpdate) {
+		m_speed = departureSpeed;
+	}
+	m_angle = (CFunc::GetTwoPointAngle(nowPos, targetPos) + (180.0 / CFunc::RAD));
+	m_maxDistance = CFunc::GetDistanceSqrt(nowPos, targetPos) + 1920; // 時機の位置に来たら到着しちゃうので、かなり遠くに設定しておく
+	m_vel.x = m_speed * cos(m_angle);
+	m_vel.y = m_speed * sin(m_angle);
+}
+
 ArrivalStatus CCVLM_CertainAmountStop::Action(CPos& updatePos) {
 
-	if (m_moveDistance >= m_maxDistance) {
+	if (!m_noArrival && m_moveDistance >= m_maxDistance) {
 		return ArrivalStatus::Arrival; // 目的地までの距離を移動したら、これ以上移動しない
 	}
 

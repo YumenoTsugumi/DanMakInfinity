@@ -25,7 +25,6 @@ public:
 //-------------------------------------------------------------------------------------
 // 直線移動
 //-------------------------------------------------------------------------------------
-
 class CConstantVelocityLinearMotion : public CMoveComponent {
 public:
 	CConstantVelocityLinearMotion(double angle, double speed);
@@ -33,7 +32,7 @@ public:
 	virtual ArrivalStatus Action(CPos& updatePos);
 	virtual void DebugPrint();
 	virtual double GetDirection();
-protected:
+
 	double m_angle;
 	double m_speed;
 	CPos m_vel;
@@ -63,8 +62,13 @@ public:
 	virtual void DebugPrint();
 	void SetDepartureAcce(double departureAcce, double departureMaxSpeed);
 	void SetArrivalAcce(double arrivalAcce, double arrivalMinSpeed, double arrivalAcceTimingRatio = 0.8);
+	void ResetTargetPos(const CPos& nowPos, const CPos& targetPos, bool speedUpdate, double departureSpeed);
 
-protected:
+	void SetNoArrival(bool noArrival) {
+		m_noArrival = noArrival; // 到着によって敵削除しない
+	};
+	bool m_noArrival;
+
 	CPos m_initPos; // 初期位置
 	CPos m_targetPos; // 目的地
 	double m_maxDistance; // 目的地までの距離

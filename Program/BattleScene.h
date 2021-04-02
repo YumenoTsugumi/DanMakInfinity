@@ -44,7 +44,7 @@ public:
 
 	CBattleSceneUI m_ui;
 
-
+	
 
 
 	// スコア
@@ -56,7 +56,9 @@ public:
 	static int GetRank() { return m_rank; }
 	static void AddRank(int delta);
 	
-
+	static CPos m_playerPos;
+	static CPos GetPlayerPos() {return m_playerPos;	}
+	static void SetPlayerPos(const CPos pos) {m_playerPos = pos;}
 
 	// その他
 	//CPos testLauncherPos; // テスト砲台位置

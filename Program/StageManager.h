@@ -4,9 +4,9 @@
 #include "BaseEffect.h"
 
 class SpawnerBase;
-
-const int FormationSpawneTiming = 3; // 3秒ごとに編隊をスポーンする間隔
-const int FormationSpawneFinishTiming = 2; // 1編隊の全敵をスポーンする時間
+class CBaseEnemy;
+const int FormationSpawneTiming = 5; // 3秒ごとに編隊をスポーンする間隔
+const int FormationSpawneFinishTiming = 1.5; // 1編隊の全敵をスポーンする時間
 
 
 class StageManager {
@@ -41,14 +41,11 @@ public:
 
 	// 1-10段階ぐらいにしとく
 	// ランクで参照して、特定ランク未満だと出てこないようにするため
+	// たぶん未使用
 	virtual int GetPower(); // 編隊の強さ（ざっくり）
 
-
-	// 各クラスでそれぞれ変数を定義するのがめんどくさいので、適当に定義しておく
-	int iVal[10];
-	double dVal[10];
-	char cVal[10];
-	bool bVal[10];
+	// 敵取得
+	virtual CBaseEnemy* GetEnemy(const CPos& pos) { return nullptr; };
 
 	int ToSecond(int millSecond);
 	double ToSecond(double millSecond);
@@ -67,20 +64,8 @@ public:
 	double ToGameSizeX(double ratioPosX);
 	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
 	double ToGameSizeY(double ratioPosY);
+
+
+	virtual CBaseEnemy* GetSmallEnemy(const CPos& pos);
 };
-
-
-
-#define SPAWNEHEADER(ClassName)					\
-class ClassName : public SpawnerBase {			\
-public:											\
-	ClassName();								\
-	virtual ~ClassName();						\
-	virtual void Spawne() override;				\
-	virtual int GetPower() override;			\
-};												\
-
-#define SPAWNECPP(ClassName)					\
-ClassName::ClassName() : SpawnerBase(){}		\
-ClassName::~ClassName() {}						\
 

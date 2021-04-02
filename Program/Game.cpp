@@ -285,6 +285,9 @@ void CGame::ImageLoadByThread()
 		std::string format2 = MyFormat("ingot%d", ii);
 		m_resourceManager.Add(new CBulletImage(format1.c_str(), 1, 1, 1, 400, 400, 0, 0), format2.c_str(), 20700 + ii);
 	}
+	// スコアアイテム
+	m_resourceManager.Add(new CBulletImage("ResourceX\\scoreItem.png", 1, 1, 1, 32, 32, 0, 2), "ScoreItem", 20720);
+
 
 	// 弾が消えるエフェクト
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect0", 20801);

@@ -177,8 +177,8 @@ void CBaseEnemy::Die() {
 		double ang = CFunc::RandI(180+60, 360-60);
 		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
 		CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
-		CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
-		eff->SetSize(0.0, +0.033, 0.125);
+		CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, 20720);
+		eff->SetSize(1.0, 0, 1.0);
 		CBattleScene::m_itemManager.Add(eff);
 	}
 

@@ -78,6 +78,8 @@ void CPlayer::Action(CInputAllStatus* input)
 }
 void CPlayer::Draw()
 {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 1.0, 0.0, m_playerImage->m_iamge);
 
 	static int aaa = 0;
