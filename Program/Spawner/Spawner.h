@@ -5,13 +5,15 @@
 
 		
 class SpawnerSmallTop_Stop : public SpawnerBase {		
-public:											
+public:								
 	SpawnerSmallTop_Stop();
 	virtual ~SpawnerSmallTop_Stop();					
 	virtual void Spawne() override;				
 	double m_returnAngle;
 	int m_returnPettern; // 帰りのパターン
 	double m_appearancePosition; // 出現位置誤差
+
+	int m_index;
 };		
 
 class SpawnerSmallLeftRight_Stop : public SpawnerBase {
@@ -26,8 +28,23 @@ public:
 
 	int m_returnPettern; // 帰りのパターン
 	int m_returnAngle;
-
+	int m_index;
 };
+
+// 上から出てきて、ゆっくり下がって、そのまま真下に行く
+class SpawnerSmallTop_NoStop : public SpawnerBase {
+public:
+	SpawnerSmallTop_NoStop();
+	virtual ~SpawnerSmallTop_NoStop();
+	virtual void Spawne() override;
+	double m_returnAngle;
+	int m_returnPettern; // 帰りのパターン
+	double m_appearancePosition; // 出現位置誤差
+	int m_index;
+};
+
+
+
 	
 class SpawnerSmallTop_Repeat_Stop : public SpawnerBase {
 public:

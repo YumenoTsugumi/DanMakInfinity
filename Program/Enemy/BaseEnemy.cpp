@@ -294,3 +294,9 @@ void CBaseEnemy::SetDrawSize(double size)
 {
 	m_drawSizeRatio = size;
 }
+
+
+double CBaseEnemy::GetToPlayerAngle()
+{
+	return CFunc::GetTwoPointAngle(m_pos, m_target) * CFunc::RAD + 180.0;
+}

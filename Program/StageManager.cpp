@@ -66,11 +66,11 @@ SpawnerBase* StageManager::GetRandomSpawner()
 SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
-	int rand = CFunc::RandI(0, 1);
-	rand = 1;
+	int rand = CFunc::RandI(0, 2);
 	switch (rand) {
 		case 0:	return new SpawnerSmallTop_Stop();
 		case 1: return new SpawnerSmallLeftRight_Stop();
+		case 2: return new SpawnerSmallTop_NoStop();
 	}
 }
 
@@ -143,7 +143,20 @@ double SpawnerBase::ToGameSizeY(double ratioPosY)
 
 #include "EnemyS01.h"
 #include "EnemyM02.h"
-CBaseEnemy* SpawnerBase::GetSmallEnemy(const CPos& pos)
+
+int SpawnerBase::GetSmallEnemyIndex() {
+
+	static int count = 0;
+	return count++ % 4;
+	return CFunc::RandI(0, 3);
+}
+CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
 {
+	switch (index) {
+		case 0: return new CEnemyS01(pos);
+		case 1: return new CEnemyS02(pos);
+		case 2: return new CEnemyS03(pos);
+		case 3: return new CEnemyS05(pos);
+	}
 	return new CEnemyS01(pos);
 }

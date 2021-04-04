@@ -65,7 +65,7 @@ public:
 	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
 	double ToGameSizeY(double ratioPosY);
 
-
-	virtual CBaseEnemy* GetSmallEnemy(const CPos& pos);
+	int GetSmallEnemyIndex();
+	virtual CBaseEnemy* GetSmallEnemy(int index, const CPos& pos);
 };
 

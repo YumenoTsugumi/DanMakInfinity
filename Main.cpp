@@ -12,13 +12,6 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	for (int ii = 0; ii < 100; ii++) {
-		double aaa = CFunc::RandD(180, 360);
-		char text[80];
-		sprintf_s(text, "%lf\n", aaa);
-		OutputDebugString(text);
-	}
-
 
 	double gameRatio = 1.0;
 	CGame::SetAllGameRect(gameRatio);

@@ -109,6 +109,9 @@ public:
 	double GetDirectionRad(); // 移動コンポーネントでの向き
 	virtual double GetFinalDirectionRad(); // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
 
+	// 敵から時機への角度（弾の発射用）
+	double GetToPlayerAngle();
+
 
 	// 時機の位置の設定
 	static CPos m_target;
