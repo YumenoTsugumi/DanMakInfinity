@@ -184,11 +184,6 @@ void SpawnerSmallTop_NoStop::Spawne()
 
 //------------------------------------------------------------------------------
 
-
-
-
-
-
 CBaseEnemy* SpawnerMedium::GetEnemy(const CPos& pos)
 {
 	return new CEnemyS01(pos);

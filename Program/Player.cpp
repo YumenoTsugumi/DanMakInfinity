@@ -33,7 +33,7 @@ void CPlayer::SetBulletManager(CBulletManager* playerBullet)
 void CPlayer::Action(CInputAllStatus* input)
 {
 	//移動処理
-	double move = 9.0;
+	double move = 11.0;
 	int moveCo = 0;
 
 	if (input->GetBtnOnOff(INPUT_DEF_UP) == true) {

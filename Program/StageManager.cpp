@@ -6,6 +6,9 @@
 //#include "EnemyMedium.h"
 //#include "EnemyLarge.h"
 
+#include "EnemyS01.h"
+#include "EnemyM02.h"
+
 #include "Spawner.h"
 #include "Game.h"
 
@@ -67,6 +70,7 @@ SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
 	int rand = CFunc::RandI(0, 2);
+	rand = 2;
 	switch (rand) {
 		case 0:	return new SpawnerSmallTop_Stop();
 		case 1: return new SpawnerSmallLeftRight_Stop();
@@ -74,6 +78,23 @@ SpawnerBase* StageManager::GetTestSpawner()
 	}
 }
 
+
+int SpawnerBase::GetSmallEnemyIndex() {
+	return 2;
+	static int count = 0;
+	return count++ % 4;
+	return CFunc::RandI(1, 4);
+}
+CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
+{
+	switch (index) {
+	case 1: return new CEnemyS01(pos);
+	case 2: return new CEnemyS02(pos);
+	case 3: return new CEnemyS03(pos);
+	case 4: return new CEnemyS05(pos);
+	}
+	return new CEnemyS01(pos);
+}
 
 
 SpawnerBase::SpawnerBase() :
@@ -139,24 +160,4 @@ double SpawnerBase::ToGameSizeY(double ratioPosY)
 	int min = GameWindowAreaTop * CGame::GetWindowRatio();
 	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
 	return 	(max - min) * (ratioPosY);
-}
-
-#include "EnemyS01.h"
-#include "EnemyM02.h"
-
-int SpawnerBase::GetSmallEnemyIndex() {
-
-	static int count = 0;
-	return count++ % 4;
-	return CFunc::RandI(0, 3);
-}
-CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
-{
-	switch (index) {
-		case 0: return new CEnemyS01(pos);
-		case 1: return new CEnemyS02(pos);
-		case 2: return new CEnemyS03(pos);
-		case 3: return new CEnemyS05(pos);
-	}
-	return new CEnemyS01(pos);
 }

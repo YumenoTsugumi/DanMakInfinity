@@ -9,22 +9,22 @@ public:
 	virtual void Draw();
 	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
 };
-
-enum ShotTypeS01 {
-	Rapid=0,
-	Slow
-};
-
 class CLauncherS01 : public CBaseLauncher {
 public:
-	ShotTypeS01 m_type;
-	CLauncherS01(int rank, const CPos& enemyPos, const CPos& relativePos, ShotTypeS01 type);
+	CLauncherS01(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS01() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
-}; 
+};
+class CLauncherS01_50 : public CBaseLauncher {
+public:
+	CLauncherS01_50(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS01_50() override;
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
 
-
-
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS02
+//----------------------------------------------------------------------------------------------------------
 class CEnemyS02 : public CBaseEnemy {
 public:
 	CEnemyS02(const CPos& pos);
@@ -35,12 +35,14 @@ public:
 
 class CLauncherS02 : public CBaseLauncher {
 public:
-	CLauncherS02(int rank, const CPos& enemyPos, const CPos& relativePos, ShotTypeS01 type);
+	CLauncherS02(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS02() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
-
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS03
+//----------------------------------------------------------------------------------------------------------
 
 class CEnemyS03 : public CBaseEnemy {
 public:
@@ -50,21 +52,24 @@ public:
 	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
 };
 
-class CLauncherS03a : public CBaseLauncher {
+class CLauncherS03_50 : public CBaseLauncher {
 public:
-	CLauncherS03a(int rank, const CPos& enemyPos, const CPos& relativePos, ShotTypeS01 type);
-	virtual ~CLauncherS03a() override;
+	CLauncherS03_50(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS03_50() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
-class CLauncherS03b : public CBaseLauncher {
+class CLauncherS03 : public CBaseLauncher {
 public:
-	CLauncherS03b(int rank, const CPos& enemyPos, const CPos& relativePos, ShotTypeS01 type);
-	virtual ~CLauncherS03b() override;
+	CLauncherS03(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS03() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 
 
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS05
+//----------------------------------------------------------------------------------------------------------
 
 
 class CEnemyS05 : public CBaseEnemy {
@@ -78,7 +83,7 @@ public:
 
 class CLauncherS05 : public CBaseLauncher {
 public:
-	CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos, ShotTypeS01 type);
+	CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS05() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };

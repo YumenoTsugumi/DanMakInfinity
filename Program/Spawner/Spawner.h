@@ -13,7 +13,7 @@ public:
 	int m_returnPettern; // 帰りのパターン
 	double m_appearancePosition; // 出現位置誤差
 
-	int m_index;
+
 };		
 
 class SpawnerSmallLeftRight_Stop : public SpawnerBase {
@@ -28,7 +28,6 @@ public:
 
 	int m_returnPettern; // 帰りのパターン
 	int m_returnAngle;
-	int m_index;
 };
 
 // 上から出てきて、ゆっくり下がって、そのまま真下に行く
@@ -40,7 +39,6 @@ public:
 	double m_returnAngle;
 	int m_returnPettern; // 帰りのパターン
 	double m_appearancePosition; // 出現位置誤差
-	int m_index;
 };
 
 

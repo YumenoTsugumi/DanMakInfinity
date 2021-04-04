@@ -47,6 +47,14 @@ protected:
 	bool bVal[10];
 
 protected:
+
+	double RankSpeed(); // ランクによる速度変化を返す
+	double RankBulletNum(); // ランクによる弾の総数を返す
+	double RankSpan(); // ランクによる発射間隔を返す
+	int RankWay(); // ランクによるnway弾の個数を返す
+	int RankRapidA(); // ランクによる連弾の個数を返す
+	int RankRapidB(); // ランクによる連弾の個数を返す
+
 	// 現在のランクの割合を返す 0.0～1.0
 	double RankRatio();
 	// 連弾の速度差を生成する(speedの10％までをindexで等分割する)
