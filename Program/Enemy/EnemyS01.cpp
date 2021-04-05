@@ -241,7 +241,93 @@ void CLauncherS03_50::Action(const CPos& newEnemyPos, const CPos& nowRelativePos
 	m_count++;
 }
 
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS04
+//----------------------------------------------------------------------------------------------------------
+CEnemyS04::CEnemyS04(const CPos& pos) : CBaseEnemy(pos) {
+	m_image = (CImage*)CGame::GetResource("enemyS4");
 
+	std::vector<Collision> collisions = { 
+		Collision(CPos(14,2), 24.0) ,
+		Collision(CPos(-14,2), 24.0) 
+	};
+	Init(200, Small, collisions);
+
+	AddLauncher(launcher = new CLauncherS04(m_rank, m_pos, CPos(20, 41)));
+	AddLauncher(new CLauncherS04(m_rank, m_pos, CPos(-20, 41)));
+}
+CEnemyS04::~CEnemyS04() {}
+void CEnemyS04::Draw() {
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	double angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
+
+	if (m_behaviorComponent->GetBehaviorStatus() != BehaviorStatus::Shot) {
+		angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
+	} else if (launcher->m_shotAngleRock) {
+		angle = CFunc::ToRad(launcher->m_shotAngle - 90.0);
+	}
+	else {
+		angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
+	}
+	CDxFunc::MyDrawRotaGraph(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+
+	DebugCollisionDraw();
+	DebugLauncherDraw();
+}
+
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CEnemyS04::GetFinalDirectionRad()
+{
+	if (m_behaviorComponent->GetBehaviorStatus() != BehaviorStatus::Shot) {
+		return CFunc::GetTwoPointAngle(m_target, m_pos);
+	} else 
+	if (launcher->m_shotAngleRock) {
+		return CFunc::ToRad(launcher->m_shotAngle);
+	}
+	else {
+		return CFunc::GetTwoPointAngle(m_target, m_pos);
+	}
+
+	//return CFunc::GetTwoPointAngle(m_target, m_pos);
+}
+CLauncherS04::CLauncherS04(int rank, const CPos& enemyPos, const CPos& relativePos) :
+	CBaseLauncher(rank, enemyPos, relativePos) {
+	m_shotAngleRock = false;
+};
+CLauncherS04::~CLauncherS04() {}
+void CLauncherS04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+{
+	__super::Action(newEnemyPos, nowRelativePos);
+
+	// ナイトメア弾
+	int initTime = 25;
+	int startTime = 30;
+	int endTime = startTime + 80;
+	int resetTime = endTime + 120;
+	int span = 7 * RankSpan();
+	
+	if (m_count == initTime) {
+		m_shotAngleRock = true;
+		m_shotAngle = this->m_parent->GetToPlayerAngle();
+		m_shotSpeed = 3.0 * RankSpeed();
+	}
+	if (m_count >= startTime && m_count <= endTime) {
+		if (m_count % span == 0) {
+			m_shotSpeed += 0.5 * RankSpeed();
+			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, m_shotSpeed, m_shotAngle, 0, 0, 0, 0, 61);
+			CBaseLauncher::m_bulletManager->Add(b);
+		}
+		if (m_count == endTime) {
+			m_shotAngleRock = false;
+		}
+	}
+
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return;
+	}
+	m_count++;
+}
 
 
 
@@ -288,20 +374,91 @@ void CLauncherS05::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 
 	double speed = 3.65 * RankSpeed();
 
-	int start_time = 120;
-	int end_time = start_time + 60;
+	int startTime = 30;
+	int endTime = startTime + 60;
+	int resetTime = endTime + 90;
 	int span = 12 * RankSpan();
-	if (m_count >= start_time && m_count <= end_time) {
+	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			double angle = this->m_parent->GetToPlayerAngle();
 			double nearAngle = CFunc::GetNearAngle(angle, 30);
 			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, speed, nearAngle, 0, 0, 0, 0, 1);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
-		if (m_count >= end_time) {
-			m_count = 0;
-			return;
+	}
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return;
+	}
+	m_count++;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS06
+//----------------------------------------------------------------------------------------------------------
+// 自機方面のばらまき
+CEnemyS06::CEnemyS06(const CPos& pos) : CBaseEnemy(pos) {
+	m_image = (CImage*)CGame::GetResource("enemyS6");
+	std::vector<Collision> collisions = { 
+		Collision(CPos(0,-5), 30.0) ,
+		Collision(CPos(18,12), 10.0),
+		Collision(CPos(-18,12), 10.0)
+	};
+	Init(200, Small, collisions);
+
+	AddLauncher(new CLauncherS06(m_rank, m_pos, CPos(0, 15)));
+}
+CEnemyS06::~CEnemyS06() {
+}
+void CEnemyS06::Draw() {
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	double angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
+	CDxFunc::MyDrawRotaGraph(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+
+	DebugCollisionDraw();
+	DebugLauncherDraw();
+}
+
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CEnemyS06::GetFinalDirectionRad()
+{
+	return CFunc::GetTwoPointAngle(m_target, m_pos);
+}
+
+
+
+CLauncherS06::CLauncherS06(int rank, const CPos& enemyPos, const CPos& relativePos) :
+	CBaseLauncher(rank, enemyPos, relativePos) {
+};
+CLauncherS06::~CLauncherS06() {
+
+}
+void CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+{
+	__super::Action(newEnemyPos, nowRelativePos);
+
+	
+
+	int startTime = 20;
+	int endTime = startTime + 120;
+	int resetTime = endTime + 120;
+	int span = 30 * RankSpan();
+	int loop = 2 * RankBulletNum();
+	if (m_count >= startTime && m_count <= endTime) {
+		if (m_count % span == 0) {
+			for (int ii = 0; ii < loop;ii++) {
+				double speed = CFunc::RandD(2.5, 3.5) * RankSpeed();
+				double angle = CFunc::RandD(-30, 30);
+				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
+				CBaseLauncher::m_bulletManager->Add(b);
+			}
 		}
+	}
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return;
 	}
 
 	m_count++;

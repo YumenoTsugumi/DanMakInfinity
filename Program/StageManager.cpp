@@ -70,7 +70,7 @@ SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
 	int rand = CFunc::RandI(0, 2);
-	rand = 2;
+	//rand = 2;
 	switch (rand) {
 		case 0:	return new SpawnerSmallTop_Stop();
 		case 1: return new SpawnerSmallLeftRight_Stop();
@@ -80,7 +80,7 @@ SpawnerBase* StageManager::GetTestSpawner()
 
 
 int SpawnerBase::GetSmallEnemyIndex() {
-	return 2;
+	return 4;
 	static int count = 0;
 	return count++ % 4;
 	return CFunc::RandI(1, 4);
@@ -91,7 +91,9 @@ CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
 	case 1: return new CEnemyS01(pos);
 	case 2: return new CEnemyS02(pos);
 	case 3: return new CEnemyS03(pos);
-	case 4: return new CEnemyS05(pos);
+	case 4: return new CEnemyS04(pos);
+	case 5: return new CEnemyS05(pos);
+	case 6: return new CEnemyS06(pos);
 	}
 	return new CEnemyS01(pos);
 }

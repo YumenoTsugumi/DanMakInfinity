@@ -2,6 +2,7 @@
 
 #include "BaseEnemy.h"
 
+// 時機狙い
 class CEnemyS01 : public CBaseEnemy {
 public:
 	CEnemyS01(const CPos& pos);
@@ -25,6 +26,7 @@ public:
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS02
 //----------------------------------------------------------------------------------------------------------
+// nWay弾
 class CEnemyS02 : public CBaseEnemy {
 public:
 	CEnemyS02(const CPos& pos);
@@ -43,7 +45,7 @@ public:
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS03
 //----------------------------------------------------------------------------------------------------------
-
+// 2つから時期狙い
 class CEnemyS03 : public CBaseEnemy {
 public:
 	CEnemyS03(const CPos& pos);
@@ -65,13 +67,35 @@ public:
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS04
+//----------------------------------------------------------------------------------------------------------
+// ナイトメア弾
+class CLauncherS04;
+class CEnemyS04 : public CBaseEnemy {
+public:
+	CLauncherS04* launcher;
+	CEnemyS04(const CPos& pos);
+	~CEnemyS04();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CLauncherS04 : public CBaseLauncher {
+public:
+	bool m_shotAngleRock; // ショット方向固定
+	double m_shotAngle;
+	double m_shotSpeed; 
+	CLauncherS04(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS04() override;
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
 
 
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS05
 //----------------------------------------------------------------------------------------------------------
-
-
+// 角度制限弾
 class CEnemyS05 : public CBaseEnemy {
 public:
 	double m_drawAngle;
@@ -85,5 +109,25 @@ class CLauncherS05 : public CBaseLauncher {
 public:
 	CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS05() override;
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
+
+
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS06
+//----------------------------------------------------------------------------------------------------------
+// 時期方向にバラまき弾
+class CEnemyS06 : public CBaseEnemy {
+public:
+	CEnemyS06(const CPos& pos);
+	~CEnemyS06();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CLauncherS06 : public CBaseLauncher {
+public:
+	CLauncherS06(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS06() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
