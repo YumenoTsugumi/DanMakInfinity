@@ -331,10 +331,12 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	m_enemyManager.Draw();
 	m_effectManager.Draw(10); // 10	敵よりあと
+
+	m_playerBullet.Draw();
 	m_player.Draw();
 	
 	m_effectManager.Draw(20); // 20 プレイヤーより後
-	m_playerBullet.Draw();
+	
 	m_itemManager.Draw();
 	m_effectManager.Draw(30); // 30 プレイヤーの弾より後
 	m_bulletManager.Draw();

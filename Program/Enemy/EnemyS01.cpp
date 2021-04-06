@@ -342,8 +342,7 @@ CEnemyS05::CEnemyS05(const CPos& pos) : CBaseEnemy(pos) {
 
 	AddLauncher(new CLauncherS05(m_rank, m_pos, CPos(0, 26)));
 }
-CEnemyS05::~CEnemyS05() {
-}
+CEnemyS05::~CEnemyS05() {}
 void CEnemyS05::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
@@ -365,9 +364,7 @@ double CEnemyS05::GetFinalDirectionRad()
 CLauncherS05::CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
 };
-CLauncherS05::~CLauncherS05() {
-
-}
+CLauncherS05::~CLauncherS05() {}
 void CLauncherS05::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 	__super::Action(newEnemyPos, nowRelativePos);
@@ -393,8 +390,6 @@ void CLauncherS05::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	m_count++;
 }
 
-
-
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS06
 //----------------------------------------------------------------------------------------------------------
@@ -410,8 +405,7 @@ CEnemyS06::CEnemyS06(const CPos& pos) : CBaseEnemy(pos) {
 
 	AddLauncher(new CLauncherS06(m_rank, m_pos, CPos(0, 15)));
 }
-CEnemyS06::~CEnemyS06() {
-}
+CEnemyS06::~CEnemyS06() {}
 void CEnemyS06::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	double angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
@@ -427,19 +421,13 @@ double CEnemyS06::GetFinalDirectionRad()
 	return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
 
-
-
 CLauncherS06::CLauncherS06(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
 };
-CLauncherS06::~CLauncherS06() {
-
-}
+CLauncherS06::~CLauncherS06() {}
 void CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 	__super::Action(newEnemyPos, nowRelativePos);
-
-	
 
 	int startTime = 20;
 	int endTime = startTime + 120;
@@ -460,7 +448,72 @@ void CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		m_count = 0;
 		return;
 	}
+	m_count++;
+}
 
+
+
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS07
+//----------------------------------------------------------------------------------------------------------
+// 自機方面のばらまき
+CEnemyS07::CEnemyS07(const CPos& pos) : CBaseEnemy(pos) {
+	m_image = (CImage*)CGame::GetResource("enemyS7");
+	std::vector<Collision> collisions = {
+		Collision(CPos(0,-5), 25.0) ,
+		Collision(CPos(33,0), 9.0),
+		Collision(CPos(45,-8), 5.0)
+	};
+	Init(200, Small, collisions);
+
+	AddLauncher(new CLauncherS07(m_rank, m_pos, CPos(0, 29)));
+}
+CEnemyS07::~CEnemyS07() {}
+void CEnemyS07::Draw() {
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	double angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
+	CDxFunc::MyDrawRotaGraph(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+
+	DebugCollisionDraw();
+	DebugLauncherDraw();
+}
+
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CEnemyS07::GetFinalDirectionRad()
+{
+	return CFunc::GetTwoPointAngle(m_target, m_pos);
+}
+
+CLauncherS07::CLauncherS07(int rank, const CPos& enemyPos, const CPos& relativePos) :
+	CBaseLauncher(rank, enemyPos, relativePos) {
+};
+CLauncherS07::~CLauncherS07() {}
+void CLauncherS07::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+{
+	__super::Action(newEnemyPos, nowRelativePos);
+
+	int startTime = 20;
+	int endTime = startTime + 120;
+	int resetTime = endTime + 120;
+	int span = 45 * RankSpan();
+	int loop = 2 * RankBulletNum();
+	int way = 3 * RankBulletNum();
+	if (m_count >= startTime && m_count <= endTime) {
+		if (m_count % span == 0) {
+			int st = -way / 2;
+			int ed = way / 2;
+			for (int ii = st; ii <= ed; ii++) {
+				double speed = 4.4 * RankSpeed();
+				double angle = ii*1.5;
+				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
+				CBaseLauncher::m_bulletManager->Add(b);
+			}
+		}
+	}
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return;
+	}
 	m_count++;
 }
 

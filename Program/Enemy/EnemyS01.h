@@ -131,3 +131,22 @@ public:
 	virtual ~CLauncherS06() override;
 	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
+
+//----------------------------------------------------------------------------------------------------------
+// CEnemyS07
+//----------------------------------------------------------------------------------------------------------
+// 時期方向にバラまき弾
+class CEnemyS07 : public CBaseEnemy {
+public:
+	CEnemyS07(const CPos& pos);
+	~CEnemyS07();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CLauncherS07 : public CBaseLauncher {
+public:
+	CLauncherS07(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherS07() override;
+	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};

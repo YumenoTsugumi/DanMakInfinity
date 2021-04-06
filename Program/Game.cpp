@@ -146,8 +146,10 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("ResourceX\\player\\playerB.png"), "playerB", 810);
 	m_resourceManager.Add(new CImage("ResourceX\\player\\playerC.png"), "playerC", 820);
 
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\PlayerBulletA.png", 1, 1, 1, 40, 40, 0, 0.0), "playerBulletA", 990);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBulletM.png", 1, 1, 1, 100, 200, 0, 0.0), "playerBulletM", 997);
+
 	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
 	//画像

@@ -21,6 +21,7 @@ public:
 	int m_slowMove;	//0(MOVE_HI)通常　1(MOVE_SLOW)低速
 
 	int m_bulletShotCount;
+	int m_bulletMainShotCount;
 	CBulletManager* m_playerBullet; // 上位のシーンからポインタをもらう
 
 	CPlayer();
@@ -31,6 +32,7 @@ public:
 	void Action(CInputAllStatus* input);
 	void Draw();
 	void Shot();
+	void MainShot();
 	
 };
 

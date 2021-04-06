@@ -28,7 +28,7 @@ StageManager::~StageManager()
 void StageManager::Main()
 {
 	if (m_count >= m_maxCount) {
-		return;
+		//return;
 	}
 
 	static bool debugMode = false;
@@ -80,7 +80,7 @@ SpawnerBase* StageManager::GetTestSpawner()
 
 
 int SpawnerBase::GetSmallEnemyIndex() {
-	return 4;
+	return 7;
 	static int count = 0;
 	return count++ % 4;
 	return CFunc::RandI(1, 4);
@@ -94,6 +94,7 @@ CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
 	case 4: return new CEnemyS04(pos);
 	case 5: return new CEnemyS05(pos);
 	case 6: return new CEnemyS06(pos);
+	case 7: return new CEnemyS07(pos);
 	}
 	return new CEnemyS01(pos);
 }
