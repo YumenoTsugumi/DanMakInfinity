@@ -69,12 +69,13 @@ SpawnerBase* StageManager::GetRandomSpawner()
 SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
-	int rand = CFunc::RandI(0, 2);
-	//rand = 2;
+	int rand = CFunc::RandI(0, 3);
+	rand = 3;
 	switch (rand) {
 		case 0:	return new SpawnerSmallTop_Stop();
 		case 1: return new SpawnerSmallLeftRight_Stop();
 		case 2: return new SpawnerSmallTop_NoStop();
+		case 3: return new SpawnerSmall_Line_Top_Stop;
 	}
 }
 

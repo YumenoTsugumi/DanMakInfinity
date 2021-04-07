@@ -3,7 +3,10 @@
 #include "resource.h"
 #include "StageManager.h"
 
-		
+// ---------------------------
+// 編隊バラバラパターン
+// ---------------------------
+// 上から真ん中まで動いて停止　その後撤退 
 class SpawnerSmallTop_Stop : public SpawnerBase {		
 public:								
 	SpawnerSmallTop_Stop();
@@ -12,10 +15,8 @@ public:
 	double m_returnAngle;
 	int m_returnPettern; // 帰りのパターン
 	double m_appearancePosition; // 出現位置誤差
-
-
-};		
-
+};
+// 左右から真ん中まで動いて停止　その後撤退 
 class SpawnerSmallLeftRight_Stop : public SpawnerBase {
 public:
 	SpawnerSmallLeftRight_Stop();
@@ -40,7 +41,25 @@ public:
 	int m_returnPettern; // 帰りのパターン
 	double m_appearancePosition; // 出現位置誤差
 };
+// ---------------------------
+// 編隊Lineパターン
+// ---------------------------
+// 上から真ん中まで動いて停止　その後撤退 
+class SpawnerSmall_Line_Top_Stop : public SpawnerBase {
+public:
+	SpawnerSmall_Line_Top_Stop();
+	virtual ~SpawnerSmall_Line_Top_Stop();
+	virtual void Spawne() override;
+	int m_inPettern;// inパターン
+	std::vector<CPos> m_inPos; // in位置
+	int m_spawnerIndex;
 
+	double m_goalY;
+
+	double m_returnAngle;
+	int m_returnPettern; // 帰りのパターン
+	double m_appearancePosition; // 出現位置誤差
+};
 
 
 	
