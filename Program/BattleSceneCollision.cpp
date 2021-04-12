@@ -2,7 +2,7 @@
 #include "Func.h"
 #include "BattleScene.h"
 
-
+// 敵　時機の弾
 void CBattleScene::Collision_Enemy_PulyerBullet() 
 {
 
@@ -39,7 +39,7 @@ void CBattleScene::Collision_Enemy_PulyerBullet()
 
 }
 
-
+// アイテム　プレイヤー
 void CBattleScene::Collision_Item_Player()
 {
 
@@ -48,19 +48,21 @@ void CBattleScene::Collision_Item_Player()
 			continue;
 		}
 		CBaseItem* item = (CBaseItem*)m_itemManager.m_bullet[jj];
-
-		if (!item->IsTakeTime()) {
-			continue;
-		}
 	
 		// アイテム取得範囲
-		if (CFunc::CollisionCircleToCircle(m_player.m_pos, 32, item->m_pos, 0)) {
+		if (item->IsTakeTime() && CFunc::CollisionCircleToCircle(m_player.m_pos, 32, item->m_pos, 0)) {
+			item->GetItemAddScore();
 			item->SetRemove();
 			continue;
 		}
+		if (item->GetRecoveryFlag())continue; // アイテム自動回収フラグが立っていると、この後の処理が不要
 
 		// アイテム自動回収範囲
 		if (CFunc::CollisionCircleToCircle(m_player.m_pos, 256+128, item->m_pos, 0)) {
+			if (!item->IsTakeTime()) {
+				item->SetPreRecovery();
+				continue;
+			}
 			item->SetRecovery();
 			continue;
 		}

@@ -46,7 +46,7 @@ void CLauncherS01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 	__super::Action(newEnemyPos, nowRelativePos);
 
-	double speed = 6.0 * RankSpeed();
+	double speed = 8.2 * RankSpeed();
 	int span = (int)(30.0 * RankSpan());
 	int loop = RankRapidA();
 
@@ -128,13 +128,13 @@ void CLauncherS02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 	__super::Action(newEnemyPos, nowRelativePos);
 	// 3 + n way弾を撃つ 
-	double speed = 4.0 * RankSpeed();
+	double speed = 7.35 * RankSpeed();
 	int way = 3 + RankWay();
 
 	int startTime = 0;
 	int endTime = startTime + 40;
 	int resetTime = endTime + 60;
-	int span = 19 * RankSpan();
+	int span = 50 * RankSpan();
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			int st = 0 - way / 2;
@@ -202,9 +202,9 @@ void CLauncherS03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int startTime = 0;
 	int endTime = startTime + 60;
 	int resetTime = endTime + 60;
-	int span = 15 * RankSpan();
+	int span = 30 * RankSpan();
 	int loop =  1 + RankRapidA();
-	double speed = 3.8 * RankSpeed();
+	double speed = 8.8 * RankSpeed();
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			for (int ii = 0; ii < loop; ii++) {
@@ -303,17 +303,17 @@ void CLauncherS04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int initTime = 25;
 	int startTime = 30;
 	int endTime = startTime + 80;
-	int resetTime = endTime + 120;
+	int resetTime = endTime + 160;
 	int span = 7 * RankSpan();
 	
 	if (m_count == initTime) {
 		m_shotAngleRock = true;
 		m_shotAngle = this->m_parent->GetToPlayerAngle();
-		m_shotSpeed = 3.0 * RankSpeed();
+		m_shotSpeed = 4.0 * RankSpeed();
 	}
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
-			m_shotSpeed += 0.5 * RankSpeed();
+			m_shotSpeed += 0.4 * RankSpeed();
 			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, m_shotSpeed, m_shotAngle, 0, 0, 0, 0, 61);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
@@ -360,7 +360,7 @@ double CEnemyS05::GetFinalDirectionRad()
 }
 
 
-
+// 角度制限弾
 CLauncherS05::CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
 };
@@ -369,12 +369,12 @@ void CLauncherS05::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
 	__super::Action(newEnemyPos, nowRelativePos);
 
-	double speed = 3.65 * RankSpeed();
+	double speed = 8.65 * RankSpeed();
 
 	int startTime = 30;
 	int endTime = startTime + 60;
 	int resetTime = endTime + 90;
-	int span = 12 * RankSpan();
+	int span = 24 * RankSpan();
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			double angle = this->m_parent->GetToPlayerAngle();
@@ -420,7 +420,7 @@ double CEnemyS06::GetFinalDirectionRad()
 {
 	return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
-
+// 自機方面のばらまき
 CLauncherS06::CLauncherS06(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
 };
@@ -432,13 +432,13 @@ void CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int startTime = 20;
 	int endTime = startTime + 120;
 	int resetTime = endTime + 120;
-	int span = 30 * RankSpan();
+	int span = 45 * RankSpan();
 	int loop = 2 * RankBulletNum();
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			for (int ii = 0; ii < loop;ii++) {
-				double speed = CFunc::RandD(2.5, 3.5) * RankSpeed();
-				double angle = CFunc::RandD(-30, 30);
+				double speed = CFunc::RandD(5.5, 7.5) * RankSpeed();
+				double angle = CFunc::RandD(-45, 45);
 				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
 				CBaseLauncher::m_bulletManager->Add(b);
 			}
@@ -456,7 +456,6 @@ void CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS07
 //----------------------------------------------------------------------------------------------------------
-// 自機方面のばらまき
 CEnemyS07::CEnemyS07(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyS7");
 	std::vector<Collision> collisions = {
@@ -484,6 +483,7 @@ double CEnemyS07::GetFinalDirectionRad()
 	return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
 
+// 時期狙い狭い3way　いわゆるワイバーン
 CLauncherS07::CLauncherS07(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
 };
@@ -503,7 +503,7 @@ void CLauncherS07::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 			int st = -way / 2;
 			int ed = way / 2;
 			for (int ii = st; ii <= ed; ii++) {
-				double speed = 4.4 * RankSpeed();
+				double speed = 7.4 * RankSpeed();
 				double angle = ii*1.5;
 				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
 				CBaseLauncher::m_bulletManager->Add(b);

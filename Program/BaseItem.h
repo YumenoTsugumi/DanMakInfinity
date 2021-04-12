@@ -41,6 +41,9 @@ public:
 private:
 	//削除中か
 	bool m_removeNow;
+
+	//輝き　画像データへのポインタ　総合画像データから保存しておく
+	static CBulletImage* m_shineImage;
 public:
 
 	//後は適当に何かさせる用に
@@ -68,23 +71,31 @@ public:
 
 	//移動制御	弾のを流用
 	//virtual void Move();
-	//範囲外	コールしない
-	//virtual void RectOut();
 	//削除
 	virtual void Remove();
+
+	// プレイヤーの範囲に入るまでの時間
+	int m_survivalTime;
+	int m_itemRank; // 1（取るまでに時間が掛かった）～3（かなり早く取った）
 
 	double m_size;
 	double m_plusSize;
 	double m_maxSize;
 	void SetSize(double size, double plusSize, double maxSize);
 
+	int GetSurvivalTimeRank();
 	void SetRemove();
-
+	void GetItemAddScore();
 	void SetRecovery();
-	bool m_recoveryFlag;
+	void SetPreRecovery(); // 45fr経過するまでにアイテムの取得範囲にはいると、45fr後に自動回収にする
+	bool m_recoveryFlag; // アイテム回収状態フラグ
+	bool m_preRecoveryFlag; // アイテム事前回収状態フラグ
+	bool GetRecoveryFlag();
 
 	// 出てからアイテムを一定時間は取れないようにするための判定
 	bool IsTakeTime();
+
+
 };
 
 //--------------------------------------------------------------------------------------------------------------

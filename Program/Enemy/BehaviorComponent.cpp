@@ -171,13 +171,11 @@ double CGoTargetBehavior::GetDirection()
 		return m_inMove.GetDirection();
 	}
 
-
 	return CFunc::ToRad(90.0);
 }
 
 void CGoTargetBehavior::DebugPrint()
 {
-
 }
 
 

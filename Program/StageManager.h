@@ -5,8 +5,8 @@
 
 class SpawnerBase;
 class CBaseEnemy;
-const int FormationSpawneTiming = 5; // 3秒ごとに編隊をスポーンする間隔
-const int FormationSpawneFinishTiming = 1.5; // 1編隊の全敵をスポーンする時間
+const int FormationSpawneTiming = 2; // 3秒ごとに編隊をスポーンする間隔
+const int FormationSpawneFinishTiming = 1.2; // 1編隊の全敵をスポーンする時間(秒)
 
 
 class StageManager {
@@ -34,6 +34,7 @@ public:
 	int m_spawneTiming;
 	int m_spawneCount;
 	bool m_deleteFlg;
+	int m_spawnerIndex;
 
 	SpawnerBase();
 	virtual ~SpawnerBase();

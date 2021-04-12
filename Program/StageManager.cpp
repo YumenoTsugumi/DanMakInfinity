@@ -70,32 +70,35 @@ SpawnerBase* StageManager::GetTestSpawner()
 {
 	//return new SpawnerM02();
 	int rand = CFunc::RandI(0, 3);
-	rand = 3;
+	rand = CFunc::RandI(0, 3);
+	//rand = 3;
 	switch (rand) {
 		case 0:	return new SpawnerSmallTop_Stop();
 		case 1: return new SpawnerSmallLeftRight_Stop();
-		case 2: return new SpawnerSmallTop_NoStop();
-		case 3: return new SpawnerSmall_Line_Top_Stop;
+		case 2: return new SpawnerSmall_Line_Top_Stop;
+		case 3: return new SpawnerSmall_Line_LeftRight_Stop;
+
+		//case 4: return new SpawnerSmallTop_NoStop();
 	}
 }
 
 
 int SpawnerBase::GetSmallEnemyIndex() {
-	return 7;
+	//return 7;
 	static int count = 0;
-	return count++ % 4;
-	return CFunc::RandI(1, 4);
+	//return count++ % 4;
+	return CFunc::RandI(1, 7);
 }
 CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
 {
 	switch (index) {
-	case 1: return new CEnemyS01(pos);
-	case 2: return new CEnemyS02(pos);
-	case 3: return new CEnemyS03(pos);
-	case 4: return new CEnemyS04(pos);
-	case 5: return new CEnemyS05(pos);
-	case 6: return new CEnemyS06(pos);
-	case 7: return new CEnemyS07(pos);
+		case 1: return new CEnemyS01(pos);
+		case 2: return new CEnemyS02(pos);
+		case 3: return new CEnemyS03(pos);
+		case 4: return new CEnemyS04(pos);
+		case 5: return new CEnemyS05(pos);
+		case 6: return new CEnemyS06(pos);
+		case 7: return new CEnemyS07(pos);
 	}
 	return new CEnemyS01(pos);
 }
@@ -106,7 +109,8 @@ SpawnerBase::SpawnerBase() :
 	m_maxCount(0),
 	m_spawneTiming(0),
 	m_deleteFlg(0),
-	m_spawneCount(0)
+	m_spawneCount(0),
+	m_spawnerIndex(0)
 {
 
 }

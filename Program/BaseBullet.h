@@ -128,7 +128,7 @@ protected:
 	//-----------------------------------
 
 	//画像データへのポインタ　総合画像データから保存しておく
-	int *m_image;
+	int* m_image;
 public:
 	//画像情報
 	CBulletImageInfo m_imageInfo;
