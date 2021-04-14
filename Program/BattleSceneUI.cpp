@@ -20,16 +20,24 @@ void CBattleSceneUI::Init() {
 	m_textComma = (CImage*)CGame::GetResource(1111);
 	m_textCommag = (CImage*)CGame::GetResource(1112);
 	for (int ii = 0; ii < 10; ii++) {
-		CImage* img = (CImage*)CGame::GetResource(1000 + ii);
-		m_textNumber.push_back(img);
+		CImage* img1 = (CImage*)CGame::GetResource(1000 + ii);
+		m_textNumber.push_back(img1);
+
+		CImage* img2 = (CImage*)CGame::GetResource(1010 + ii);
+		m_textBigNumber.push_back(img2);
+
+		CImage* img3 = (CImage*)CGame::GetResource(1020 + ii);
+		m_textItemTakeNumber.push_back(img3);
 	}
-	for (int ii = 0; ii < 10; ii++) {
-		CImage* img = (CImage*)CGame::GetResource(1010 + ii);
-		m_textBigNumber.push_back(img);
-	}
+	m_textScoreItem = (CImages*)CGame::GetResource(1030);
 
 	// 外側
 	m_UIFoundation = (CImage*)CGame::GetResource(1500);
+
+	m_itemImage = (CBulletImage*)CGame::GetResource(20720); // アイテム
+	m_shineImage = (CBulletImage*)CGame::GetResource(20721); // アイテムの輝き
+	m_itemDrawSize1 = 1.0;
+	m_itemDrawSize2 = 0.0;
 }
 void CBattleSceneUI::Draw() {
 	DrawGameAreaUI();
@@ -182,8 +190,63 @@ void CBattleSceneUI::DrawOutArea()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	CDxFunc::MyDrawGraph(0, 0, m_UIFoundation->m_iamge);
 	
+	// 得点アイテムの合計
+	int totalItemCount, rank3ItemCount, rank2ItemCount, rank1ItemCount;
+	CBattleScene::GetItemCount(totalItemCount, rank3ItemCount, rank2ItemCount, rank1ItemCount);
+	DrawItemGetCounter(GameWindowAreaRight + 100, 28, 70, 0.7, totalItemCount);
+
+
+	// 得点アイテムの累計(3ランク)
+	m_rotationAngle += CFunc::ToRad(m_itemImage->m_rotaSpeed);
+	m_itemDrawSize1 += 0.02;
+	if (m_itemDrawSize1 > 2.0)m_itemDrawSize1 = 0.0;
+	m_itemDrawSize2 += 0.02;
+	if (m_itemDrawSize2 > 2.0)m_itemDrawSize2 = 0.0;
+	// 3
+	double itemDrawSize = 1.0;
+	CPos itemRank3 = CPos(GameWindowAreaRight + 100, 140);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	CDxFunc::MyDrawRotaGraph(itemRank3, itemDrawSize * 2, m_rotationAngle, m_shineImage->m_images[0]);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	CDxFunc::MyDrawRotaGraph(itemRank3, itemDrawSize, m_rotationAngle, m_itemImage->m_images[0]);
+	{
+		double ang = CFunc::RandF(0, 360);
+		double speed = CFunc::RandD(1.0, 1.6);
+		CBaseEffect* eff = new CBaseEffect(60, EDirType::Abs, itemRank3, speed, ang, 0, -0.2, 0.5, 0, 20721);
+		eff->SetSize(0.2, +0.0);
+		eff->SetWaitTime(CFunc::RandI(1, 15));
+		eff->SetBlend(128, -1.0, 0);
+		eff->SetBlendType(DX_BLENDMODE_ADD);
+		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+		eff->SetRemoveCount(60);	//60frで削除
+		CBattleScene::m_effectManager.Add(eff);
+	}
+	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 140, 0.5, rank3ItemCount);
+
+
+
+	CPos itemRank2 = CPos(GameWindowAreaRight + 100, 190);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 192);
+	CDxFunc::MyDrawRotaGraph(itemRank2, itemDrawSize * 2, m_rotationAngle, m_shineImage->m_images[0]);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	CDxFunc::MyDrawRotaGraph(itemRank2, itemDrawSize, m_rotationAngle, m_itemImage->m_images[0]);
+	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 190, 0.5, rank2ItemCount);
+
+	CPos itemRank1 = CPos(GameWindowAreaRight + 100, 240);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	CDxFunc::MyDrawRotaGraph(itemRank1, itemDrawSize, m_rotationAngle, m_itemImage->m_images[0]);
+	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 240, 0.5, rank1ItemCount);
 }
 
-
+void CBattleSceneUI::DrawItemGetCounter(double x, double xGap, double y, double size, int value)
+{
+	int digit = CFunc::GetDigit(value);
+	if (digit == 0)digit = 1;
+	for (int ii = 0; ii < digit; ii++) {
+		int showValue = value / (int)(pow(10, (digit - ii - 1))) % 10;
+		int drawImage = m_textScoreItem->m_images[showValue];
+		CDxFunc::MyDrawRotaGraph(x + ii * xGap, y, size, 0, drawImage);
+	}
+}
 
 

@@ -45,7 +45,15 @@ public:
 	CBattleSceneUI m_ui;
 
 	
-
+	// 取得アイテム合計数
+	static int m_takeItemRankCount[3]; // それぞれのランク毎にとった個数
+	static void AddItem(int itemRank);
+	static void GetItemCount(int& total, int& rank3Item, int& rank2Item, int& rank1Item) {
+		rank3Item = m_takeItemRankCount[2];
+		rank2Item = m_takeItemRankCount[1];
+		rank1Item = m_takeItemRankCount[0];
+		total = rank3Item * 3 + rank2Item * 2 + rank1Item;
+	}
 
 	// スコア
 	static long long m_hiScore;
@@ -53,6 +61,7 @@ public:
 	static int m_rank;
 	static long long GetHiScore() {	return m_hiScore;	}
 	static long long GetScore() { return m_score; }
+	static void AddScore(int addScore);
 	static int GetRank() { return m_rank; }
 	static void AddRank(int delta);
 	

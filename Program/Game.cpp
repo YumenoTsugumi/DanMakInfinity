@@ -181,6 +181,13 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\comma.png"), "comma", 1111);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\commag.png"), "commag", 1112);
 
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\s%d.png", ii);
+		std::string format2 = MyFormat("s%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1020 + ii);
+	}
+	m_resourceManager.Add(new CImages("Resource\\UI_fullhd2\\scoreText.png", 10,10,1,80,80), "scoreText", 1030);
+
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1150);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1151);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku.png"), "RankWaku", 1152);

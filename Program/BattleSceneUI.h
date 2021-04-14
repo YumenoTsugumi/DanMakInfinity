@@ -28,6 +28,7 @@ protected:
 	CImage* m_textHiScore;
 	std::vector<CImage*> m_textNumber;
 	std::vector<CImage*> m_textBigNumber;
+	std::vector<CImage*> m_textItemTakeNumber;
 	CImage* m_text0g;
 	CImage* m_textComma;
 	CImage* m_textCommag;
@@ -38,6 +39,14 @@ protected:
 	// 外側
 	CImage* m_UIFoundation;
 
+	// アイテム
+	CImages* m_textScoreItem;
+	double m_rotationAngle; // アイテムの回転
+	double m_itemDrawSize1;
+	double m_itemDrawSize2;
+	CBulletImage* m_itemImage; // アイテム
+	CBulletImage* m_shineImage; // アイテムの輝き
+	void DrawItemGetCounter(double x, double xGap, double y, double size, int value);
 
 	void DrawGameAreaUI(); // 画面内のUI描画
 	void DrawOutArea(); // 画面外の描画

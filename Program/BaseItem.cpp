@@ -2,14 +2,15 @@
 #include "DXFunc.h"
 #include "BaseItem.h"
 #include "BaseBullet.h"
+#include "BaseBullet.h"
 #include "Game.h"
 #include <float.h>
-
+#include "BattleScene.h"
 CBulletImage* CBaseItem::m_shineImage = nullptr;
 
 // プレイヤーがアイテム回収範囲に入った
 const int noTakeCount = 45; // フレーム
-const int fastGetItemCount = 15; // アイテムが取れるようになって0.5秒以内にアイテム取得範囲に入った
+const int fastGetItemCount = 0; // アイテムが取れるようになって0.5秒以内にアイテム取得範囲に入った
 const int nomalGetItemCount = 60; // アイテムが取れるようになって0.5+1秒以内にアイテム取得範囲に入った
 
 //---------------------------------------------------------------------------------
@@ -148,7 +149,7 @@ void CBaseItem::Draw(){
 		double blend = 255.0 - 255.0 * ((double)(m_count) / (noTakeCount + fastGetItemCount + nomalGetItemCount)); // アイテムが取得できる時間 / アイテムが輝いている時間
 		
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blend);
-		CDxFunc::MyDrawRotaGraph(m_pos, m_size*2.0, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, shineImage);
+		CDxFunc::MyDrawRotaGraph(m_pos, m_size * 2.0, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, shineImage);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
@@ -215,7 +216,7 @@ void CBaseItem::SetPreRecovery()
 
 // アイテムによるスコア加算
 void CBaseItem::GetItemAddScore() {
-
+	CBattleScene::AddItem(m_itemRank);
 }
 
 void CBaseItem::SetRemove()
