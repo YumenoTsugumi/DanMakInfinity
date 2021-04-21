@@ -2,6 +2,7 @@
 
 #include "resource.h"
 #include "BaseEffect.h"
+class CBattleScene;
 
 class CBackGround {
 public:
@@ -46,4 +47,9 @@ public:
 	CPos m_movedPlayerPos; // プレイヤーの移動後の初期位置
 	virtual void SetInitPlayerPos(CPos& initPos);
 	virtual void SetPlayerMovedPos(CPos& movedPos);
+
+	void SetBattleScene(CBattleScene* scene) {
+		m_backGround = scene;
+	}
+	CBattleScene* m_backGround;
 };

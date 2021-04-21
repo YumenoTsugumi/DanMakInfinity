@@ -300,9 +300,9 @@ void CGame::ImageLoadByThread()
 
 
 	// 弾が消えるエフェクト
-	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect0", 20801);
-	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect1.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect1", 20802);
-	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect2.png", 4, 4, 1, 16, 16, 2, 0), "BulletDeleteEffect2", 20803);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect0", 20801);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect1.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect1", 20802);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect2.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect2", 20803);
 
 
 

@@ -12,7 +12,7 @@ enum StartLRPos {
 // ---------------------------
 class SpawnerMoveStopMove : public SpawnerBase {
 public:
-	SpawnerMoveStopMove();
+	SpawnerMoveStopMove(EnemySize spawnerSize);
 	~SpawnerMoveStopMove();
 	CInOutBehavior* GetReturnPettern(int spawnerIndex, const CPos& pos, const CPos& targetPos);
 
@@ -25,7 +25,7 @@ public:
 // 上から真ん中まで動いて停止　その後撤退 
 class SpawnerSmallTop_Stop : public SpawnerMoveStopMove {
 public:								
-	SpawnerSmallTop_Stop();
+	SpawnerSmallTop_Stop(EnemySize spawnerSize);
 	virtual ~SpawnerSmallTop_Stop();					
 	virtual void Spawne() override;				
 	double m_appearancePosition; // 出現位置誤差
@@ -33,7 +33,7 @@ public:
 // 左右から真ん中まで動いて停止　その後撤退 
 class SpawnerSmallLeftRight_Stop : public SpawnerMoveStopMove {
 public:
-	SpawnerSmallLeftRight_Stop();
+	SpawnerSmallLeftRight_Stop(EnemySize spawnerSize);
 	virtual ~SpawnerSmallLeftRight_Stop();
 	virtual void Spawne() override;
 
@@ -46,7 +46,7 @@ public:
 // 上から真ん中まで動いて停止　その後撤退 (Line)
 class SpawnerSmall_Line_Top_Stop : public SpawnerMoveStopMove {
 public:
-	SpawnerSmall_Line_Top_Stop();
+	SpawnerSmall_Line_Top_Stop(EnemySize spawnerSize);
 	virtual ~SpawnerSmall_Line_Top_Stop();
 	virtual void Spawne() override;
 	int m_inPettern;// inパターン
@@ -60,7 +60,7 @@ public:
 // 左右から真ん中まで動いて停止　その後撤退 (Line)
 class SpawnerSmall_Line_LeftRight_Stop : public SpawnerMoveStopMove {
 public:
-	SpawnerSmall_Line_LeftRight_Stop();
+	SpawnerSmall_Line_LeftRight_Stop(EnemySize spawnerSize);
 	virtual ~SpawnerSmall_Line_LeftRight_Stop();
 	virtual void Spawne() override;
 	StartLRPos m_LRPettern; // 出現パターン
@@ -82,40 +82,40 @@ public:
 // 止まらず動き続けるパターン
 // ---------------------------
 // 上から出てきて、ゆっくり下がって、そのまま真下に行く
-class SpawnerSmallTop_NoStop : public SpawnerBase {
-public:
-	SpawnerSmallTop_NoStop();
-	virtual ~SpawnerSmallTop_NoStop();
-	virtual void Spawne() override;
-	double m_returnAngle;
-	int m_returnPettern; // 帰りのパターン
-	double m_appearancePosition; // 出現位置誤差
-};
-
-
-	
-class SpawnerSmallTop_Repeat_Stop : public SpawnerBase {
-public:
-	SpawnerSmallTop_Repeat_Stop();
-	virtual ~SpawnerSmallTop_Repeat_Stop();
-	virtual void Spawne() override;
-
-	int spawnerPettern; // 出現パターン
-	double spawnerTargetPosX; // 出現後の移動先の位置
-	double m_appearancePosition; // 出現位置誤差
-
-	int returnPettern; // 帰りのパターン
-};
-
-
-class SpawnerMedium : public SpawnerBase {	
-public:										
-	SpawnerMedium();						
-	virtual ~SpawnerMedium();				
-	virtual void Spawne() override;		
-
-	int spawnerPettern; // 出現パターン
-	double m_appearancePosition; // 出現位置誤差
-
-	virtual CBaseEnemy* GetEnemy(const CPos& pos);
-};											
+//class SpawnerSmallTop_NoStop : public SpawnerBase {
+//public:
+//	SpawnerSmallTop_NoStop(EnemySize spawnerSize);
+//	virtual ~SpawnerSmallTop_NoStop();
+//	virtual void Spawne() override;
+//	double m_returnAngle;
+//	int m_returnPettern; // 帰りのパターン
+//	double m_appearancePosition; // 出現位置誤差
+//};
+//
+//
+//	
+//class SpawnerSmallTop_Repeat_Stop : public SpawnerBase {
+//public:
+//	SpawnerSmallTop_Repeat_Stop(EnemySize spawnerSize);
+//	virtual ~SpawnerSmallTop_Repeat_Stop();
+//	virtual void Spawne() override;
+//
+//	int spawnerPettern; // 出現パターン
+//	double spawnerTargetPosX; // 出現後の移動先の位置
+//	double m_appearancePosition; // 出現位置誤差
+//
+//	int returnPettern; // 帰りのパターン
+//};
+//
+//
+//class SpawnerMedium : public SpawnerBase {	
+//public:										
+//	SpawnerMedium(EnemySize spawnerSize);
+//	virtual ~SpawnerMedium();				
+//	virtual void Spawne() override;		
+//
+//	int spawnerPettern; // 出現パターン
+//	double m_appearancePosition; // 出現位置誤差
+//
+//	virtual CBaseEnemy* GetEnemy(const CPos& pos);
+//};											

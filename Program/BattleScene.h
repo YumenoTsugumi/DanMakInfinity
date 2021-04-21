@@ -32,6 +32,20 @@ public:
 
 	CGame *m_game; // 上位のゲームクラス
 	CPlayer m_player; // プレイヤー自身
+	CPos m_initPlayerPos; // プレイヤーの初期位置
+	CPos GetZureBackGroundSyou() {
+		CPos subPos; // 背景とプレイヤーの位置の位相
+		subPos.x = (m_initPlayerPos.x - m_player.m_pos.x) / 5.0;
+		subPos.y = 0;
+		return subPos;
+	}
+	CPos GetZureBackGroundDai() {
+		CPos subPos; // 背景とプレイヤーの位置の位相
+		subPos.x = (m_initPlayerPos.x - m_player.m_pos.x) / 10.0;
+		subPos.y = 0;
+		return subPos;
+	}
+
 	CBulletManager m_playerBullet; // プレイヤーの弾
 
 	static CEnemyManager m_enemyManager; // 敵
@@ -54,6 +68,8 @@ public:
 		rank1Item = m_takeItemRankCount[0];
 		total = rank3Item * 3 + rank2Item * 2 + rank1Item;
 	}
+	// ランク
+
 
 	// スコア
 	static long long m_hiScore;
@@ -83,6 +99,7 @@ public:
 		Item = 1
 	};
 	void RemoveBullet(); // 弾消し処理
+	static void RemoveBulletByMidiumEnemy(int id); // 弾消し処理
 	static void SetBulletRemoveTime(BulletRemoveType type, int time);
 	static BulletRemoveType m_bulletRemoveType;
 	static int m_bulletRemoveTime;

@@ -193,8 +193,7 @@ void CBattleSceneUI::DrawOutArea()
 	// 得点アイテムの合計
 	int totalItemCount, rank3ItemCount, rank2ItemCount, rank1ItemCount;
 	CBattleScene::GetItemCount(totalItemCount, rank3ItemCount, rank2ItemCount, rank1ItemCount);
-	DrawItemGetCounter(GameWindowAreaRight + 100, 28, 70, 0.7, totalItemCount);
-
+	DrawItemGetCounter(GameWindowAreaRight + 40, 30, 85, 0.7, totalItemCount);
 
 	// 得点アイテムの累計(3ランク)
 	m_rotationAngle += CFunc::ToRad(m_itemImage->m_rotaSpeed);
@@ -204,7 +203,7 @@ void CBattleSceneUI::DrawOutArea()
 	if (m_itemDrawSize2 > 2.0)m_itemDrawSize2 = 0.0;
 	// 3
 	double itemDrawSize = 1.0;
-	CPos itemRank3 = CPos(GameWindowAreaRight + 100, 140);
+	CPos itemRank3 = CPos(GameWindowAreaRight + 40, 140);
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 	CDxFunc::MyDrawRotaGraph(itemRank3, itemDrawSize * 2, m_rotationAngle, m_shineImage->m_images[0]);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -221,21 +220,21 @@ void CBattleSceneUI::DrawOutArea()
 		eff->SetRemoveCount(60);	//60frで削除
 		CBattleScene::m_effectManager.Add(eff);
 	}
-	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 140, 0.5, rank3ItemCount);
+	DrawItemGetCounter(GameWindowAreaRight + 40+40, 18, 140, 0.5, rank3ItemCount);
 
 
 
-	CPos itemRank2 = CPos(GameWindowAreaRight + 100, 190);
+	CPos itemRank2 = CPos(GameWindowAreaRight + 40+40+100+10, 140);
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 192);
 	CDxFunc::MyDrawRotaGraph(itemRank2, itemDrawSize * 2, m_rotationAngle, m_shineImage->m_images[0]);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	CDxFunc::MyDrawRotaGraph(itemRank2, itemDrawSize, m_rotationAngle, m_itemImage->m_images[0]);
-	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 190, 0.5, rank2ItemCount);
+	DrawItemGetCounter(GameWindowAreaRight + 40 + 40 + 100+40, 20, 140, 0.5, rank2ItemCount);
 
-	CPos itemRank1 = CPos(GameWindowAreaRight + 100, 240);
+	CPos itemRank1 = CPos(GameWindowAreaRight + 40 + 40 + 100 +10+ 40+100, 140);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	CDxFunc::MyDrawRotaGraph(itemRank1, itemDrawSize, m_rotationAngle, m_itemImage->m_images[0]);
-	DrawItemGetCounter(GameWindowAreaRight + 160, 20, 240, 0.5, rank1ItemCount);
+	DrawItemGetCounter(GameWindowAreaRight + 40 + 40 + 100 + 40 + 100+40, 20, 140, 0.5, rank1ItemCount);
 }
 
 void CBattleSceneUI::DrawItemGetCounter(double x, double xGap, double y, double size, int value)

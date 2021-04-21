@@ -1,5 +1,6 @@
 ﻿
 #include "BackGround.h"
+#include "BattleScene.h"
 #include "Game.h"
 
 CBackGround::CBackGround() : m_effectManager(512){
@@ -82,19 +83,23 @@ void CBackGroundPatternA::Action()
 void CBackGroundPatternA::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
+	//CPos subPos; // 背景とプレイヤーの位置の位相
+	//subPos.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 5.0;
+	//subPos.y = 0;
+	assert(m_backGround != nullptr);
+	CPos subPos = m_backGround->GetZureBackGroundSyou();
 
-	CPos subPos; // 背景とプレイヤーの位置の位相
-	subPos.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 5.0;
-	subPos.y = 0;
 
 	CDxFunc::MyDrawRotaGraph(m_posSpaceNear[0].x + subPos.x, m_posSpaceNear[0].y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
 	CDxFunc::MyDrawRotaGraph(m_posSpaceNear[1].x + subPos.x, m_posSpaceNear[1].y + subPos.y, 1.0, 180.0 / CFunc::RAD, m_imageNearSpace->m_iamge, TRUE, TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
-	CPos subPos2; // 背景とプレイヤーの位置の位相
-	subPos2.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 10.0;
-	subPos2.y = 0;
+	//CPos subPos2; // 背景とプレイヤーの位置の位相
+	//subPos2.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 10.0;
+	//subPos2.y = 0;
+	CPos subPos2 = m_backGround->GetZureBackGroundSyou();
+
 	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[0].x + subPos2.x, m_posSpaceFarwayY[0].y + subPos2.y, 1.0, 0.0, m_imageFarwaySpace->m_iamge, TRUE, FALSE);
 	if (m_SpaceFarwayLR == CBackGroundPatternA::ImagePosLR::R) {
 		CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[1].x + subPos2.x, m_posSpaceFarwayY[1].y + subPos2.y, 1.0, 180.0 / CFunc::RAD, m_imageFarwaySpace->m_iamge, TRUE, TRUE);

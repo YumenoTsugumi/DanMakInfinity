@@ -10,7 +10,8 @@
 CImage* m_imageRedAura = nullptr;
 CImage* m_imageBlueAura = nullptr;
 
-
+CBattleScene* CBaseBullet::m_scene;
+CBattleScene* CBulletManager::m_scene;
 //---------------------------------------------------------------------------------
 //	CBulletImageInfo
 //---------------------------------------------------------------------------------
@@ -77,6 +78,9 @@ void CBulletManager::Action(){
 }
 
 void CBulletManager::Draw(){
+	CPos subPos = m_scene->GetZureBackGroundSyou();
+
+
 	for (int i = 0; i < m_bulletTotalNum; i++) {
 		if (m_bullet[i] == nullptr) {
 			continue;
@@ -86,10 +90,10 @@ void CBulletManager::Draw(){
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 		if (bullet->m_imageInfo.m_imageNo >= 0 && bullet->m_imageInfo.m_imageNo <= 100) {
 			if (bullet->m_imageInfo.m_imageNo % 10 == 2) {
-				CDxFunc::MyDrawRotaGraph(bullet->m_pos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageBlueAura->m_iamge); // 青オーラ
+				CDxFunc::MyDrawRotaGraph(bullet->m_pos + subPos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageBlueAura->m_iamge); // 青オーラ
 			}
 			else if (bullet->m_imageInfo.m_imageNo % 10 == 1) {
-				CDxFunc::MyDrawRotaGraph(bullet->m_pos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageRedAura->m_iamge); // 赤オーラ
+				CDxFunc::MyDrawRotaGraph(bullet->m_pos + subPos, 1.0f, bullet->m_angle + bullet->m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_imageRedAura->m_iamge); // 赤オーラ
 			}
 		}
 	}
@@ -158,10 +162,11 @@ int CBulletManager::Add(CBaseBullet *Bullet){
 CPos CBaseBullet::m_target;
 CRect CBaseBullet::m_rect;
 
-CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image){
+CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) : 
+	m_shotEnemyId(-1)
+{
 	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
 	SetImage(image);
-
 }
 //CBaseBullet::CBaseBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName){
 //	Set(type, P, speed, angle, corner, acce, maxSpeed, nearAngle);
@@ -204,7 +209,8 @@ void CBaseBullet::Draw(){
 
 	SetDrawBlendMode(m_blendType, 255);
 	//描画
-	CDxFunc::MyDrawRotaGraph(m_pos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	CPos subPos = m_scene->GetZureBackGroundSyou();
+	CDxFunc::MyDrawRotaGraph(m_pos + subPos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
@@ -313,6 +319,8 @@ void CBaseBullet::Set(bool type, CPos P, double speed, double angle, double corn
 	m_removeFlg = false;	
 	// 削除時のエフェクトアリ
 	m_enableRemoveEffect = true;
+	// 発射した敵は後でSetShotEnemyIdする必要あり
+	m_shotEnemyId = -1;
 }
 void CBaseBullet::SetImage(int image){
 	if(image == -1){
@@ -379,4 +387,9 @@ void CBaseBullet::Hit()
 // 削除フラグ立てる
 void CBaseBullet::SetRemove() {
 	m_removeFlg = true;
+}
+
+void CBaseBullet::SetShotEnemyId(int shotEnemyId)
+{
+	m_shotEnemyId = shotEnemyId;
 }

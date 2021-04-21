@@ -6,8 +6,9 @@
 //#include "EnemyMedium.h"
 //#include "EnemyLarge.h"
 
-#include "EnemyS01.h"
-#include "EnemyM02.h"
+#include "EnemyS.h"
+#include "EnemyM.h"
+#include "EnemyL.h"
 
 #include "Spawner.h"
 #include "Game.h"
@@ -28,7 +29,7 @@ StageManager::~StageManager()
 void StageManager::Main()
 {
 	if (m_count >= m_maxCount) {
-		//return;
+		return;
 	}
 
 	static bool debugMode = false;
@@ -63,7 +64,7 @@ void StageManager::AddSpawner()
 
 SpawnerBase* StageManager::GetRandomSpawner()
 {
-	return new SpawnerSmallLeftRight_Stop();
+	return new SpawnerSmallLeftRight_Stop(EnemySize::Small);
 }
 
 SpawnerBase* StageManager::GetTestSpawner()
@@ -72,16 +73,73 @@ SpawnerBase* StageManager::GetTestSpawner()
 	int rand = CFunc::RandI(0, 3);
 	rand = CFunc::RandI(0, 3);
 	//rand = 3;
+	//EnemySize rand2 = (EnemySize)CFunc::RandI(EnemySize::Small, EnemySize::Large);
+
+	int ary[] = { 1,1,2,0,0,2 };
+	static int count = 0;
+	EnemySize ssss = (EnemySize)ary[count];
+	count++;
+	if (count >= 6)ssss = EnemySize::Medium;
+	ssss = EnemySize::Medium;
+
 	switch (rand) {
-		case 0:	return new SpawnerSmallTop_Stop();
-		case 1: return new SpawnerSmallLeftRight_Stop();
-		case 2: return new SpawnerSmall_Line_Top_Stop;
-		case 3: return new SpawnerSmall_Line_LeftRight_Stop;
+		case 0:	return new SpawnerSmallTop_Stop(ssss);
+		case 1: return new SpawnerSmallLeftRight_Stop(ssss);
+		case 2: return new SpawnerSmall_Line_Top_Stop(ssss);
+		case 3: return new SpawnerSmall_Line_LeftRight_Stop(ssss);
 
 		//case 4: return new SpawnerSmallTop_NoStop();
 	}
+	return nullptr;
 }
 
+//---------------------------------------------------
+
+//---------------------------------------------------
+
+SpawnerBase::SpawnerBase(EnemySize spawnerSize) :
+	m_count(0),
+	m_maxCount(0),
+	m_spawneTiming(0),
+	m_deleteFlg(0),
+	m_spawnerIndex(0)
+{
+	SetSpawner(spawnerSize);
+}
+SpawnerBase::~SpawnerBase(){}
+void SpawnerBase::Spawne(){}
+int SpawnerBase::GetPower() { return 1; }
+
+
+void SpawnerBase::SetSpawner(EnemySize spawnerSize)
+{
+	m_spawnerSize = spawnerSize;
+	if (m_spawnerSize == EnemySize::Small) {
+		m_index = GetSmallEnemyIndex();
+		m_maxSpawneCount = 12;
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		m_index = GetMediumEnemyIndex();
+		m_maxSpawneCount = 4;
+	}
+	else if (m_spawnerSize == EnemySize::Large) {
+		m_index = GetLargeEnemyIndex();
+		m_maxSpawneCount = 2;
+	}
+}
+CBaseEnemy* SpawnerBase::GetEnemy(const CPos& pos)
+{
+	if (m_spawnerSize == EnemySize::Small) {
+		return GetSmallEnemy(m_index, pos);
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		return GetMediumEnemy(m_index, pos);
+	}
+	else if (m_spawnerSize == EnemySize::Large) {
+		return GetLargeEnemy(m_index, pos);
+	}
+	return nullptr;
+}
 
 int SpawnerBase::GetSmallEnemyIndex() {
 	//return 7;
@@ -102,21 +160,30 @@ CBaseEnemy* SpawnerBase::GetSmallEnemy(int index, const CPos& pos)
 	}
 	return new CEnemyS01(pos);
 }
-
-
-SpawnerBase::SpawnerBase() :
-	m_count(0),
-	m_maxCount(0),
-	m_spawneTiming(0),
-	m_deleteFlg(0),
-	m_spawneCount(0),
-	m_spawnerIndex(0)
+int SpawnerBase::GetMediumEnemyIndex()
 {
-
+	return CFunc::RandI(1, 1);
 }
-SpawnerBase::~SpawnerBase(){}
-void SpawnerBase::Spawne(){}
-int SpawnerBase::GetPower() { return 1; }
+CBaseEnemy* SpawnerBase::GetMediumEnemy(int index, const CPos& pos)
+{
+	switch (index) {
+		case 1: return new CEnemyM02(pos);
+	}
+	return nullptr;
+}
+int SpawnerBase::GetLargeEnemyIndex()
+{
+	return CFunc::RandI(1, 1);
+}
+CBaseEnemy* SpawnerBase::GetLargeEnemy(int index, const CPos& pos)
+{
+	switch (index) {
+		case 1: return new CEnemyL01(pos);
+	}
+	return nullptr;
+}
+
+
 
 int SpawnerBase::ToSecond(int millSecond)
 {

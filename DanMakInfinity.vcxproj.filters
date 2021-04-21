@@ -114,10 +114,13 @@
     <ClCompile Include="Program\Spawner\Spawner.cpp">
       <Filter>ソース ファイル\Spawner</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Enemy\EnemyS01.cpp">
+    <ClCompile Include="Program\Enemy\EnemyS.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Program\Enemy\EnemyM02.cpp">
+    <ClCompile Include="Program\Enemy\EnemyM.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Program\Enemy\EnemyL.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,10 +200,13 @@
     <ClInclude Include="Program\Spawner\Spawner.h">
       <Filter>ヘッダー ファイル\Spawner</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Enemy\EnemyS01.h">
+    <ClInclude Include="Program\Enemy\EnemyS.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Program\Enemy\EnemyM02.h">
+    <ClInclude Include="Program\Enemy\EnemyM.h">
+      <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\Enemy\EnemyL.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

@@ -161,8 +161,9 @@
     <ClCompile Include="Program\DXFunc.cpp" />
     <ClCompile Include="Program\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Program\Enemy\BehaviorComponent.cpp" />
-    <ClCompile Include="Program\Enemy\EnemyM02.cpp" />
-    <ClCompile Include="Program\Enemy\EnemyS01.cpp" />
+    <ClCompile Include="Program\Enemy\EnemyL.cpp" />
+    <ClCompile Include="Program\Enemy\EnemyM.cpp" />
+    <ClCompile Include="Program\Enemy\EnemyS.cpp" />
     <ClCompile Include="Program\Enemy\MoveComponent.cpp" />
     <ClCompile Include="Program\Func.cpp" />
     <ClCompile Include="Program\Game.cpp" />
@@ -189,8 +190,9 @@
     <ClInclude Include="Program\DXFunc.h" />
     <ClInclude Include="Program\Enemy\BaseEnemy.h" />
     <ClInclude Include="Program\Enemy\BehaviorComponent.h" />
-    <ClInclude Include="Program\Enemy\EnemyM02.h" />
-    <ClInclude Include="Program\Enemy\EnemyS01.h" />
+    <ClInclude Include="Program\Enemy\EnemyL.h" />
+    <ClInclude Include="Program\Enemy\EnemyM.h" />
+    <ClInclude Include="Program\Enemy\EnemyS.h" />
     <ClInclude Include="Program\Enemy\MoveComponent.h" />
     <ClInclude Include="Program\Func.h" />
     <ClInclude Include="Program\Game.h" />

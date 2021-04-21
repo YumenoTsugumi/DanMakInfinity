@@ -37,7 +37,7 @@ long long CBattleScene::m_score = 0;
 int CBattleScene::m_rank = 0;
 
 // 取得アイテム合計数
-int CBattleScene::m_takeItemRankCount[3] = { 0 }; // それぞれのランク毎
+int CBattleScene::m_takeItemRankCount[3] = { 0,0,0 }; // それぞれのランク毎
 
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
@@ -72,9 +72,13 @@ void CBattleScene::Init(CGame* gameP) {
 	CBaseLauncher::SetBulletManagerPointer(&m_bulletManager);
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManager);
 
+	CBaseEnemy::SetBattleScene(this);
+	CBaseBullet::SetBattleScene(this);
+	CBulletManager::SetBattleScene(this);
 
 	// デバッグ用の全敵表示
 	//DebugAllEnemyDirection();
+	m_initPlayerPos = m_player.m_pos;
 
 	m_bg.SetInitPlayerPos(m_player.m_pos);
 
@@ -117,6 +121,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	CBaseBullet::SetTarget(m_player.m_pos);
 	CBaseEnemy::SetTarget(m_player.m_pos);
 	CBaseLauncher::SetTarget(m_player.m_pos);
+	m_bg.SetBattleScene(this);
 	SetPlayerPos(m_player.m_pos);
 
 	m_playerBullet.Action();
@@ -155,6 +160,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	// デバッグコマンド
 	DebugCommand();
+
 }
 
 // ランクUP
@@ -186,7 +192,7 @@ void CBattleScene::AddItem(int itemRank) // itemRank 1 2 3
 void CBattleScene::SetBulletRemoveTime(BulletRemoveType type, int time)
 {
 	m_bulletRemoveType = type;
-	m_bulletRemoveTime = time; // 1なら1fr弾けしする
+	m_bulletRemoveTime = time; // 1なら1fr弾消しする
 	m_bulletRemoveCount = 0;
 }
 // 弾消し処理
@@ -195,7 +201,7 @@ void CBattleScene::RemoveBullet()
 	if (m_bulletRemoveCount >= m_bulletRemoveTime) {
 		return; // 弾消し終了
 	}
-	if(m_bulletRemoveCount)
+
 	for (int ii = 0; ii < m_bulletManager.m_bulletTotalNum; ii++) {
 		if (m_bulletManager.m_bullet[ii] == nullptr) {
 			continue;
@@ -205,21 +211,39 @@ void CBattleScene::RemoveBullet()
 
 		// 削除時アイテムなら
 		if (m_bulletRemoveType == BulletRemoveType::Item) {
-			// アイテム
-			int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
-
-			double ang = 270.0;
-			double speed = 1.0 + CFunc::RandF(1000, 3000) / 1000.0;
-			CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, itemImage[CFunc::RandI(0, 5)]);
-			eff->SetSize(0.0, +0.033, 0.125);
+			double ang = CFunc::RandI(270-2, 270+2);
+			double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+			CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
+			CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, 20720);
+			eff->SetSize(1.0, 0, 1.0);
 			CBattleScene::m_itemManager.Add(eff);
-
 		}
 	}
 
 	m_bulletRemoveCount++;
 }
+#include "BaseEffect.h"
+void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
+{
+	for (int ii = 0; ii < m_bulletManager.m_bulletTotalNum; ii++) {
+		if (m_bulletManager.m_bullet[ii] == nullptr) {
+			continue;
+		}
+		CBaseBullet* bullet = m_bulletManager.m_bullet[ii];
+		if (bullet->m_shotEnemyId != id) {
+			continue;
+		}
+		bullet->SetRemove();
 
+		double ang = CFunc::RandI(270 - 2, 270 + 2);
+		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+		CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
+		CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, 20720);
+		eff->SetSize(1.0, 0, 1.0);
+		CBattleScene::m_itemManager.Add(eff);
+		
+	}
+}
 
 // 全敵表示
 void CBattleScene::DebugAllEnemyDirection()

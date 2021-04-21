@@ -2,7 +2,8 @@
 #include "BattleScene.h"
 
 CPos CBaseEnemy::m_target;
-
+int CBaseEnemy::m_globalEnemyId = 0; // 発射ID（中型機の弾消し用のID）
+CBattleScene* CBaseEnemy::m_scene;
 //---------------------------------------------------------------------------------
 //	CEnemyManager
 //---------------------------------------------------------------------------------
@@ -103,6 +104,7 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 	m_drawSizeRatio(1.0)
 {
 	m_rank = CBattleScene::GetRank();
+	m_enemyId = m_globalEnemyId++;
 }
 
 CBaseEnemy::~CBaseEnemy() {
@@ -171,8 +173,7 @@ void CBaseEnemy::Die() {
 	}
 
 	// アイテム
-	int itemCount = (m_size + 1) * 10;
-	int itemImage[6] = { 20700 ,20701 ,20702 ,20703 ,20704 ,20705 };
+	int itemCount = (m_size + 1) * 10; // 大30　中20　小10
 	for (int ii = 0; ii < itemCount; ii++) {
 		double ang = CFunc::RandI(180+60, 360-60);
 		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
@@ -184,7 +185,10 @@ void CBaseEnemy::Die() {
 
 	// 大型機の場合、全部弾消し
 	if (m_size == EnemySize::Large) {
-		CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 30);
+		CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 60);
+	}
+	else if (m_size == EnemySize::Medium) { // 中型機の場合、その機体が出した弾をすべて消す
+		CBattleScene::RemoveBulletByMidiumEnemy(GetEnemyId());
 	}
 }
 

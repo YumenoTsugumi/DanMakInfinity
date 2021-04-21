@@ -6,7 +6,7 @@
 
 #include <vector>
 #include "Game.h"
-
+class CBattleScene;
 class CBaseLauncher;
 
 class CBaseEnemy;
@@ -83,7 +83,11 @@ public:
 	bool m_removeFlg; // trueになると勝手に削除しｔくれる
 
 	EnemySize m_size; // 大中小
-	
+
+	static int m_globalEnemyId; // 発射IDインクリメント
+	int m_enemyId; // 発射ID（中型機の弾消し用のID）
+	int GetEnemyId() { return m_enemyId; }
+
 	bool m_shotTiming; // CBehaviorComponent以外で撃つタイミングを制御したい場合(trueならうつ)
 	void SetMovingShot() { // 動いていても打つ
 		m_shotTiming = true;
@@ -121,6 +125,11 @@ public:
 	void DebugCollisionDraw();
 	// ランチャーの位置を可視化
 	void DebugLauncherDraw();
+
+	static void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	static CBattleScene* m_scene;
 };
 
 /*

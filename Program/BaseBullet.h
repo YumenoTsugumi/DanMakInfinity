@@ -11,7 +11,7 @@ class CBulletImageInfo;
 
 class CResourceManager;
 
-
+class CBattleScene;
 
 
 enum EDirType
@@ -103,6 +103,11 @@ public:
 	virtual void Draw();
 
 	int Add(CBaseBullet *bullet);
+
+	static void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	static CBattleScene* m_scene;
 };
 
 //---------------------------------------------------------------------------------
@@ -156,6 +161,9 @@ public:
 	double m_angle, m_speed;
 	double m_corner, m_accelerate, m_maxsp;
 
+	int m_shotEnemyId;
+	void SetShotEnemyId(int shotEnemyId);
+
 	// íœƒtƒ‰ƒO—§‚Ä‚é
 	void SetRemove();
 public:
@@ -189,6 +197,11 @@ public:
 
 	// ’e‚ª‰½‚©‚É“–‚½‚Á‚½
 	void virtual Hit();
+
+	static void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	static CBattleScene* m_scene;
 };
 
 
