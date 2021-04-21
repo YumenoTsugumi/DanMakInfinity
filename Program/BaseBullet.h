@@ -103,11 +103,6 @@ public:
 	virtual void Draw();
 
 	int Add(CBaseBullet *bullet);
-
-	static void SetBattleScene(CBattleScene* scene) {
-		m_scene = scene;
-	}
-	static CBattleScene* m_scene;
 };
 
 //---------------------------------------------------------------------------------
@@ -197,11 +192,6 @@ public:
 
 	// ’e‚ª‰½‚©‚É“–‚½‚Á‚½Žž
 	void virtual Hit();
-
-	static void SetBattleScene(CBattleScene* scene) {
-		m_scene = scene;
-	}
-	static CBattleScene* m_scene;
 };
 
 

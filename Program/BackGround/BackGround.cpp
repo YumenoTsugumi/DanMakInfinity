@@ -86,8 +86,8 @@ void CBackGroundPatternA::Draw() {
 	//CPos subPos; // 背景とプレイヤーの位置の位相
 	//subPos.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 5.0;
 	//subPos.y = 0;
-	assert(m_backGround != nullptr);
-	CPos subPos = m_backGround->GetZureBackGroundSyou();
+	assert(m_scene != nullptr);
+	CPos subPos = m_scene->GetBackGroundscrollSmall();
 
 
 	CDxFunc::MyDrawRotaGraph(m_posSpaceNear[0].x + subPos.x, m_posSpaceNear[0].y + subPos.y, 1.0, 0.0, m_imageNearSpace->m_iamge, TRUE, FALSE);
@@ -98,7 +98,7 @@ void CBackGroundPatternA::Draw() {
 	//CPos subPos2; // 背景とプレイヤーの位置の位相
 	//subPos2.x = (m_initPlayerPos.x - m_movedPlayerPos.x) / 10.0;
 	//subPos2.y = 0;
-	CPos subPos2 = m_backGround->GetZureBackGroundSyou();
+	CPos subPos2 = m_scene->GetBackGroundscrollLarge();
 
 	CDxFunc::MyDrawRotaGraph(m_posSpaceFarwayY[0].x + subPos2.x, m_posSpaceFarwayY[0].y + subPos2.y, 1.0, 0.0, m_imageFarwaySpace->m_iamge, TRUE, FALSE);
 	if (m_SpaceFarwayLR == CBackGroundPatternA::ImagePosLR::R) {

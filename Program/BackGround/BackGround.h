@@ -49,7 +49,7 @@ public:
 	virtual void SetPlayerMovedPos(CPos& movedPos);
 
 	void SetBattleScene(CBattleScene* scene) {
-		m_backGround = scene;
+		m_scene = scene;
 	}
-	CBattleScene* m_backGround;
+	CBattleScene* m_scene;
 };

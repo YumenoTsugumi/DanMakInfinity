@@ -10,8 +10,6 @@
 CImage* m_imageRedAura = nullptr;
 CImage* m_imageBlueAura = nullptr;
 
-CBattleScene* CBaseBullet::m_scene;
-CBattleScene* CBulletManager::m_scene;
 //---------------------------------------------------------------------------------
 //	CBulletImageInfo
 //---------------------------------------------------------------------------------
@@ -78,8 +76,7 @@ void CBulletManager::Action(){
 }
 
 void CBulletManager::Draw(){
-	CPos subPos = m_scene->GetZureBackGroundSyou();
-
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 
 	for (int i = 0; i < m_bulletTotalNum; i++) {
 		if (m_bullet[i] == nullptr) {
@@ -209,7 +206,7 @@ void CBaseBullet::Draw(){
 
 	SetDrawBlendMode(m_blendType, 255);
 	//•`‰æ
-	CPos subPos = m_scene->GetZureBackGroundSyou();
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 	CDxFunc::MyDrawRotaGraph(m_pos + subPos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;

@@ -2,7 +2,7 @@
 #include "DXFunc.h"
 #include "BaseBeam.h"
 #include "Game.h"
-
+#include "BattleScene.h"
 //---------------------------------------------------------------------------------
 //	CBeamManager
 //---------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ void CBaseBeam::Action() {
 
 void CBaseBeam::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 	//‘äÀ
 	double siz = 1.0 * m_removeSize;
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, siz, 0.0, m_imageStand->m_iamge);
@@ -245,7 +245,7 @@ void CBaseBeam::Draw() {
 			double x, y;
 			x = m_pos.x + cos(m_drawAngle) * (double)i / 2 * m_speed;
 			y = m_pos.y + sin(m_drawAngle) * (double)i / 2 * m_speed;
-			CDxFunc::MyDrawRotaGraph(x, y, 0.12, m_drawAngle + 90.0 / CFunc::RAD, m_imageLaser->m_iamge);
+			CDxFunc::MyDrawRotaGraph(x + subPos.x, y + subPos.y, 0.12, m_drawAngle + 90.0 / CFunc::RAD, m_imageLaser->m_iamge);
 		}
 	}
 
@@ -255,7 +255,7 @@ void CBaseBeam::Draw() {
 			double bure = CFunc::RandF(-5, 5) / CFunc::RAD;
 			//íœ’†‚¾‚Æ‚¾‚ñ‚¾‚ñ¬‚³‚­‚·‚é
 			double siz = 1.0 * m_removeSize;
-			CDxFunc::MyDrawRotaGraph(m_bullet[i]->m_pos, siz, m_drawAngle + 90.0 / CFunc::RAD + bure, m_imageLaser->m_iamge);
+			CDxFunc::MyDrawRotaGraph(m_bullet[i]->m_pos + subPos, siz, m_drawAngle + 90.0 / CFunc::RAD + bure, m_imageLaser->m_iamge);
 		}
 	}
 

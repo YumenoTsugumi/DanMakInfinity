@@ -26,9 +26,7 @@ void CEnemyM02::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	double angle = GetFinalDirectionRad() - CFunc::ToRad(90.0);
 
-	CPos subPos = m_scene->GetZureBackGroundSyou();
-
-	CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+	BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
 
 	DebugCollisionDraw();
 	DebugLauncherDraw();
@@ -57,7 +55,7 @@ void CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int span = 3 * RankSpan(); // 弾を撃つ間隔
 	if (m_count == startTime) {
 
-		int loopBulletNum[3] = { 7,6,5};
+		int loopBulletNum[3] = { 7, 6, 5};
 
 		std::vector < std::vector<double>> angleAry;
 		std::vector<double> tempAry7 = { -3.0, -2.0, -1.0, 0 , 1.0, 2.0, 3.0 };
@@ -67,22 +65,22 @@ void CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		angleAry.push_back(tempAry6);
 		angleAry.push_back(tempAry5);
 
-		//double sppedTemp = 0;
-		//for (std::vector<double> ary : angleAry) {
-		//	sppedTemp += 0.4;
-		//	for (double angle : ary) {
-		//		double speed = 9.5 * RankSpeed() + sppedTemp;
-		//		CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle*5, 0, 0, 0, 0, 1);
-		//		b->SetShotEnemyId(m_parent->GetEnemyId());
-		//		CBaseLauncher::m_bulletManager->Add(b);
-		//	}
-		//}
-		for (int ii = 0; ii < 360; ii++) {
-			double speed = 3.5 * RankSpeed();
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, ii * 1, 0, 0, 0, 0, 1);
-			b->SetShotEnemyId(m_parent->GetEnemyId());
-			CBaseLauncher::m_bulletManager->Add(b);
+		double sppedTemp = 0;
+		for (std::vector<double> ary : angleAry) {
+			sppedTemp += 0.4;
+			for (double angle : ary) {
+				double speed = 9.5 * RankSpeed() + sppedTemp;
+				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle*5, 0, 0, 0, 0, 1);
+				b->SetShotEnemyId(m_parent->GetEnemyId());
+				CBaseLauncher::m_bulletManager->Add(b);
+			}
 		}
+		//for (int ii = 0; ii < 360; ii++) {
+		//	double speed = 3.5 * RankSpeed();
+		//	CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, ii * 1, 0, 0, 0, 0, 1);
+		//	b->SetShotEnemyId(m_parent->GetEnemyId());
+		//	CBaseLauncher::m_bulletManager->Add(b);
+		//}
 	}
 
 

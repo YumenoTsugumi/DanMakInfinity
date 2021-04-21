@@ -33,17 +33,26 @@ public:
 	CGame *m_game; // 上位のゲームクラス
 	CPlayer m_player; // プレイヤー自身
 	CPos m_initPlayerPos; // プレイヤーの初期位置
-	CPos GetZureBackGroundSyou() {
+	CPos GetBackGroundscrollSmall() {
 		CPos subPos; // 背景とプレイヤーの位置の位相
 		subPos.x = (m_initPlayerPos.x - m_player.m_pos.x) / 5.0;
 		subPos.y = 0;
 		return subPos;
 	}
-	CPos GetZureBackGroundDai() {
+	CPos GetBackGroundscrollLarge() {
 		CPos subPos; // 背景とプレイヤーの位置の位相
 		subPos.x = (m_initPlayerPos.x - m_player.m_pos.x) / 10.0;
 		subPos.y = 0;
 		return subPos;
+	}
+
+	// CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
+	static CBattleScene* m_scene;
+	static void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	static CBattleScene* GetBattleScene() {
+		return m_scene;
 	}
 
 	CBulletManager m_playerBullet; // プレイヤーの弾

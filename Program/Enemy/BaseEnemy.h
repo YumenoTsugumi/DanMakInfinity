@@ -61,6 +61,8 @@ public:
 
 	virtual void Action();
 	virtual void Draw();
+	void BaseDraw(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag);
+
 	virtual void Shot();
 	virtual void Damaged(int damage); // ダメージを受けたとき
 	virtual void Die(); // 死んだ時

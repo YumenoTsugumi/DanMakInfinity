@@ -18,6 +18,9 @@ bool CBattleScene::m_enemyLauncherDraw = false;
 bool CBattleScene::m_enableDebugCommand = true;
 CPos CBattleScene::m_playerPos;
 
+
+CBattleScene* CBattleScene::m_scene = nullptr;
+
 //静的なのを使うにはコレがいる？
 //CResourceManager* CScene::resManager;
 
@@ -72,9 +75,7 @@ void CBattleScene::Init(CGame* gameP) {
 	CBaseLauncher::SetBulletManagerPointer(&m_bulletManager);
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManager);
 
-	CBaseEnemy::SetBattleScene(this);
-	CBaseBullet::SetBattleScene(this);
-	CBulletManager::SetBattleScene(this);
+	SetBattleScene(this);
 
 	// デバッグ用の全敵表示
 	//DebugAllEnemyDirection();
@@ -157,6 +158,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_ui.Draw();
 
 	m_effectManager.Draw(60); // 60 UI
+
 
 	// デバッグコマンド
 	DebugCommand();

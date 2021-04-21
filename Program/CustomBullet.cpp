@@ -2,7 +2,7 @@
 #include "DXFunc.h"
 #include "BaseBullet.h"
 #include "CustomBullet.h"
-
+#include "BattleScene.h"
 CBulletManager* CCustomBullet::m_manager = nullptr;
 
 CCustomBullet::CCustomBullet(EDirType type, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, int image) :
@@ -79,12 +79,14 @@ void CCustomBullet::Action(){
 }
 
 void CCustomBullet::Draw(){
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
+
 	if(m_standByCount < m_standByTime){
 		//ŽÀ‘Ì‰»’†
 		int alpha = (int)((double)255 * ((double)m_standByCount / m_standByTime ));
 
 		SetDrawBlendMode( DX_BLENDMODE_ALPHA , alpha ) ;
-		CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 1.0, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos + subPos, 1.0, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 	} else {
 		//’Êí•`‰æ
 		CBaseBullet::Draw();

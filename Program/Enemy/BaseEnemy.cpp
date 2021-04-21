@@ -126,6 +126,12 @@ void CBaseEnemy::Draw() {
 
 }
 
+void CBaseEnemy::BaseDraw(CPos p, double ExtRate, double Angle, int GrHandle, int TransFlag, int TurnFlag)
+{
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
+	CDxFunc::MyDrawRotaGraph(p + subPos, ExtRate, Angle, GrHandle, TransFlag, TurnFlag);
+}
+
 void CBaseEnemy::Shot()
 {
 	for (CBaseLauncher* l : m_launchers) {

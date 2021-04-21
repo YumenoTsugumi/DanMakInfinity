@@ -50,4 +50,7 @@ public:
 
 	// 弾が何かに当たった時
 	void virtual Hit();
+
+	//メイン描画
+	virtual void Draw();
 };

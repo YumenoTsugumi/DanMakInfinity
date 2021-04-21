@@ -4,6 +4,7 @@
 #include "BaseBullet.h"
 #include "Game.h"
 #include <float.h>
+#include "BattleScene.h"
 
 //---------------------------------------------------------------------------------
 //	CEffectManager
@@ -182,7 +183,8 @@ void CBaseEffect::Draw(){
 		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
 	//•`‰æ
-	CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
+	CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }

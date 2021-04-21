@@ -216,3 +216,29 @@ void CPlayerBullet::Hit()
 
 	CBattleScene::m_effectManager.Add(eff);
 }
+
+//メイン描画
+void CPlayerBullet::Draw()
+{
+	SetDrawBlendMode(m_blendType, 255);
+
+	//アニメフラグがONなら
+	if (m_imageInfo.m_animeFlg == true) {
+		if (m_count % m_imageInfo.m_animeSpeed == 0) {
+			m_imageInfo.m_animePos++;
+			if (m_imageInfo.m_animePos >= m_imageInfo.m_animeNum) {
+				m_imageInfo.m_animePos = 0;
+			}
+		}
+	}
+	//回転フラグがONなら
+	if (m_imageInfo.m_rotationFlg == true) {
+		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
+	}
+
+	SetDrawBlendMode(m_blendType, 255);
+	//描画
+	CDxFunc::MyDrawRotaGraph(m_pos, 1.0f, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}

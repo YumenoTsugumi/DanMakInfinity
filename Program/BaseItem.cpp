@@ -140,6 +140,7 @@ void CBaseItem::Draw(){
 
 	//描画
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 	int itemRank = GetSurvivalTimeRank();
 	if (m_recoveryFlag) {
 		itemRank = m_itemRank; // 自動取得モードになってるなら、その時時点の値にする
@@ -149,14 +150,14 @@ void CBaseItem::Draw(){
 		double blend = 255.0 - 255.0 * ((double)(m_count) / (noTakeCount + fastGetItemCount + nomalGetItemCount)); // アイテムが取得できる時間 / アイテムが輝いている時間
 		
 		SetDrawBlendMode(DX_BLENDMODE_ADD, blend);
-		CDxFunc::MyDrawRotaGraph(m_pos, m_size * 2.0, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, shineImage);
+		CDxFunc::MyDrawRotaGraph(m_pos+ subPos, m_size * 2.0, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, shineImage);
 
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 	}
 	else {
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
 	}
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
