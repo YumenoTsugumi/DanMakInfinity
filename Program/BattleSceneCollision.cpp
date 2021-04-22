@@ -26,8 +26,7 @@ void CBattleScene::Collision_Enemy_PulyerBullet()
 				}
 				CPlayerBullet* playerBullet = (CPlayerBullet*)m_playerBullet.m_bullet[ii];
 
-
-				if (CFunc::CollisionCircleToCircle(playerBullet->m_pos, playerBullet->m_hitSize, ep, size)) {
+				if (CFunc::CollisionCircleToCircle(playerBullet->m_pos - GetBackGroundscrollSmall(), playerBullet->m_hitSize, ep, size)) {
 					enemy->Damaged(playerBullet->m_damage); // 爆発エフェクトはここ
 					playerBullet->Hit(); // ヒットエフェクトはココ
 					continue;
@@ -50,7 +49,7 @@ void CBattleScene::Collision_Item_Player()
 		CBaseItem* item = (CBaseItem*)m_itemManager.m_bullet[jj];
 	
 		// アイテム取得範囲
-		if (item->IsTakeTime() && CFunc::CollisionCircleToCircle(m_player.m_pos, 32, item->m_pos, 0)) {
+		if (item->IsTakeTime() && CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), 32, item->m_pos, 0)) {
 			item->GetItemAddScore();
 			item->SetRemove();
 			continue;
@@ -58,7 +57,7 @@ void CBattleScene::Collision_Item_Player()
 		if (item->GetRecoveryFlag())continue; // アイテム自動回収フラグが立っていると、この後の処理が不要
 
 		// アイテム自動回収範囲
-		if (CFunc::CollisionCircleToCircle(m_player.m_pos, 256+128, item->m_pos, 0)) {
+		if (CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), 256+128, item->m_pos, 0)) {
 			if (!item->IsTakeTime()) {
 				item->SetPreRecovery();
 				continue;

@@ -111,6 +111,9 @@ public:
 	//virtual void RectOut();
 	//çÌèú
 	virtual void Remove();
+
+	bool m_scroll;
+	void SetScroll(bool scroll) { m_scroll = scroll; }
 };
 
 //--------------------------------------------------------------------------------------------------------------

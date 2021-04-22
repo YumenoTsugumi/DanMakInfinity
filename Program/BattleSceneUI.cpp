@@ -218,6 +218,7 @@ void CBattleSceneUI::DrawOutArea()
 		eff->SetBlendType(DX_BLENDMODE_ADD);
 		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
 		eff->SetRemoveCount(60);	//60frで削除
+		eff->SetScroll(false);
 		CBattleScene::m_effectManager.Add(eff);
 	}
 	DrawItemGetCounter(GameWindowAreaRight + 40+40, 18, 140, 0.5, rank3ItemCount);

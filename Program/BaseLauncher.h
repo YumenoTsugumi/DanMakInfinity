@@ -48,7 +48,9 @@ protected:
 
 protected:
 
-	double RankSpeed(); // ランクによる速度変化を返す
+	double Rank10To15(); // ランクによる数値を返す 1.0-1.5
+
+	double RankSpeed(); // ランクによる速度変化を返す 1.0-2.0
 	double RankBulletNum(); // ランクによる弾の総数を返す
 	double RankSpan(); // ランクによる発射間隔を返す
 	int RankWay(); // ランクによるnway弾の個数を返す

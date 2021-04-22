@@ -73,6 +73,10 @@ void CBaseLauncher::SetParent(CBaseEnemy* parent)
 　弾追加　　（追加）弾速4.0　弾数4.0　間隔1.5
 */
 
+double CBaseLauncher::Rank10To15() {
+	return 1.0 + 0.5 * (m_rank / 100.0);
+}
+
 // ランクによる速度変化を返す
 double CBaseLauncher::RankSpeed(){
 	return 1.0 + 1.0 * (m_rank / 100.0);

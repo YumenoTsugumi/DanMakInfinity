@@ -239,10 +239,12 @@ void CBaseBullet::Move(){
 
 void CBaseBullet::RectOut(){
 	//óÃàÊäOÇ…èoÇΩÇÁçÌèú
-	if(	m_pos.x <	CGame::GetGameRect().leftUp.x		- m_imageInfo.m_sizeX/2	|| 
-		m_pos.x >	CGame::GetGameRect().rightDown.x	+ m_imageInfo.m_sizeX/2	|| 
-		m_pos.y <	CGame::GetGameRect().leftUp.y		- m_imageInfo.m_sizeY/2	|| 
-		m_pos.y >	CGame::GetGameRect().rightDown.y	+ m_imageInfo.m_sizeY/2	){
+	const double bufferW = CGame::GetAllGameRect().x * 0.05;
+	const double bufferH = CGame::GetAllGameRect().y * 0.05;
+	if(	m_pos.x <	CGame::GetGameRect().leftUp.x		- m_imageInfo.m_sizeX/2	- bufferW ||
+		m_pos.x >	CGame::GetGameRect().rightDown.x	+ m_imageInfo.m_sizeX/2 + bufferW ||
+		m_pos.y <	CGame::GetGameRect().leftUp.y		- m_imageInfo.m_sizeY/2 - bufferH ||
+		m_pos.y >	CGame::GetGameRect().rightDown.y	+ m_imageInfo.m_sizeY/2 + bufferH){
 		m_removeFlg = true;
 	}
 }

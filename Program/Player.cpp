@@ -207,7 +207,7 @@ void CPlayerBullet::Hit()
 
 	CPos pp(CFunc::RandF(0, WindowX), CFunc::RandF(0, 400));
 	double ang = CFunc::RandF(0, 360);
-	CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_pos, 0.1, ang, 0, 0, 0, 0, 20600);
+	CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_pos - CBattleScene::GetBattleScene()->GetBackGroundscrollSmall(), 0.1, ang, 0, 0, 0, 0, 20600);
 	eff->SetSize(0.35, +0.0);
 	eff->SetBlend(64, -0, 0);
 	eff->SetBlendType(DX_BLENDMODE_ADD);

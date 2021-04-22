@@ -119,9 +119,9 @@ void CBattleScene::Main(CInputAllStatus *input){
 	RemoveBullet(); // íeè¡Çµèàóù
 
 	m_bg.SetPlayerMovedPos(m_player.m_pos);
-	CBaseBullet::SetTarget(m_player.m_pos);
-	CBaseEnemy::SetTarget(m_player.m_pos);
-	CBaseLauncher::SetTarget(m_player.m_pos);
+	CBaseBullet::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
+	CBaseEnemy::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
+	CBaseLauncher::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
 	m_bg.SetBattleScene(this);
 	SetPlayerPos(m_player.m_pos);
 

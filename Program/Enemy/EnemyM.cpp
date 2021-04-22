@@ -54,35 +54,28 @@ void CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int resetTime = endTime + 300; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
 	int span = 3 * RankSpan(); // 弾を撃つ間隔
 	if (m_count == startTime) {
+		struct LoopBullet {
+			int num;
+			double angle;
+			double speed;
+		};
 
-		int loopBulletNum[3] = { 7, 6, 5};
+		std::vector<LoopBullet> loopBullet;
+		//								num angle speed
+		loopBullet.push_back(LoopBullet{ 7 + RankRapidA(),  5.0 * Rank10To15(),  5.5 * Rank10To15() });
+		loopBullet.push_back(LoopBullet{ 6 + RankRapidA(),  4.0 * Rank10To15(),  5.0 * Rank10To15() });
+		loopBullet.push_back(LoopBullet{ 5 + RankRapidA(),  3.0 * Rank10To15(),  4.5 * Rank10To15() });
 
-		std::vector < std::vector<double>> angleAry;
-		std::vector<double> tempAry7 = { -3.0, -2.0, -1.0, 0 , 1.0, 2.0, 3.0 };
-		std::vector<double> tempAry6 = { -2.5, -1.5, -0.5, 0.5, 1.5, 2.5 };
-		std::vector<double> tempAry5 = { -2.0, -1.0, 0 , 1.0, 2.0, };
-		angleAry.push_back(tempAry7);
-		angleAry.push_back(tempAry6);
-		angleAry.push_back(tempAry5);
-
-		double sppedTemp = 0;
-		for (std::vector<double> ary : angleAry) {
-			sppedTemp += 0.4;
-			for (double angle : ary) {
-				double speed = 9.5 * RankSpeed() + sppedTemp;
-				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle*5, 0, 0, 0, 0, 1);
+		for (const LoopBullet& bullet : loopBullet) {
+			for (int jj = 0; jj < bullet.num; jj++) {
+				double speed = 6.5 * RankSpeed() + bullet.speed;
+				double angle = -bullet.angle + bullet.angle * ((double)jj / bullet.num) * 2.0;
+				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
 				b->SetShotEnemyId(m_parent->GetEnemyId());
 				CBaseLauncher::m_bulletManager->Add(b);
 			}
 		}
-		//for (int ii = 0; ii < 360; ii++) {
-		//	double speed = 3.5 * RankSpeed();
-		//	CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, ii * 1, 0, 0, 0, 0, 1);
-		//	b->SetShotEnemyId(m_parent->GetEnemyId());
-		//	CBaseLauncher::m_bulletManager->Add(b);
-		//}
 	}
-
 
 	if (m_count >= resetTime) {
 		m_count = 0;

@@ -45,6 +45,9 @@ public:
 		subPos.y = 0;
 		return subPos;
 	}
+	CPos GetPlayerPosByScroll() {
+		return m_player.m_pos - GetBackGroundscrollSmall();
+	}
 
 	// CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 	static CBattleScene* m_scene;

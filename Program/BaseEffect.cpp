@@ -77,6 +77,7 @@ void CBaseEffect::Set(){
 
 	m_waitCount = 0;
 	m_waitTime = 0;
+	m_scroll = true;
 }
 
 void CBaseEffect::Action(){
@@ -183,8 +184,13 @@ void CBaseEffect::Draw(){
 		m_imageInfo.m_rotationAngle += m_imageInfo.m_rotationSpeed;
 	}
 	//•`‰æ
-	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
-	CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0/CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	if (m_scroll) {
+		CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
+		CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	}
+	else {
+		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+	}
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }
