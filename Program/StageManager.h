@@ -6,8 +6,7 @@
 
 class SpawnerBase;
 class CBaseEnemy;
-const int FormationSpawneTiming = 2; // 3秒ごとに編隊をスポーンする間隔
-const int FormationSpawneFinishTiming = 1.2; // 1編隊の全敵をスポーンする時間(秒)
+
 
 class StageManager {
 public:
@@ -15,16 +14,22 @@ public:
 	virtual ~StageManager();
 	int m_count;
 	int m_maxCount;
-	int m_spawneTiming;
+	int m_spawneTimingSmallA;
+	int m_spawneTimingSmallB;
 	std::vector<SpawnerBase*> m_spawners;
 
 	// 編隊を強さに振り分けるやつ
 	int m_strengthCounter;
 
 	void Main();
-	void AddSpawner();
+
 	SpawnerBase* GetRandomSpawner();
 	SpawnerBase* GetTestSpawner();
+
+	void AddSpawnerA();
+	void AddSpawnerB();
+	SpawnerBase* GetRandomSpawner_SmallA();
+	SpawnerBase* GetRandomSpawner_SmallB();
 };
 
 class SpawnerBase {
@@ -34,6 +39,8 @@ public:
 	int m_spawneTiming;
 	bool m_deleteFlg;
 	int m_spawnerIndex;
+
+	double m_speed;
 
 	SpawnerBase(EnemySize spawnerSize);
 	virtual ~SpawnerBase();

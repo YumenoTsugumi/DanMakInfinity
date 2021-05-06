@@ -13,11 +13,19 @@
 #include "Spawner.h"
 #include "Game.h"
 
+const int FormationSpawneSmallATiming = 3; // 3秒ごとに編隊をスポーンする間隔
+const int FormationSpawneSmallBTiming = 5; // 5秒ごとに編隊をスポーンする間隔
+const int FormationSpawneFinishTiming = 1.2; // 1編隊の全敵をスポーンする時間(秒)
+
 StageManager::StageManager()
 {
 	m_count = 0;
 	m_maxCount = 60*120; // 120s
-	m_spawneTiming = 60 * FormationSpawneTiming; // n秒毎に敵スポーン
+
+	m_spawneTimingSmallA = 60 * FormationSpawneSmallATiming; // n秒毎に敵スポーン
+	m_spawneTimingSmallB = 60 * FormationSpawneSmallBTiming; // n秒毎に敵スポーン
+
+
 	m_strengthCounter = 0;
 }
 
@@ -34,11 +42,22 @@ void StageManager::Main()
 
 	static bool debugMode = false;
 	static int debugOnce = 0;
-	// 編隊の出現順番
-	if (m_count % m_spawneTiming == 0 && (debugOnce == 0 || !debugMode)) {
+	if (m_count % m_spawneTimingSmallA == 0 && (debugOnce == 0 || !debugMode)) {
 		debugOnce++;
-		AddSpawner();
+		//GetTestSpawner();
+		SpawnerBase* spawner = GetTestSpawner();
+		m_spawners.push_back(spawner);
 	}
+
+	// 編隊の出現順番
+	//if (m_count % m_spawneTimingSmallA == 0 && (debugOnce == 0 || !debugMode)) {
+	//	debugOnce++;
+	//	AddSpawnerA();
+	//}
+	//if (m_count % m_spawneTimingSmallB == 0 && (debugOnce == 0 || !debugMode)) {
+	//	debugOnce++;
+	//	AddSpawnerB();
+	//}
 
 	for (auto it = m_spawners.begin(); it != m_spawners.end();) {
 		SpawnerBase* spawner = *it;
@@ -55,10 +74,14 @@ void StageManager::Main()
 }
 
 
-void StageManager::AddSpawner()
+void StageManager::AddSpawnerA()
 {
-	//SpawnerBase* spawner = GetRandomSpawner();
-	SpawnerBase* spawner = GetTestSpawner();
+	SpawnerBase* spawner = GetRandomSpawner_SmallA();
+	m_spawners.push_back(spawner);
+}
+void StageManager::AddSpawnerB()
+{
+	SpawnerBase* spawner = GetRandomSpawner_SmallB();
 	m_spawners.push_back(spawner);
 }
 
@@ -67,13 +90,33 @@ SpawnerBase* StageManager::GetRandomSpawner()
 	return new SpawnerSmallLeftRight_Stop(EnemySize::Small);
 }
 
+SpawnerBase* StageManager::GetRandomSpawner_SmallA()
+{
+	EnemySize size = EnemySize::Small;
+	int rand = CFunc::RandI(0, 3);
+	switch (rand) {
+		case 0:	return new SpawnerSmallTop_Stop(size);
+		case 1: return new SpawnerSmallLeftRight_Stop(size);
+		case 2: return new SpawnerSmall_Line_Top_Stop(size);
+		case 3: return new SpawnerSmall_Line_LeftRight_Stop(size);
+	}
+	return nullptr;
+}
+SpawnerBase* StageManager::GetRandomSpawner_SmallB()
+{
+	EnemySize size = EnemySize::Small;
+	int rand = CFunc::RandI(0, 2);
+	switch (rand) {
+		case 0: return new SpawnerSmallTop_NoStop_Uturn(size);
+		case 1: return new SpawnerSmallTop_NoStop_LRTurn(size);
+		case 2: return new SpawnerSmallTop_NoStop_LRCos(size);
+	}
+	return nullptr;
+}
+
 SpawnerBase* StageManager::GetTestSpawner()
 {
-	//return new SpawnerM02();
 	int rand = CFunc::RandI(0, 3);
-	rand = CFunc::RandI(0, 3);
-	//rand = 3;
-	//EnemySize rand2 = (EnemySize)CFunc::RandI(EnemySize::Small, EnemySize::Large);
 
 	int ary[] = { 1,1,2,0,0,2 };
 	static int count = 0;
@@ -88,7 +131,9 @@ SpawnerBase* StageManager::GetTestSpawner()
 		case 2: return new SpawnerSmall_Line_Top_Stop(ssss);
 		case 3: return new SpawnerSmall_Line_LeftRight_Stop(ssss);
 
-		//case 4: return new SpawnerSmallTop_NoStop();
+		case 4: return new SpawnerSmallTop_NoStop_Uturn(ssss);
+		case 5: return new SpawnerSmallTop_NoStop_LRTurn(ssss);
+		case 6: return new SpawnerSmallTop_NoStop_LRCos(ssss);
 	}
 	return nullptr;
 }
@@ -166,8 +211,11 @@ int SpawnerBase::GetMediumEnemyIndex()
 }
 CBaseEnemy* SpawnerBase::GetMediumEnemy(int index, const CPos& pos)
 {
-	switch (index) {
-		case 1: return new CEnemyM02(pos);
+	int rand = CFunc::RandI(1, 3);
+	switch (rand) {
+	case 1: return new CEnemyM01(pos);
+	case 2: return new CEnemyM02(pos);
+	case 3: return new CEnemyM08(pos);
 	}
 	return nullptr;
 }
@@ -182,8 +230,6 @@ CBaseEnemy* SpawnerBase::GetLargeEnemy(int index, const CPos& pos)
 	}
 	return nullptr;
 }
-
-
 
 int SpawnerBase::ToSecond(int millSecond)
 {

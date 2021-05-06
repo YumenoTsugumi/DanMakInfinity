@@ -14,13 +14,13 @@ class CLauncherS01 : public CBaseLauncher {
 public:
 	CLauncherS01(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS01() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 class CLauncherS01_50 : public CBaseLauncher {
 public:
 	CLauncherS01_50(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS01_50() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ class CLauncherS02 : public CBaseLauncher {
 public:
 	CLauncherS02(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS02() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -58,13 +58,13 @@ class CLauncherS03_50 : public CBaseLauncher {
 public:
 	CLauncherS03_50(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS03_50() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 class CLauncherS03 : public CBaseLauncher {
 public:
 	CLauncherS03(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS03() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ public:
 	double m_shotSpeed; 
 	CLauncherS04(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS04() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 
@@ -109,7 +109,7 @@ class CLauncherS05 : public CBaseLauncher {
 public:
 	CLauncherS05(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS05() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 
@@ -129,7 +129,7 @@ class CLauncherS06 : public CBaseLauncher {
 public:
 	CLauncherS06(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS06() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -148,5 +148,5 @@ class CLauncherS07 : public CBaseLauncher {
 public:
 	CLauncherS07(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherS07() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };

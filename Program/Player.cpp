@@ -50,6 +50,7 @@ void CPlayer::Action(CInputAllStatus* input)
 		moveCo++;
 	}
 	if (moveCo >= 2) {
+		//constexpr double r2 = 1.0 / sqrt(2.0);
 		move *= 1.0 / sqrt(2.0);
 		m_slowMove = MOVE_SLOW;
 	}

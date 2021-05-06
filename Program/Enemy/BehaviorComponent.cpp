@@ -189,11 +189,12 @@ CBezierBehavior::CBezierBehavior(const CPos& st, const CPos& p1, const CPos& p2,
 	CBehaviorComponent(),
 	m_move(st, p1, p2, ed, speed)
 {
-
+	m_moveStatus = BehaviorStatus::Shot;
 }
 CBezierBehavior::CBezierBehavior(const std::vector<CPos>& posArray, double speed) : CBehaviorComponent(),
 	m_move(posArray, speed)
 {
+	m_moveStatus = BehaviorStatus::Shot;
 }
 
 CBezierBehavior::~CBezierBehavior()
@@ -209,6 +210,11 @@ void CBezierBehavior::Action(CPos& updatePos)
 		}
 	}
 
+	ArrivalStatus arrivalStatus = m_move.Action(updatePos);
+	if (arrivalStatus == ArrivalStatus::Arrival) {
+		m_moveStatus = BehaviorStatus::Finish;
+	}
+
 	m_move.Action(updatePos);
 }
 void CBezierBehavior::DebugPrint()
@@ -221,7 +227,7 @@ double CBezierBehavior::GetDirection()
 }
 BehaviorStatus CBezierBehavior::GetBehaviorStatus()
 {
-	return BehaviorStatus::Shot;
+	return m_moveStatus;
 }
 
 
@@ -253,7 +259,6 @@ void CBezierInOutBehavior::Action(CPos& updatePos)
 		ArrivalStatus arrivalStatus = m_inMove.Action(updatePos);
 		if (arrivalStatus == ArrivalStatus::Arrival) {
 			m_moveStatus = BehaviorStatus::Shot;
-			
 		}
 	}
 	else if (m_moveStatus == BehaviorStatus::Shot) {

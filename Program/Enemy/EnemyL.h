@@ -22,13 +22,13 @@ class CLauncherL01a : public CBaseLauncher {
 public:
 	CLauncherL01a(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CLauncherL01a() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 class CLauncherL01b : public CBaseLauncher {
 public:
 	LauncherPos m_lr;
 	CLauncherL01b(int rank, const CPos& enemyPos, const CPos& relativePos, LauncherPos lr);
 	virtual ~CLauncherL01b() override;
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 

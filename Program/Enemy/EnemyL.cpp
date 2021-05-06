@@ -31,7 +31,7 @@ void CEnemyL01::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	double angle = GetFinalDirectionRad() - CFunc::ToRad(90.0);
 
-	CDxFunc::MyDrawRotaGraph(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+	BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
 
 	DebugCollisionDraw();
 	DebugLauncherDraw();
@@ -49,9 +49,10 @@ CLauncherL01a::CLauncherL01a(int rank, const CPos& enemyPos, const CPos& relativ
 
 CLauncherL01a::~CLauncherL01a() {}
 
-void CLauncherL01a::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+bool CLauncherL01a::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos, nowRelativePos);
+	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
+	if (!waitShot) return true;
 
 	int startTime = 20;
 	int endTime = startTime + 60;
@@ -74,9 +75,10 @@ void CLauncherL01a::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	}
 	if (m_count >= resetTime) {
 		m_count = 0;
-		return;
+		return true;
 	}
 	m_count++;
+	return true;
 }
 
 
@@ -87,11 +89,10 @@ CLauncherL01b::CLauncherL01b(int rank, const CPos& enemyPos, const CPos& relativ
 
 CLauncherL01b::~CLauncherL01b() {}
 
-void CLauncherL01b::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+bool CLauncherL01b::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 {
-	__super::Action(newEnemyPos, nowRelativePos);
-
-
+	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
+	if (!waitShot) return true;
 
 	int startTime = 20;
 	int endTime = startTime + 60;
@@ -120,7 +121,8 @@ void CLauncherL01b::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	}
 	if (m_count >= resetTime) {
 		m_count = 0;
-		return;
+		return true;
 	}
 	m_count++;
+	return true;
 }

@@ -122,10 +122,11 @@ public:
 	virtual BehaviorStatus GetBehaviorStatus();
 protected:
 	CBezierMotion m_move;
+	BehaviorStatus m_moveStatus; // 移動状態
 };
 
 
-// A地点から出てきて、うって、B地点にいく(ベジエ版)
+// A地点から出てきて、うって止まって、B地点にいく(ベジエ版)
 //std::vector<CPos> poss = {
 //CPos(-100, -100), CPos(100, 100), CPos(200, 100), CPos(300, 100),
 //CPos(300, 100), CPos(600, 100), CPos(600, 200), CPos(300, 200),

@@ -17,7 +17,7 @@ public:
 	CBaseLauncher(int rank, const CPos& enemyPos, const CPos& relativePos);
 	virtual ~CBaseLauncher();
 
-	virtual void Action(const CPos& newEnemyPos, const CPos& nowRelativePos);
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos);
 
 	//弾幕管理をしているマネージャ
 	static CBulletManager* m_bulletManager;

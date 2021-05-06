@@ -6,6 +6,7 @@
 enum StartLRPos {
 	Left = 0,
 	Right = 1,
+	Top = 2,
 };
 // ---------------------------
 // 編隊バラバラパターン
@@ -76,7 +77,43 @@ public:
 	double m_appearancePosition; // 出現位置誤差
 };
 
+// ------------------------------------------------------------------------------------------------------------
+// 止まらず動き続けるパターン
+// ------------------------------------------------------------------------------------------------------------
+// 画面左から出てきて、右に行って左に帰ってくる つ
+// 画面上から出てきて、下に行って上に帰ってくる U
+// 画面右から出てきて、左に行って右に帰ってくる
+class SpawnerSmallTop_NoStop_Uturn : public SpawnerBase {
+public:
+	SpawnerSmallTop_NoStop_Uturn(EnemySize spawnerSize);
+	virtual ~SpawnerSmallTop_NoStop_Uturn();
+	virtual void Spawne() override;
+	std::vector<CPos> m_posAry;
+	StartLRPos m_spawnerPosition; // 出現位置
+	double m_appearancePosition; // 出現位置誤差
+};
 
+// 画面左から出てきて、上にいく
+// 画面右から出てきて、上にいく
+class SpawnerSmallTop_NoStop_LRTurn : public SpawnerBase {
+public:
+	SpawnerSmallTop_NoStop_LRTurn(EnemySize spawnerSize);
+	virtual ~SpawnerSmallTop_NoStop_LRTurn();
+	virtual void Spawne() override;
+	std::vector<CPos> m_posAry;
+	StartLRPos m_spawnerPosition; // 出現位置
+};
+
+// 画面左から出てきて、うねうねしながら
+// 画面右から出てきて、うねうねしながら
+class SpawnerSmallTop_NoStop_LRCos : public SpawnerBase {
+public:
+	SpawnerSmallTop_NoStop_LRCos(EnemySize spawnerSize);
+	virtual ~SpawnerSmallTop_NoStop_LRCos();
+	virtual void Spawne() override;
+	std::vector<CPos> m_posAry;
+	StartLRPos m_spawnerPosition; // 出現位置
+};
 
 // ---------------------------
 // 止まらず動き続けるパターン

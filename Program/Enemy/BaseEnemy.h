@@ -132,6 +132,10 @@ public:
 		m_scene = scene;
 	}
 	static CBattleScene* m_scene;
+
+
+	int m_waitShotTime; // 0になったらショット打ち始める -60～0
+	int GetWaitShotTime() { return m_waitShotTime; };
 };
 
 /*

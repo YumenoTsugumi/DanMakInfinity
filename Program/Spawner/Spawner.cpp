@@ -9,7 +9,7 @@
 
 const int m_maxSpawneCount = 12;
 
-
+const int FormationSpawneFinishTiming = 2; // 出現する時間 2秒でで12体スポーンさせる
 
 // 帰り道共通パターン
 SpawnerMoveStopMove::SpawnerMoveStopMove(EnemySize spawnerSize) : SpawnerBase(spawnerSize){
@@ -389,6 +389,270 @@ void SpawnerSmall_Line_LeftRight_Stop::Spawne()
 		}
 	}
 }
+
+// ------------------------------------------------------------------------------------------------------------
+// 止まらず動き続けるパターン
+// ------------------------------------------------------------------------------------------------------------
+SpawnerSmallTop_NoStop_Uturn::SpawnerSmallTop_NoStop_Uturn(EnemySize spawnerSize) : SpawnerBase(spawnerSize)
+{
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneTiming = m_maxCount / m_maxSpawneCount;
+	m_spawnerPosition = (StartLRPos)CFunc::RandI(0, 2); // 出現位置パターン
+
+	if (m_spawnerPosition == StartLRPos::Left ||
+		m_spawnerPosition == StartLRPos::Right) {
+
+		double stY = 0.05 + CFunc::RandD(0, 0.08);
+		double edY = 0.4 + CFunc::RandD(0, 0.08);
+		if (CFunc::RandI(0, 1)) {
+			std::swap(stY, edY);
+		}
+		if (m_spawnerPosition == StartLRPos::Left) {
+			m_posAry = std::vector<CPos>{
+				CPos(ToGamePosX(-0.2), ToGamePosY(stY)),
+				CPos(ToGamePosX(1.4),  ToGamePosY(stY)),
+				CPos(ToGamePosX(1.4),  ToGamePosY(edY)),
+				CPos(ToGamePosX(-0.2), ToGamePosY(edY)) };
+		}
+		else if (m_spawnerPosition == StartLRPos::Right) {
+			m_posAry = std::vector<CPos>{
+				CPos(ToGamePosX(1.2),  ToGamePosY(stY)),
+				CPos(ToGamePosX(-0.4), ToGamePosY(stY)),
+				CPos(ToGamePosX(-0.4), ToGamePosY(edY)),
+				CPos(ToGamePosX(1.2),  ToGamePosY(edY)) };
+		}
+	} else if (m_spawnerPosition == StartLRPos::Top) {
+		double stX = CFunc::RandD(0.1, 0.3);
+		double edX = CFunc::RandD(0.7, 0.9);
+		if (CFunc::RandI(0, 1)) {
+			std::swap(stX, edX);
+		}
+		double YY = CFunc::RandD(0.5, 0.7);
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(stX), ToGamePosY(-0.1)),
+			CPos(ToGamePosX(stX), ToGamePosY(YY)),
+			CPos(ToGamePosX(edX), ToGamePosY(YY)),
+			CPos(ToGamePosX(edX), ToGamePosY(-0.1)) };
+	}
+
+	if (m_spawnerSize == EnemySize::Small) {
+		m_speed = CFunc::RandD(4.0, 5.5);
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		m_speed = CFunc::RandD(1.0, 2.5);
+	}
+}
+
+SpawnerSmallTop_NoStop_Uturn::~SpawnerSmallTop_NoStop_Uturn() {}
+
+void SpawnerSmallTop_NoStop_Uturn::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
+
+	if (m_count % m_spawneTiming == 0) {
+		CBaseEnemy* enemy = GetEnemy(m_posAry[0]);
+		CBezierBehavior* move = new CBezierBehavior(m_posAry, m_speed);
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
+
+		m_spawnerIndex++;
+	}
+}
+
+
+
+SpawnerSmallTop_NoStop_LRTurn::SpawnerSmallTop_NoStop_LRTurn(EnemySize spawnerSize) : SpawnerBase(spawnerSize)
+{
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneTiming = m_maxCount / m_maxSpawneCount;
+
+	// 画面上から出てきて、左にいく
+	// 画面上から出てきて、右にいく
+	m_spawnerPosition = (StartLRPos)CFunc::RandI(2, 3);
+
+	// 0と1は画面の下の方から出てくるのはナンセンスなのでやめた
+	if (m_spawnerPosition == 0) {
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(-0.2), ToGamePosY(0.4)),
+			CPos(ToGamePosX(1.0), ToGamePosY(0.5)),
+			CPos(ToGamePosX(1.0), ToGamePosY(0.0)),
+			CPos(ToGamePosX(1.0), ToGamePosY(-0.3)) };
+	} else if (m_spawnerPosition == 1) {
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(1.2), ToGamePosY(0.4)),
+			CPos(ToGamePosX(0.0), ToGamePosY(0.5)),
+			CPos(ToGamePosX(0.0), ToGamePosY(0.0)),
+			CPos(ToGamePosX(0.0), ToGamePosY(-0.3)) };
+	} else if (m_spawnerPosition == 2) {
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(1.0), ToGamePosY(-0.3)),
+			CPos(ToGamePosX(1.0), ToGamePosY(0.0)),
+			CPos(ToGamePosX(1.0), ToGamePosY(0.5)),
+			CPos(ToGamePosX(-0.2), ToGamePosY(0.4)) };
+	} else if (m_spawnerPosition == 3) {
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(0.0), ToGamePosY(-0.3)),
+			CPos(ToGamePosX(0.0), ToGamePosY(0.0)),
+			CPos(ToGamePosX(0.0), ToGamePosY(0.5)),
+			CPos(ToGamePosX(1.2), ToGamePosY(0.4)) };
+	}
+	for (CPos& p : m_posAry) {
+		p.x += ToGameSizeX(CFunc::RandD(-0.1, 0.1));
+		p.y += ToGameSizeY(CFunc::RandD(-0.1, 0.1));
+	}
+
+	if (m_spawnerSize == EnemySize::Small) {
+		m_speed = CFunc::RandD(4.0, 5.5);
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		m_speed = CFunc::RandD(1.0, 2.5);
+	}
+}
+
+SpawnerSmallTop_NoStop_LRTurn::~SpawnerSmallTop_NoStop_LRTurn() {}
+
+void SpawnerSmallTop_NoStop_LRTurn::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
+
+	if (m_count % m_spawneTiming == 0) {
+		CBaseEnemy* enemy = GetEnemy(m_posAry[0]);
+		CBezierBehavior* move = new CBezierBehavior(m_posAry, m_speed);
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
+
+		m_spawnerIndex++;
+	}
+}
+
+
+SpawnerSmallTop_NoStop_LRCos::SpawnerSmallTop_NoStop_LRCos(EnemySize spawnerSize) : SpawnerBase(spawnerSize)
+{
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneTiming = m_maxCount / m_maxSpawneCount;
+
+	// 画面左から　Z
+	// 画面右から　S
+	// 画面左から　~
+	// 画面右から　N
+	m_spawnerPosition = (StartLRPos)CFunc::RandI(0, 3);
+	if (m_spawnerPosition == 0) {
+		double posX = CFunc::RandD(0.3, 0.4);
+		double posY = CFunc::RandD(0.3, 0.5);
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(-0.2),ToGamePosY(0.0 + CFunc::RandD(0,0.4))),
+			CPos(ToGamePosX(1.2 + CFunc::RandD(0,0.1)), ToGamePosY(0.1 + CFunc::RandD(0,0.2))),
+			CPos(ToGamePosX(1.2), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+			CPos(ToGamePosX(-0.1), ToGamePosY(posY)),
+			CPos(ToGamePosX(-0.1 + CFunc::RandD(0,0.1)), ToGamePosY(posY + CFunc::RandD(0.1,0.2))),
+			CPos(ToGamePosX(1.2), ToGamePosY(0.3 + CFunc::RandD(0,0.3)))
+		};
+	}
+	else if (m_spawnerPosition == 1) {
+		double posX = CFunc::RandD(0.7, 0.8);
+		double posY = CFunc::RandD(0.3, 0.5);
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(1.2),ToGamePosY(0.0 + CFunc::RandD(0,0.2))),
+			CPos(ToGamePosX(-0.2 + CFunc::RandD(0,0.1)), ToGamePosY(0.1 + CFunc::RandD(0,0.2))),
+			CPos(ToGamePosX(-0.2), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+			CPos(ToGamePosX(1.1), ToGamePosY(posY)),
+			CPos(ToGamePosX(1.1 + -CFunc::RandD(0,0.1)), ToGamePosY(posY + CFunc::RandD(0.1,0.2))),
+			CPos(ToGamePosX(-0.2), ToGamePosY(0.3 + CFunc::RandD(0,0.3)))
+		};
+	}
+	else if (m_spawnerPosition == 2) {
+		double posX = CFunc::RandD(0.4, 0.6);
+		double posY = CFunc::RandD(0.2, 0.4);
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(-0.2),ToGamePosY(-0.0)),
+			CPos(ToGamePosX(0.1), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(0.1)),
+
+			CPos(ToGamePosX(posX), ToGamePosY(0.1)),
+			CPos(ToGamePosX(posX + 0.1), ToGamePosY(-0.2)),
+			CPos(ToGamePosX(posX+ CFunc::RandD(0.2, 0.4)), ToGamePosY(posY+0.1)),
+			CPos(ToGamePosX(1.2), ToGamePosY(0.3))
+		};
+	}
+	else if (m_spawnerPosition == 3) {
+		double posX = CFunc::RandD(0.4, 0.6);
+		double posY = CFunc::RandD(0.2, 0.4);
+		m_posAry = std::vector<CPos>{
+			CPos(ToGamePosX(1.2),ToGamePosY(-0.0)),
+			CPos(ToGamePosX(0.9), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(posY)),
+			CPos(ToGamePosX(posX), ToGamePosY(0.1)),
+
+			CPos(ToGamePosX(posX), ToGamePosY(0.1)),
+			CPos(ToGamePosX(posX - 0.1), ToGamePosY(-0.2)),
+			CPos(ToGamePosX(posX - CFunc::RandD(0.2, 0.4)), ToGamePosY(posY + 0.1)),
+			CPos(ToGamePosX(-0.2), ToGamePosY(0.3))
+		};
+	}
+	//for (CPos& p : m_posAry) {
+	//	p.x += ToGameSizeX(CFunc::RandD(-0.1, 0.1));
+	//	p.y += ToGameSizeY(CFunc::RandD(-0.1, 0.1));
+	//}
+
+	if (m_spawnerSize == EnemySize::Small) {
+		m_speed = CFunc::RandD(4.0, 5.5);
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		m_speed = CFunc::RandD(1.0, 2.5);
+	}
+}
+
+SpawnerSmallTop_NoStop_LRCos::~SpawnerSmallTop_NoStop_LRCos() {}
+
+void SpawnerSmallTop_NoStop_LRCos::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
+
+	if (m_count % m_spawneTiming == 0) {
+		CBaseEnemy* enemy = GetEnemy(m_posAry[0]);
+		CBezierBehavior* move = new CBezierBehavior(m_posAry, m_speed);
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
+		m_spawnerIndex++;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

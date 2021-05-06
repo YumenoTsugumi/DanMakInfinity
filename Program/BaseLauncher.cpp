@@ -32,8 +32,11 @@ CBaseLauncher::~CBaseLauncher() {
 };
 
 
-void CBaseLauncher::Action(const CPos& newEnemyPos, const CPos& nowRelativePos) {
+bool CBaseLauncher::Action(const CPos& newEnemyPos, const CPos& nowRelativePos) {
 	m_enemyPos = newEnemyPos;
+
+	if (m_parent->GetWaitShotTime() >= 0) return true;
+	return false;
 }
 
 

@@ -105,6 +105,7 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 {
 	m_rank = CBattleScene::GetRank();
 	m_enemyId = m_globalEnemyId++;
+	m_waitShotTime = -CFunc::RandI(0, 60);
 }
 
 CBaseEnemy::~CBaseEnemy() {
@@ -112,6 +113,7 @@ CBaseEnemy::~CBaseEnemy() {
 }
 
 void CBaseEnemy::Action() {
+	m_waitShotTime++;
 	m_behaviorComponent->Action(m_pos);
 
 	BehaviorStatus behaviorStatus = m_behaviorComponent->GetBehaviorStatus();
