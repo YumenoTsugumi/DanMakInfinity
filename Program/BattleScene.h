@@ -12,6 +12,7 @@
 #include "BackGround.h"
 #include "GameDefine.h"
 #include "BattleSceneUI.h"
+#include "BattleResultUI.h"
 #include "StageManager.h"
 
 class CBattleScene : public CScene{
@@ -65,6 +66,8 @@ public:
 	static CBeamManager m_beamManager; // “G‚Ìƒr[ƒ€
 
 	StageManager m_stageManager; // “G‚ÌƒXƒ|ƒi[
+	bool m_battleResultUIReset;
+	CBattleResultUI m_battleResultUI; // Ÿ—˜‰æ–Ê
 
 	CBackGroundPatternA m_bg; // ”wŒi
 
@@ -112,10 +115,12 @@ public:
 	};
 	void RemoveBullet(); // ’eÁ‚µˆ—
 	static void RemoveBulletByMidiumEnemy(int id); // ’eÁ‚µˆ—
-	static void SetBulletRemoveTime(BulletRemoveType type, int time);
+	static void SetBulletRemoveTime(BulletRemoveType type, int time); // ’eÁ‚µ
 	static BulletRemoveType m_bulletRemoveType;
 	static int m_bulletRemoveTime;
 	static int m_bulletRemoveCount;
+
+	void DestoryAllEnemyNothingItemDrop(); // ‘S“G”j‰ó
 
 	// BattleSceneCollision.cpp‚É‚ÄÀ‘•
 	void Collision_Enemy_PulyerBullet(); // “G@‹@‚Ì’e

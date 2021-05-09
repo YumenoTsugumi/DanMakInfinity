@@ -12,6 +12,7 @@ CEnemyL01::CEnemyL01(const CPos& pos) : CBaseEnemy(pos){
 	SetDrawSize(2.0); // 画像が小さかったので二倍
 	m_image = (CImage*)CGame::GetResource("enemyL1");
 	m_shotTiming = true;
+	m_drawSizeRatio = 3.0;
 	std::vector<Collision> collisions = { 
 		Collision(CPos(0,-26), 40.0),
 		Collision(CPos(0,28), 24.0),
@@ -103,17 +104,17 @@ bool CLauncherL01b::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 			double angle;
 			if (m_lr == LauncherPos::LauncherLeft) {
 				angle = ((CEnemyL01*)m_parent)->m_shotAngleL;
-				((CEnemyL01*)m_parent)->m_shotAngleL += -5;
+				((CEnemyL01*)m_parent)->m_shotAngleL += -2;
 			}
 			else {
 				angle = ((CEnemyL01*)m_parent)->m_shotAngleR;
-				((CEnemyL01*)m_parent)->m_shotAngleR -= -5;
+				((CEnemyL01*)m_parent)->m_shotAngleR -= -2;
 			}
 			double speed = 5.0 + 2.0 * RankRatio();
 
 			for (int ii = 0; ii < 4; ii++) {
 				double shotAngle = angle + 90.0 * ii;
-				CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos , speed, shotAngle, 0, 0, 0, 0, 1);
+				CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos , speed, shotAngle, 0, 0, 0, 0, 12);
 				b->SetShotEnemyId(m_parent->GetEnemyId());
 				CBaseLauncher::m_bulletManager->Add(b);
 			}

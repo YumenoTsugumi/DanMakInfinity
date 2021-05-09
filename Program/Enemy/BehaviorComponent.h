@@ -56,7 +56,6 @@ public:
 		m_outMove.SetNoArrival(true);
 	}; // endTargetPosを無視して、離れる時に、プレイヤーが居る場所を参照し続ける（時期狙い）
 protected:
-
 	int m_shotTime; // 撃つ時間
 	int m_shotCount;  // 撃つ時間の計測
 

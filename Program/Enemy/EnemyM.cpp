@@ -12,7 +12,8 @@
 //----------------------------------------------------------------------------------------------------------
 CEnemyM01::CEnemyM01(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM1");
-	m_shotTiming = true;
+	//m_shotTiming = true;
+	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,9), 24.0),
 		Collision(CPos(35,-15), 19.0),
@@ -117,7 +118,8 @@ bool CLauncherM01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 //----------------------------------------------------------------------------------------------------------
 CEnemyM02::CEnemyM02(const CPos& pos) : CBaseEnemy(pos){
 	m_image = (CImage*)CGame::GetResource("enemyM2");
-	m_shotTiming = true;
+	//m_shotTiming = true;
+	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = { 
 		Collision(CPos(0,-9), 34.0),
 		Collision(CPos(35,24), 24.0), 
@@ -125,7 +127,7 @@ CEnemyM02::CEnemyM02(const CPos& pos) : CBaseEnemy(pos){
 	Init(600, Medium, collisions);
 
 	AddLauncher(new CLauncherM02(m_rank, m_pos, CPos(36, 46)));
-	//AddLauncher(new CLauncherM02(m_rank, m_pos, CPos(-36, 46)));
+	AddLauncher(new CLauncherM02(m_rank, m_pos, CPos(-36, 46)));
 }
 CEnemyM02::~CEnemyM02() {
 }
@@ -140,9 +142,8 @@ void CEnemyM02::Draw() {
 }
 
 // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
-double CEnemyM02::GetFinalDirectionRad()
-{
-	return CFunc::ToRad(90.0);
+double CEnemyM02::GetFinalDirectionRad(){
+	return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
 
 CLauncherM02::CLauncherM02(int rank, const CPos& enemyPos, const CPos& relativePos) :
@@ -201,6 +202,7 @@ bool CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 CEnemyM08::CEnemyM08(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM8");
 	//m_shotTiming = true;
+	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,27), 24.0),
 		Collision(CPos(38,-14), 28.0),
@@ -226,10 +228,9 @@ void CEnemyM08::Draw() {
 	}
 	else if (launcher->m_shotAngleRock) {
 		angle = CFunc::ToRad(launcher->m_shotAngle - 90.0);
-		CPos pos = m_pos;
-		pos.x += cos(CFunc::ToRad(launcher->m_shotAngle)) * m_nockbackLength;
-		pos.y += sin(CFunc::ToRad(launcher->m_shotAngle)) * m_nockbackLength;
-		BaseDraw(pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+		m_pos.x += cos(CFunc::ToRad(launcher->m_shotAngle)) * m_nockbackLength;
+		m_pos.y += sin(CFunc::ToRad(launcher->m_shotAngle)) * m_nockbackLength;
+		BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
 	}
 	else {
 		angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
@@ -271,15 +272,17 @@ bool CLauncherM08::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
 	if (!waitShot) return true;
 
-	int effectStartTime = 0;
-	int effectEndTime = 60;
-	int effectSpan = 4;
-	int shotTime = effectEndTime + 30;
-	int nockbackTime = shotTime + 10;
+	constexpr int effectStartTime = 0;
+	constexpr int effectEndTime = 60;
+	constexpr int effectSpan = 4;
+	constexpr int shotTime = effectEndTime + 30;
+	constexpr int nockbackTimeS = shotTime + 10;
+	constexpr int nockbackTimeE = nockbackTimeS + 10;
+	constexpr int endtime = 180;
 
 	if (m_count >= effectStartTime && m_count <= effectEndTime) {
 		if (m_count % effectSpan == 0) {
-			// エフェクト
+			// 周りから光が集まるエフェクト
 			CPos pos;
 			double angleDeg = CFunc::RandD(0, 360);
 			double angleRad = CFunc::ToRad(angleDeg);
@@ -287,6 +290,19 @@ bool CLauncherM08::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 			pos.y = sin(angleRad) * 40.0;
 			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_enemyPos + nowRelativePos + pos, 1.0, 180.0+angleDeg, 0, 0, 0, 0, 01); // "BulletDeleteEffect0"
 			eff->SetSize(1.0, -0.015);
+			eff->SetBlend(128, -3.0, 0);
+			eff->SetBlendType(DX_BLENDMODE_ADD);
+			eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+			CBattleScene::m_effectManager.Add(eff);
+		}
+		if (m_count % effectSpan == 1) { // ちょっとだけずらす
+			// エナジーがたまったエフェクト
+			double size = 2.0 * ((double)m_count / effectEndTime);
+			CPos pos;
+			double angleDeg = CFunc::RandD(0, 360);
+			double angleRad = CFunc::ToRad(angleDeg);
+			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_enemyPos + nowRelativePos, 0.1, angleDeg, 0, 0, 0, 0, 01); // "BulletDeleteEffect0"
+			eff->SetSize(size, 0.015);
 			eff->SetBlend(255, -3.0, 0);
 			eff->SetBlendType(DX_BLENDMODE_ADD);
 			eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
@@ -298,9 +314,9 @@ bool CLauncherM08::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		m_shotAngle = CFunc::ToDeg(CFunc::GetTwoPointAngle(m_target, m_parent->m_pos));
 
 		for (int jj = 0; jj < 30; jj++) {
-			double speed = CFunc::RandD(15,25) * RankSpeed();
+			double speed = CFunc::RandD(10,20) * RankSpeed();
 			double angle = CFunc::RandD(-3, 3);
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 61);
 			
 			b->SetShotEnemyId(m_parent->GetEnemyId());
 			CBaseLauncher::m_bulletManager->Add(b);
@@ -309,15 +325,22 @@ bool CLauncherM08::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		m_tempCount = 0;
 	}
 
-	if (m_count >= shotTime && m_count <= nockbackTime) {
+	if (m_count >= shotTime && m_count <= nockbackTimeS) {
 		m_tempCount++;
-		((CEnemyM08*)m_parent)->m_nockbackLength -= 10 * (1.0 - (double)m_tempCount / 10.0);
+		((CEnemyM08*)m_parent)->m_nockbackLength += 0.2 * (0.2 - (double)m_tempCount / 1.0);
+	} else if (m_count >= nockbackTimeS && m_count <= nockbackTimeE) {
+		m_tempCount++;
+		((CEnemyM08*)m_parent)->m_nockbackLength -= 0.075 * (0.075 - (double)m_tempCount / 1.0);
+	}
+	if (m_count == nockbackTimeE) {
+		m_shotAngleRock = false;
+		((CEnemyM08*)m_parent)->m_nockbackLength = 0;
 	}
 
-
-	if (m_count >= nockbackTime) {
-		m_tempCount = 0;
-		m_count = 0;
+	if (m_count >= endtime) {
+		// 一度しか打たない
+		//m_tempCount = 0;
+		//m_count = 0;
 		return true;
 	}
 	m_count++;

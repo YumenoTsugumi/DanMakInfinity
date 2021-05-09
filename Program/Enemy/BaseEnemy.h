@@ -34,6 +34,8 @@ public:
 	virtual void Action();
 	virtual void Draw();
 
+	void DestoryAllEnemyNothingItemDrop();
+
 	int Add(CBaseEnemy* enemy);
 };
 
@@ -65,7 +67,7 @@ public:
 
 	virtual void Shot();
 	virtual void Damaged(int damage); // ダメージを受けたとき
-	virtual void Die(); // 死んだ時
+	virtual void Die(bool dropItem = true); // 死んだ時
 	virtual void DebugPrint();
 
 	void SetBehaviorComponent(CBehaviorComponent* component, int waitTime = 0);

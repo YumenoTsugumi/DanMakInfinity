@@ -434,13 +434,6 @@ SpawnerSmallTop_NoStop_Uturn::SpawnerSmallTop_NoStop_Uturn(EnemySize spawnerSize
 			CPos(ToGamePosX(edX), ToGamePosY(YY)),
 			CPos(ToGamePosX(edX), ToGamePosY(-0.1)) };
 	}
-
-	if (m_spawnerSize == EnemySize::Small) {
-		m_speed = CFunc::RandD(4.0, 5.5);
-	}
-	else if (m_spawnerSize == EnemySize::Medium) {
-		m_speed = CFunc::RandD(1.0, 2.5);
-	}
 }
 
 SpawnerSmallTop_NoStop_Uturn::~SpawnerSmallTop_NoStop_Uturn() {}
@@ -505,12 +498,6 @@ SpawnerSmallTop_NoStop_LRTurn::SpawnerSmallTop_NoStop_LRTurn(EnemySize spawnerSi
 		p.y += ToGameSizeY(CFunc::RandD(-0.1, 0.1));
 	}
 
-	if (m_spawnerSize == EnemySize::Small) {
-		m_speed = CFunc::RandD(4.0, 5.5);
-	}
-	else if (m_spawnerSize == EnemySize::Medium) {
-		m_speed = CFunc::RandD(1.0, 2.5);
-	}
 }
 
 SpawnerSmallTop_NoStop_LRTurn::~SpawnerSmallTop_NoStop_LRTurn() {}

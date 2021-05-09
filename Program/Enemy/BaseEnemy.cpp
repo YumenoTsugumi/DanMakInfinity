@@ -89,7 +89,15 @@ int CEnemyManager::Add(CBaseEnemy* Bullet) {
 	return -1;
 }
 
-
+void CEnemyManager::DestoryAllEnemyNothingItemDrop()
+{
+	for (int i = 0; i < m_enemyTotalNum; i++) {
+		if (m_enemy[i] == nullptr) {
+			continue;
+		}
+		m_enemy[i]->Die(false); // アイテムを落とさない
+	}
+}
 //------------------------------------------------------
 // 本体
 //------------------------------------------------------
@@ -152,7 +160,7 @@ void CBaseEnemy::Damaged(int damage) {
 } 
 
 // 死んだ時
-void CBaseEnemy::Die() {
+void CBaseEnemy::Die(bool dropItem) {
 	if (m_removeFlg == true) {
 		return;
 	}
@@ -164,39 +172,64 @@ void CBaseEnemy::Die() {
 	// "FireballExplosion10", 20503
 	// 爆発エフェクト
 	int image4[4] = { 20503 ,20501 ,20501 ,20501 };
-	for (int ii = 0; ii < 4; ii++) {
-		CPos pp(CFunc::RandF(0, WindowX), CFunc::RandF(0, WindowY));
-		double ang = (double)ii * 120 + CFunc::RandF(0, 90);
-		double speed = CFunc::RandF(200, 400) / 100.0;
-		CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos, speed, ang, 0, -0.2, 0.5, 0, image4[ii]);
-		double size = 0.8 - (double)ii * 0.1;
-		eff->SetSize(size, +0.0);
-		eff->SetWaitTime(CFunc::RandI(1, 15));
-		eff->SetBlend(255, +0.0);
-		eff->SetBlendType(DX_BLENDMODE_NOBLEND);
-		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
-		eff->SetRemoveCount(60);	//60frで削除
+	if (m_size == EnemySize::Large) { // 大型
+		int loopCp = 12;
+		for (int ii = 0; ii < loopCp; ii++) {
+			CPos pp(CFunc::RandI(0, 30), CFunc::RandI(0, 30));
+			double ang = (double)ii * 120 + CFunc::RandF(0, 90);
+			double speed = 1.0 + CFunc::RandF(200, 400) / 100.0;
+			CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos + pp, speed, ang, 0, -0.2, 0.5, 0, image4[ii % 4]);
+			double size = 1.8 - (double)ii * 0.1;
+			eff->SetSize(size, +0.0);
+			eff->SetWaitTime(ii * 3);
+			eff->SetBlend(255, +0.0);
+			eff->SetBlendType(DX_BLENDMODE_NOBLEND);
+			eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+			eff->SetRemoveCount(60);	//60frで削除
 
-		CBattleScene::m_effectManager.Add(eff);
+			CBattleScene::m_effectManager.Add(eff);
+		}
+
+	} else { // 小型中型
+		int loopCp = 4;
+		if (m_size == EnemySize::Medium)loopCp = 6;
+
+		for (int ii = 0; ii < loopCp; ii++) {
+			CPos pp(CFunc::RandI(0, 30), CFunc::RandI(0, 30));
+			double ang = (double)ii * 120 + CFunc::RandF(0, 90);
+			double speed = CFunc::RandF(200, 400) / 100.0;
+			CBaseEffect* eff = new CBaseEffect(0, EDirType::Abs, m_pos + pp, speed, ang, 0, -0.2, 0.5, 0, image4[ii % 4]);
+			double size = 0.8 - (double)ii * 0.1;
+			eff->SetSize(size, +0.0);
+			eff->SetWaitTime(ii * 4);
+			eff->SetBlend(255, +0.0);
+			eff->SetBlendType(DX_BLENDMODE_NOBLEND);
+			eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+			eff->SetRemoveCount(60);	//60frで削除
+
+			CBattleScene::m_effectManager.Add(eff);
+		}
 	}
 
-	// アイテム
-	int itemCount = (m_size + 1) * 10; // 大30　中20　小10
-	for (int ii = 0; ii < itemCount; ii++) {
-		double ang = CFunc::RandI(180+60, 360-60);
-		double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
-		CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
-		CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, 20720);
-		eff->SetSize(1.0, 0, 1.0);
-		CBattleScene::m_itemManager.Add(eff);
-	}
+	if (dropItem) {
+		// アイテム
+		int itemCount = (m_size + 1) * 10; // 大30　中20　小10
+		for (int ii = 0; ii < itemCount; ii++) {
+			double ang = CFunc::RandI(180 + 60, 360 - 60);
+			double speed = 1.0 + CFunc::RandF(100, 300) / 100.0;
+			CPos addPos = CPos(CFunc::RandI(-50, 50), CFunc::RandI(-50, 50));
+			CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, 20720);
+			eff->SetSize(1.0, 0, 1.0);
+			CBattleScene::m_itemManager.Add(eff);
+		}
 
-	// 大型機の場合、全部弾消し
-	if (m_size == EnemySize::Large) {
-		CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 60);
-	}
-	else if (m_size == EnemySize::Medium) { // 中型機の場合、その機体が出した弾をすべて消す
-		CBattleScene::RemoveBulletByMidiumEnemy(GetEnemyId());
+		// 大型機の場合、全部弾消し
+		if (m_size == EnemySize::Large) {
+			CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Item, 120);
+		}
+		else if (m_size == EnemySize::Medium) { // 中型機の場合、その機体が出した弾をすべて消す
+			CBattleScene::RemoveBulletByMidiumEnemy(GetEnemyId());
+		}
 	}
 }
 

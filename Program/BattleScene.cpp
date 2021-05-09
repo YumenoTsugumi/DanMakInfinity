@@ -76,6 +76,7 @@ void CBattleScene::Init(CGame* gameP) {
 	CBaseLauncher::SetBeamManagerPointer(&m_beamManager);
 
 	SetBattleScene(this);
+	m_stageManager.SetBattleScene(this);
 
 	// デバッグ用の全敵表示
 	//DebugAllEnemyDirection();
@@ -84,6 +85,8 @@ void CBattleScene::Init(CGame* gameP) {
 	m_bg.SetInitPlayerPos(m_player.m_pos);
 
 	m_ui.Init();
+	m_battleResultUI.Init();
+	m_battleResultUIReset = true;
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -156,6 +159,15 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_effectManager.Draw(50); // 50 最前面
 
 	m_ui.Draw();
+
+	StageManageStatus status = m_stageManager.GetStatus();
+	if (status == StageManageStatus::ResultDrawWait) {
+		if (m_battleResultUIReset) {
+			m_battleResultUI.Set(9999, 8765, 0, 3, 2, 5555, 123456789, 10);
+			m_battleResultUIReset = false;
+		}
+		m_battleResultUI.Draw();
+	}
 
 	m_effectManager.Draw(60); // 60 UI
 
@@ -246,6 +258,12 @@ void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
 		
 	}
 }
+
+// 全敵破壊
+void CBattleScene::DestoryAllEnemyNothingItemDrop() {
+	m_enemyManager.DestoryAllEnemyNothingItemDrop();
+}
+
 
 // 全敵表示
 void CBattleScene::DebugAllEnemyDirection()

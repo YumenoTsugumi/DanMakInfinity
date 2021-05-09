@@ -23,6 +23,12 @@ void CPlayer::Init()
 
 	m_playerImage = (CImage*)CGame::GetResource(800);
 	m_bitRImage = (CImage*)CGame::GetResource(801);
+	m_hitMakerImage = (CImage*)CGame::GetResource(850);
+
+	m_posBitAngleL[0] = 0;
+	m_posBitAngleL[1] = 180.0;
+	m_posBitAngleR[0] = 0;
+	m_posBitAngleR[1] = 180.0;
 }
 
 void CPlayer::SetBulletManager(CBulletManager* playerBullet)
@@ -90,15 +96,11 @@ void CPlayer::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 1.0, 0.0, m_playerImage->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 0.75, m_hitMakerRotateAngle, m_hitMakerImage->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 0.75, -m_hitMakerRotateAngle, m_hitMakerImage->m_iamge);
+	m_hitMakerRotateAngle += CFunc::ToRad(1.0);
 
-	static int aaa = 0;
-	if (aaa == 0) {
-		aaa++;
-		m_posBitAngleL[0] = 0;
-		m_posBitAngleL[1] = 180.0;
-		m_posBitAngleR[0] = 0;
-		m_posBitAngleR[1] = 180.0;
-	}
+
 	m_posBitAngleL[0] += 3.0;
 	m_posBitAngleL[1] += 3.0;
 	m_posBitAngleR[0] += 3.0;

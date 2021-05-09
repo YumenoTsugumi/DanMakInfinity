@@ -140,12 +140,12 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\auraRed.png"), "auraRed", 501);
 
 
-	//
-
 	m_resourceManager.Add(new CImage("ResourceX\\player\\playerA.png"), "playerA", 800);
 	m_resourceManager.Add(new CImage("ResourceX\\player\\BitR.png"), "BitR", 801);
 	m_resourceManager.Add(new CImage("ResourceX\\player\\playerB.png"), "playerB", 810);
 	m_resourceManager.Add(new CImage("ResourceX\\player\\playerC.png"), "playerC", 820);
+
+	m_resourceManager.Add(new CImage("ResourceX\\player\\hitMaker.png"), "hitMaker.png", 850);
 
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\PlayerBulletA.png", 1, 1, 1, 40, 40, 0, 0.0), "playerBulletA", 990);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
@@ -195,8 +195,28 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWakuAura.png"), "RankWakuAura", 1153);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku2.png"), "RankWaku2", 1154);
 
-	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
 
+
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_A.png"), "ResultUI_A", 1201);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_AA.png"), "ResultUI_AA", 1202);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_AB.png"), "ResultUI_AB", 1203);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_AC.png"), "ResultUI_AC", 1204);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_B.png"), "ResultUI_B", 1205);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_C.png"), "ResultUI_C", 1206);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_D.png"), "ResultUI_D", 1207);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_E.png"), "ResultUI_E", 1208);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_F.png"), "ResultUI_F", 1209);
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\ResultUI_N%d.png", ii);
+		std::string format2 = MyFormat("ResultUI_N%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1210 + ii);
+	}
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_Np.png"), "ResultUI_Np", 1220);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_Nc.png"), "ResultUI_Nc", 1221);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_Nd.png"), "ResultUI_Nd", 1222);
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
 }
 void CGame::ImageLoadByThread()
 {

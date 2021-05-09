@@ -13,51 +13,72 @@
 #include "Spawner.h"
 #include "Game.h"
 
-const int FormationSpawneSmallATiming = 3; // 3秒ごとに編隊をスポーンする間隔
-const int FormationSpawneSmallBTiming = 5; // 5秒ごとに編隊をスポーンする間隔
-const int FormationSpawneFinishTiming = 1.2; // 1編隊の全敵をスポーンする時間(秒)
+const int toSecond = 60;
+const int FormationSpawneFinishTiming = toSecond * 1.2; // 1編隊の全敵をスポーンする時間(秒)
+
+const int FormationSpawneSmallATiming = toSecond * 3; // 3秒ごとに編隊をスポーンする間隔
+const int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊をスポーンする間隔
+const int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔
+const int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間
+
+const int TotalSpawneTime = toSecond * 5; // 敵をスポーンしつづける時間
+const int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 5; // 最後敵をスポーンしてからちょっと待つ時間
 
 StageManager::StageManager()
 {
 	m_count = 0;
-	m_maxCount = 60*120; // 120s
-
-	m_spawneTimingSmallA = 60 * FormationSpawneSmallATiming; // n秒毎に敵スポーン
-	m_spawneTimingSmallB = 60 * FormationSpawneSmallBTiming; // n秒毎に敵スポーン
-
-
-	m_strengthCounter = 0;
+	status = StageManageStatus::Now;
 }
 
 StageManager::~StageManager() 
 {
 }
 
+void StageManager::StageReset()
+{
+	m_count = 0;
+	status = StageManageStatus::Now;
+}
 
 void StageManager::Main()
 {
-	if (m_count >= m_maxCount) {
+	if (m_count >= TotalSpawneTime) {
+		// 全敵のスポーンが終わってから一定時間まつ
+		if (m_count == TotalSpawneTime) {
+			status = WaitingEnd;
+		}
+		
+		// すべての敵を破壊して、UIを表示する
+		if (m_count == TotalSpawneTime_EndTime) {
+			CBattleScene::SetBulletRemoveTime(CBattleScene::BulletRemoveType::Nothing, 0);
+			m_scene->DestoryAllEnemyNothingItemDrop();
+			status = ResultDrawWait;
+		}
+		m_count++;
 		return;
 	}
 
-	static bool debugMode = false;
-	static int debugOnce = 0;
-	if (m_count % m_spawneTimingSmallA == 0 && (debugOnce == 0 || !debugMode)) {
-		debugOnce++;
-		//GetTestSpawner();
+
+#if 1
+	if (m_count % FormationSpawneSmallATiming == 0) {
 		SpawnerBase* spawner = GetTestSpawner();
 		m_spawners.push_back(spawner);
 	}
-
+#else
 	// 編隊の出現順番
-	//if (m_count % m_spawneTimingSmallA == 0 && (debugOnce == 0 || !debugMode)) {
-	//	debugOnce++;
-	//	AddSpawnerA();
-	//}
-	//if (m_count % m_spawneTimingSmallB == 0 && (debugOnce == 0 || !debugMode)) {
-	//	debugOnce++;
-	//	AddSpawnerB();
-	//}
+	if (m_count % FormationSpawneSmallATiming == 0 && m_count != 0) {
+		m_spawners.push_back(GetRandomSpawner_SmallA());
+	}
+	if (m_count % FormationSpawneSmallBTiming == 0) {
+		m_spawners.push_back(GetRandomSpawner_SmallB());
+	}
+	if (m_count % FormationSpawneMediumATiming == 0 && m_count != 0) {
+		m_spawners.push_back(GetRandomSpawner_MediumA());
+	}
+	if (m_count % FormationSpawneLargeATiming == 0 && m_count != 0) {
+		m_spawners.push_back(GetRandomSpawner_LargeA());
+	}
+#endif
 
 	for (auto it = m_spawners.begin(); it != m_spawners.end();) {
 		SpawnerBase* spawner = *it;
@@ -71,23 +92,6 @@ void StageManager::Main()
 	}
 
 	m_count++;
-}
-
-
-void StageManager::AddSpawnerA()
-{
-	SpawnerBase* spawner = GetRandomSpawner_SmallA();
-	m_spawners.push_back(spawner);
-}
-void StageManager::AddSpawnerB()
-{
-	SpawnerBase* spawner = GetRandomSpawner_SmallB();
-	m_spawners.push_back(spawner);
-}
-
-SpawnerBase* StageManager::GetRandomSpawner()
-{
-	return new SpawnerSmallLeftRight_Stop(EnemySize::Small);
 }
 
 SpawnerBase* StageManager::GetRandomSpawner_SmallA()
@@ -110,6 +114,32 @@ SpawnerBase* StageManager::GetRandomSpawner_SmallB()
 		case 0: return new SpawnerSmallTop_NoStop_Uturn(size);
 		case 1: return new SpawnerSmallTop_NoStop_LRTurn(size);
 		case 2: return new SpawnerSmallTop_NoStop_LRCos(size);
+	}
+	return nullptr;
+}
+
+SpawnerBase* StageManager::GetRandomSpawner_MediumA() 
+{
+	EnemySize size = EnemySize::Medium;
+	int rand = CFunc::RandI(0, 3);
+	switch (rand) {
+		case 0:	return new SpawnerSmallTop_Stop(size);
+		case 1: return new SpawnerSmallLeftRight_Stop(size);
+		case 2: return new SpawnerSmall_Line_Top_Stop(size);
+		case 3: return new SpawnerSmall_Line_LeftRight_Stop(size);
+	}
+	return nullptr;
+}
+
+SpawnerBase* StageManager::GetRandomSpawner_LargeA()
+{
+	EnemySize size = EnemySize::Large;
+	int rand = CFunc::RandI(0, 3);
+	switch (rand) {
+		case 0:	return new SpawnerSmallTop_Stop(size);
+		case 1: return new SpawnerSmallLeftRight_Stop(size);
+		case 2: return new SpawnerSmall_Line_Top_Stop(size);
+		case 3: return new SpawnerSmall_Line_LeftRight_Stop(size);
 	}
 	return nullptr;
 }
@@ -150,6 +180,7 @@ SpawnerBase::SpawnerBase(EnemySize spawnerSize) :
 	m_spawnerIndex(0)
 {
 	SetSpawner(spawnerSize);
+	SetSpeedBySize();
 }
 SpawnerBase::~SpawnerBase(){}
 void SpawnerBase::Spawne(){}
@@ -213,9 +244,9 @@ CBaseEnemy* SpawnerBase::GetMediumEnemy(int index, const CPos& pos)
 {
 	int rand = CFunc::RandI(1, 3);
 	switch (rand) {
-	case 1: return new CEnemyM01(pos);
-	case 2: return new CEnemyM02(pos);
-	case 3: return new CEnemyM08(pos);
+		case 1: return new CEnemyM01(pos);
+		case 2: return new CEnemyM02(pos);
+		case 3: return new CEnemyM08(pos);
 	}
 	return nullptr;
 }
@@ -240,6 +271,18 @@ double SpawnerBase::ToSecond(double millSecond)
 	return millSecond * 60.0;
 }
 
+void SpawnerBase::SetSpeedBySize()
+{
+	if (m_spawnerSize == EnemySize::Small) {
+		m_speed = CFunc::RandD(4.0, 5.5);
+	}
+	else if (m_spawnerSize == EnemySize::Medium) {
+		m_speed = CFunc::RandD(1.5, 2.5);
+	}
+	else if (m_spawnerSize == EnemySize::Large) {
+		m_speed = CFunc::RandD(1.0, 1.3);
+	}
+}
 
 // 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 // FulHDなら (480,20)(1440,1060)の範囲

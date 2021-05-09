@@ -21,8 +21,6 @@ public:
 	void Draw();
 
 protected:
-
-
 	// “à‘¤
 	CImage* m_textScore;
 	CImage* m_textHiScore;

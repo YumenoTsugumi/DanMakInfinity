@@ -7,6 +7,11 @@
 class SpawnerBase;
 class CBaseEnemy;
 
+enum StageManageStatus {
+	Now = 0,
+	WaitingEnd = 1,
+	ResultDrawWait = 2
+};
 
 class StageManager {
 public:
@@ -14,22 +19,33 @@ public:
 	virtual ~StageManager();
 	int m_count;
 	int m_maxCount;
+	void StageReset();
+
+	StageManageStatus GetStatus() {
+		return status;
+	}
+	StageManageStatus status;
+
 	int m_spawneTimingSmallA;
 	int m_spawneTimingSmallB;
+	int m_spawneTimingMediumA;
+	int m_spawneTimingLargeA;
 	std::vector<SpawnerBase*> m_spawners;
-
-	// 編隊を強さに振り分けるやつ
-	int m_strengthCounter;
 
 	void Main();
 
-	SpawnerBase* GetRandomSpawner();
 	SpawnerBase* GetTestSpawner();
 
-	void AddSpawnerA();
-	void AddSpawnerB();
-	SpawnerBase* GetRandomSpawner_SmallA();
-	SpawnerBase* GetRandomSpawner_SmallB();
+	SpawnerBase* GetRandomSpawner_SmallA(); // 動き回る+停止も含む
+	SpawnerBase* GetRandomSpawner_SmallB(); // 動き回る
+
+	SpawnerBase* GetRandomSpawner_MediumA(); // 停止のみ
+	SpawnerBase* GetRandomSpawner_LargeA(); // 停止のみ
+
+	void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	CBattleScene* m_scene;
 };
 
 class SpawnerBase {
@@ -74,8 +90,9 @@ public:
 	EnemySize m_spawnerSize; // 出現する敵のサイズ
 	CBaseEnemy* GetEnemy(const CPos& pos);
 
-	int m_index; // 出現する敵（子クラスで使用）
+	void SetSpeedBySize();
 
+	int m_index; // 出現する敵（子クラスで使用）
 private:
 	int GetSmallEnemyIndex();
 	CBaseEnemy* GetSmallEnemy(int index, const CPos& pos);

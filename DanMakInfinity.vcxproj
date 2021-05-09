@@ -154,6 +154,7 @@
     <ClCompile Include="Program\BaseEffect.cpp" />
     <ClCompile Include="Program\BaseItem.cpp" />
     <ClCompile Include="Program\BaseLauncher.cpp" />
+    <ClCompile Include="Program\BattleResultUI.cpp" />
     <ClCompile Include="Program\BattleScene.cpp" />
     <ClCompile Include="Program\BattleSceneUI.cpp" />
     <ClCompile Include="Program\BulletBase.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Program\BaseEffect.h" />
     <ClInclude Include="Program\BaseItem.h" />
     <ClInclude Include="Program\BaseLauncher.h" />
+    <ClInclude Include="Program\BattleResultUI.h" />
     <ClInclude Include="Program\BattleScene.h" />
     <ClInclude Include="Program\BattleSceneUI.h" />
     <ClInclude Include="Program\BulletBase.h" />
