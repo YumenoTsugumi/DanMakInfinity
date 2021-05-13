@@ -195,9 +195,6 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWakuAura.png"), "RankWakuAura", 1153);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku2.png"), "RankWaku2", 1154);
 
-
-
-
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_A.png"), "ResultUI_A", 1201);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_AA.png"), "ResultUI_AA", 1202);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_AB.png"), "ResultUI_AB", 1203);
@@ -216,7 +213,20 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_Nc.png"), "ResultUI_Nc", 1221);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\ResultUI_Nd.png"), "ResultUI_Nd", 1222);
 
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankS.png"), "rankS", 1250);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankA.png"), "rankA", 1251);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankB.png"), "rankB", 1252);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankC.png"), "rankC", 1253);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankD.png"), "rankD", 1254);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\rankE.png"), "rankE", 1255);
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\uiaura.png"), "uiaura", 1260);
+
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
+
+
+
+
 }
 void CGame::ImageLoadByThread()
 {

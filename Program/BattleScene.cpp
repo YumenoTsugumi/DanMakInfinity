@@ -160,10 +160,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	m_ui.Draw();
 
-	StageManageStatus status = m_stageManager.GetStatus();
-	if (status == StageManageStatus::ResultDrawWait) {
+	StageManager::StageManageStatus status = m_stageManager.GetStatus();
+	if (status == StageManager::StageManageStatus::ResultDrawWait) {
 		if (m_battleResultUIReset) {
-			m_battleResultUI.Set(9999, 8765, 0, 3, 2, 5555, 123456789, 10);
+			m_battleResultUI.Set(9999, 8765, 0, 3, 2, 5555, 12345678, 10);
 			m_battleResultUIReset = false;
 		}
 		m_battleResultUI.Draw();

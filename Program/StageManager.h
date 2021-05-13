@@ -7,14 +7,16 @@
 class SpawnerBase;
 class CBaseEnemy;
 
-enum StageManageStatus {
-	Now = 0,
-	WaitingEnd = 1,
-	ResultDrawWait = 2
-};
+
 
 class StageManager {
 public:
+	enum StageManageStatus {
+		Now = 0,
+		WaitingEnd = 1,
+		ResultDrawWait = 2
+	};
+
 	StageManager();
 	virtual ~StageManager();
 	int m_count;

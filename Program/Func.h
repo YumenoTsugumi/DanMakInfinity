@@ -142,6 +142,17 @@ public:
 	//ex)23456->5
 	static int GetDigit(int number);
 	static int GetDigit(long long number);
+	//	m_resultUI_Np,m_resultUI_Nd,m_resultUI_Nc
+	//0123456789
+	// 10[%]  11[.] 12[,]
+	// 1234567
+	// [0] : 7
+	// [1] : 6
+	// [2] : 5
+	// [3] : ,
+	// [4] : 4
+	// [5] : 3
+	static void GetDigitArray(int zeroumeDigit, long long number, std::vector<int>& indexAry);
 
 	//数値だけの文字列に,をつけていく
 	//input:1234567

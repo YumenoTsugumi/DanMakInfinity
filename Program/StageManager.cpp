@@ -21,7 +21,7 @@ const int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊を�
 const int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔
 const int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間
 
-const int TotalSpawneTime = toSecond * 5; // 敵をスポーンしつづける時間
+const int TotalSpawneTime = toSecond * 1; // 敵をスポーンしつづける時間
 const int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 5; // 最後敵をスポーンしてからちょっと待つ時間
 
 StageManager::StageManager()

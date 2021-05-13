@@ -263,6 +263,78 @@ int CFunc::GetDigit(long long number)
 	return digit;
 }
 
+//	m_resultUI_Np,m_resultUI_Nd,m_resultUI_Nc
+//0123456789
+// 10[%]  11[.] 12[,]
+// 7 1234567
+// [0] : 7
+// [1] : 6
+// [2] : 5
+// [3] : ,
+// [4] : 4
+// [6] : 3
+// [7] : 2
+// [8] : ,
+// [9] : 1
+
+// 5 123
+// [0] : 3
+// [1] : 2
+// [2] : 1
+// [3] : ,
+// [4] : 0
+// [5] : 0
+// zeroumeDigitが6でnumberが12345　なら　012,345になる
+void CFunc::GetDigitArray(int zeroDigit, long long number, std::vector<int>& indexAry)
+{
+
+	int count = 0;
+	if(number == 0){
+		for (int ii = zeroDigit; ii > 0; ii--) {
+			count++;
+			indexAry.push_back(0);
+			if (count % 3 == 0) {
+				if (ii == 1) {
+					continue;
+				}
+				indexAry.push_back(12); // 12はカンマ
+			}
+		}
+		return;
+	}
+
+	int digit = CFunc::GetDigit(number);
+	for (int ii = digit; ii > 0; ii--) {
+		count++;
+		int index = (number / (int)pow(10, digit - ii)) % 10;
+
+		indexAry.push_back(index);
+		if (count % 3 == 0) {
+			if (ii == 1) {
+				continue;
+			}
+			indexAry.push_back(12); // 12はカンマ
+		}
+	}
+	// 0が続く場合
+	if (zeroDigit - digit > 0) {
+		if (count % 3 == 0) {
+			indexAry.push_back(12); // 12はカンマ
+		}
+	}
+	for (int ii = 0; ii < zeroDigit - digit; ii++) {
+		count++;
+		indexAry.push_back(0);
+		if (count % 3 == 0) {
+			if (ii + digit == zeroDigit-1) {
+				continue;
+			}
+			indexAry.push_back(12); // 12はカンマ
+		}
+	}
+	return;
+}
+
 //1ベクトルの角度
 double CFunc::GetOneVectorAngle(CPos p)
 {

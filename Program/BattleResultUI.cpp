@@ -36,6 +36,14 @@ void CBattleResultUI::Init() {
 	m_resultUI_Np = (CImage*)CGame::GetResource(1220);
 	m_resultUI_Nc = (CImage*)CGame::GetResource(1221);
 	m_resultUI_Nd = (CImage*)CGame::GetResource(1222);
+
+	m_resultUI_rankS = (CImage*)CGame::GetResource(1250);
+	m_resultUI_rankA = (CImage*)CGame::GetResource(1251);
+	m_resultUI_rankB = (CImage*)CGame::GetResource(1252);
+	m_resultUI_rankC = (CImage*)CGame::GetResource(1253);
+	m_resultUI_rankD = (CImage*)CGame::GetResource(1254);
+	m_resultUI_rankE = (CImage*)CGame::GetResource(1255);
+	m_resultUI_uiaura = (CImage*)CGame::GetResource(1260);
 }
 
 void CBattleResultUI::Set(int destoryLargeEnemyRatio,
@@ -47,6 +55,8 @@ void CBattleResultUI::Set(int destoryLargeEnemyRatio,
 	int getScore,
 	int getRank
 ){
+	status = BattleResultUIStatus::Now;
+
 	m_destoryLargeEnemyRatio  = destoryLargeEnemyRatio;
 	m_destoryMediumEnemyRatio = destoryMediumEnemyRatio;
 	m_destorySmallEnemyRatio = destorySmallEnemyRatio;
@@ -68,6 +78,7 @@ void CBattleResultUI::Set(int destoryLargeEnemyRatio,
 	m_drawDdestoryMediumEnemyRatio = 0;
 	m_drawDdestorySmallEnemyRatio = 0;
 	m_drawGetItemRatio = 0;
+	m_drawGetScore = m_getScore;
 
 	m_usedBombSize = 2.0;
 	m_missCountSize = 2.0;
@@ -77,6 +88,19 @@ void CBattleResultUI::Set(int destoryLargeEnemyRatio,
 	for (int ii = 0; ii < 4; ii++) {
 		m_countupFinishEndFlag[ii] = false;
 	}
+	for (int ii = 0; ii < 4; ii++) {
+		m_rankAuraAngle[ii] = false;
+	}
+	m_rankDrawSize = 3.0;
+	m_rankDrawAlpha = 0;
+
+	int dmyY;
+	GetGraphSize(m_resultUI_E->m_iamge, &m_getScoreImageSizeX, &dmyY);
+	m_getScoreDrawSize = 2.0;
+	m_getScoreDrawAlpha = 0;
+
+
+	m_allAlphaRatio = 1.0;
 }
 
 void CBattleResultUI::Draw(){
@@ -98,7 +122,7 @@ void CBattleResultUI::Draw(){
 		if (m_count >= drawTiming[ii]) {
 			double subX = 0;
 			if (ii == 1 || ii == 2 || ii == 3)subX = 90;
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_draw1Alpha[ii]);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_draw1Alpha[ii] * m_allAlphaRatio);
 			double posX = resultUI_x + subX + m_draw1ImageSizeX[ii] / 2;
 			double posY = resultUI_y + ii * span_y;
 			CDxFunc::MyDrawRotaGraph(posX, posY, m_draw1Size[ii], 0.0, drawImage[ii]->m_iamge);
@@ -180,30 +204,115 @@ void CBattleResultUI::Draw(){
 
 
 	if (m_count >= timing5) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_usedBombAlpha);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_usedBombAlpha * m_allAlphaRatio);
 		CDxFunc::MyDrawRotaGraph(resultUI_x + 800, resultUI_y + span_y * 5, m_usedBombSize, 0.0, drawNumberImage[m_usedBomb]->m_iamge);
 		if (m_usedBombSize > 1.0) {
 			m_usedBombSize -= 1.0 / smallInvTime;
 		}
 		if (m_usedBombAlpha < 255) {
-			m_usedBombAlpha += 225.0 / smallInvTime;
+			m_usedBombAlpha += 255.0 / smallInvTime;
 		}
 	}
 	if (m_count >= timing6) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_missCountAlpha);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_missCountAlpha * m_allAlphaRatio);
 		CDxFunc::MyDrawRotaGraph(resultUI_x + 800, resultUI_y + span_y * 6, m_missCountSize, 0.0, drawNumberImage[m_missCount]->m_iamge);
 		if (m_missCountSize > 1.0) {
 			m_missCountSize -= 1.0 / smallInvTime;
 		}
 		if (m_missCountAlpha < 255) {
-			m_missCountAlpha += 225.0 / smallInvTime;
+			m_missCountAlpha += 255.0 / smallInvTime;
 		}
+	}
+
+	int timing7 = timing6 + draw2SCountupSpan;
+	if (m_count >= timing7) {
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 96 * m_rankDrawAlpha/255.0 * m_allAlphaRatio);
+		CDxFunc::MyDrawRotaGraph(resultUI_x + 800 - 350, resultUI_y + span_y * 7 + 50, 0.5, m_rankAuraAngle[0], m_resultUI_uiaura->m_iamge);
+		CDxFunc::MyDrawRotaGraph(resultUI_x + 800 - 350, resultUI_y + span_y * 7 + 50, 0.4, m_rankAuraAngle[1], m_resultUI_uiaura->m_iamge);
+		CDxFunc::MyDrawRotaGraph(resultUI_x + 800 - 350, resultUI_y + span_y * 7 + 50, 0.5, m_rankAuraAngle[2], m_resultUI_uiaura->m_iamge);
+		CDxFunc::MyDrawRotaGraph(resultUI_x + 800 - 350, resultUI_y + span_y * 7 + 50, 0.4, m_rankAuraAngle[3], m_resultUI_uiaura->m_iamge);
+		m_rankAuraAngle[0] += 0.005;
+		m_rankAuraAngle[1] += 0.0022;
+		m_rankAuraAngle[2] -= 0.004;
+		m_rankAuraAngle[3] -= 0.0013;
+
+		
+		if (m_rankDrawSize > 1.0) {
+			m_rankDrawSize -= 1.0 / smallInvTime;
+		}
+		if (m_rankDrawAlpha < 255) {
+			m_rankDrawAlpha += 255.0 / (smallInvTime*2);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_rankDrawAlpha * m_allAlphaRatio);
+		CDxFunc::MyDrawRotaGraph(resultUI_x + 800 - 350, resultUI_y + span_y * 7 + 50, m_rankDrawSize, 0.0, m_resultUI_rankS->m_iamge);
+	}
+
+	int timing8 = timing7 + draw2SCountupSpan * 2;
+	int timing9 = timing8 + draw2SCountupSpan * 1;
+	int timing10 = timing9 + draw2SCountupSpan * 2;
+	int timing9CountDown = 120;
+	double addCountDownRatio = m_getScore / timing9CountDown;
+	if (m_count >= timing9) {
+		
+		if (m_getScoreDrawSize > 1.0) {
+			m_getScoreDrawSize -= 1.0 / smallInvTime;
+		}
+		if (m_getScoreDrawAlpha < 255) {
+			m_getScoreDrawAlpha += 255.0 / (smallInvTime * 2);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_getScoreDrawAlpha * m_allAlphaRatio);
+		double posX = resultUI_x + m_getScoreImageSizeX / 2;
+		double posY = resultUI_y + 9 * span_y;
+		CDxFunc::MyDrawRotaGraph(posX, posY, m_getScoreDrawSize, 0.0, m_resultUI_E->m_iamge);
+	}
+	if (m_count >= timing9) {
+		DrawDigitNumber2(m_drawGetScore, resultUI_x + 800, resultUI_y + span_y * 9);
+	}
+	if (m_count >= timing10) {
+		if (m_drawGetScore >= addCountDownRatio) {
+			m_drawGetScore -= addCountDownRatio;
+			CBattleScene::AddScore(addCountDownRatio);
+		}
+		else if (addCountDownRatio - m_drawGetScore > 0) {
+			m_drawGetScore = 0;
+			CBattleScene::AddScore(m_drawGetScore);
+		}
+	}
+
+	constexpr double timing11FeedOut = 20.0;
+	int timing11 = timing10 + timing9CountDown + draw2SCountupSpan * 2;
+	if (m_count >= timing11) {
+		m_allAlphaRatio -= 1.0 / timing11FeedOut;
+	}
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+}
+
+
+void CBattleResultUI::DrawDigitNumber2(int number, int posX, int posY)
+{
+
+	CImage* drawNumberImage[] = {
+		m_resultUI_N0,m_resultUI_N1,m_resultUI_N2,m_resultUI_N3,m_resultUI_N4,
+		m_resultUI_N5,m_resultUI_N6,m_resultUI_N7,m_resultUI_N8,m_resultUI_N9,
+		m_resultUI_Np,m_resultUI_Nd,m_resultUI_Nc
+	};
+
+	std::vector<int> indexAry;
+	CFunc::GetDigitArray(8, number, indexAry);
+
+	for (int ii = 0; ii < indexAry.size(); ii++) {
+		double x = posX - ii * 36;
+		double y = posY;
+		CImage* drawImage = drawNumberImage[indexAry[ii]];
+		CDxFunc::MyDrawRotaGraph(x, y, m_getScoreDrawSize, 0.0, drawImage->m_iamge);
 	}
 }
 
 void CBattleResultUI::DrawDestoryRatio(int destoryEnemyRatio, int posX, int posY)
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * m_allAlphaRatio);
 
 	CImage* drawNumberImage[] = {
 		m_resultUI_N0,m_resultUI_N1,m_resultUI_N2,m_resultUI_N3,m_resultUI_N4,

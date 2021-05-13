@@ -14,14 +14,28 @@
 
 constexpr int draw1Count = 7;
 
+
+
+
+
 class CBattleResultUI{
 public:
+	enum BattleResultUIStatus {
+		Now = 0, // 描画中
+		FeedOut = 1, // 終わってフェードアウト中
+		Finish = 2 // 完全に終了
+	};
+
 	CBattleResultUI();
 	virtual ~CBattleResultUI();
 
 	void Init();
 	void Draw();
 
+	BattleResultUIStatus GetStatus() {
+		return status;
+	}
+	BattleResultUIStatus status;
 protected:
 	int m_count;
 
@@ -49,6 +63,14 @@ protected:
 	CImage* m_resultUI_Nc;
 	CImage* m_resultUI_Nd;
 
+	CImage* m_resultUI_rankS;
+	CImage* m_resultUI_rankA;
+	CImage* m_resultUI_rankB;
+	CImage* m_resultUI_rankC;
+	CImage* m_resultUI_rankD;
+	CImage* m_resultUI_rankE;
+	CImage* m_resultUI_uiaura;
+
 public:
 	void Set(	int destoryLargeEnemyRatio,
 				int destoryMediumEnemyRatio,
@@ -71,6 +93,7 @@ public:
 	int m_drawDdestoryMediumEnemyRatio;
 	int m_drawDdestorySmallEnemyRatio;
 	void DrawDestoryRatio(int destoryEnemyRatio, int posX, int posY);
+	void DrawDigitNumber2(int number, int posX, int posY);
 
 	// 使用ボム
 	int m_usedBomb;
@@ -91,12 +114,23 @@ public:
 	int m_draw1Alpha[draw1Count];
 	int m_draw1ImageSizeX[draw1Count];
 
+	// ランクの後ろにあるピカピカ
+	double m_rankDrawSize;
+	double m_rankDrawAlpha;
+	double m_rankAuraAngle[4];
+
 	// 取得スコア
 	int m_getScore;
-
+	int m_drawGetScore;
+	int m_getScoreImageSizeX;
+	double m_getScoreDrawSize;
+	double m_getScoreDrawAlpha;
 
 	// 上昇ランク
 	int m_getRank;
 
+
+	// 全体のαlpha
+	double m_allAlphaRatio;
 };
 
