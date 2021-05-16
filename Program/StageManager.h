@@ -20,7 +20,6 @@ public:
 	StageManager();
 	virtual ~StageManager();
 	int m_count;
-	int m_maxCount;
 	void StageReset();
 
 	StageManageStatus GetStatus() {

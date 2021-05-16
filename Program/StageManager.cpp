@@ -16,18 +16,17 @@
 const int toSecond = 60;
 const int FormationSpawneFinishTiming = toSecond * 1.2; // 1編隊の全敵をスポーンする時間(秒)
 
-const int FormationSpawneSmallATiming = toSecond * 3; // 3秒ごとに編隊をスポーンする間隔
-const int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊をスポーンする間隔
-const int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔
-const int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間
+const int FormationSpawneSmallATiming = toSecond * 3; // 3秒ごとに編隊をスポーンする間隔(秒)
+const int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊をスポーンする間隔(秒)
+const int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔(秒)
+const int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間隔(秒)
 
-const int TotalSpawneTime = toSecond * 1; // 敵をスポーンしつづける時間
-const int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 5; // 最後敵をスポーンしてからちょっと待つ時間
+const int TotalSpawneTime = toSecond * 11; // 敵をスポーンしつづける時間（秒
+const int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 7; // 最後敵をスポーンしてからちょっと待つ時間（秒
 
 StageManager::StageManager()
 {
-	m_count = 0;
-	status = StageManageStatus::Now;
+	StageReset();
 }
 
 StageManager::~StageManager() 
@@ -36,8 +35,6 @@ StageManager::~StageManager()
 
 void StageManager::StageReset()
 {
-	m_count = 0;
-	status = StageManageStatus::Now;
 }
 
 void StageManager::Main()
@@ -59,11 +56,30 @@ void StageManager::Main()
 	}
 
 
-#if 1
-	if (m_count % FormationSpawneSmallATiming == 0) {
-		SpawnerBase* spawner = GetTestSpawner();
-		m_spawners.push_back(spawner);
-	}
+#if 0
+	//if (m_count  == 1) {
+	//	SpawnerBase* spawner = GetTestSpawner();
+	//	m_spawners.push_back(spawner);
+	//}
+
+	//if (m_count % FormationSpawneSmallATiming == 0) {
+	//	SpawnerBase* spawner = GetTestSpawner();
+	//	m_spawners.push_back(spawner);
+	//}
+
+	//// 編隊の出現順番
+	//if (m_count % FormationSpawneSmallATiming == 0) {
+	//	m_spawners.push_back(GetRandomSpawner_SmallA());
+	//}
+	//if (m_count % FormationSpawneSmallBTiming == 0) {
+	//	m_spawners.push_back(GetRandomSpawner_SmallB());
+	//}
+	//if (m_count % FormationSpawneMediumATiming == 0) {
+	//	m_spawners.push_back(GetRandomSpawner_MediumA());
+	//}
+	//if (m_count % FormationSpawneLargeATiming == 0) {
+	//	m_spawners.push_back(GetRandomSpawner_LargeA());
+	//}
 #else
 	// 編隊の出現順番
 	if (m_count % FormationSpawneSmallATiming == 0 && m_count != 0) {
@@ -174,7 +190,6 @@ SpawnerBase* StageManager::GetTestSpawner()
 
 SpawnerBase::SpawnerBase(EnemySize spawnerSize) :
 	m_count(0),
-	m_maxCount(0),
 	m_spawneTiming(0),
 	m_deleteFlg(0),
 	m_spawnerIndex(0)

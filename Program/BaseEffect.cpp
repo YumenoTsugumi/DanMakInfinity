@@ -78,6 +78,11 @@ void CBaseEffect::Set(){
 	m_waitCount = 0;
 	m_waitTime = 0;
 	m_scroll = true;
+
+	m_drawAddAnimeRotate = 0.0;
+	m_drawAnimeRotate = 0.0;
+	m_addAcce2 = 0.0;
+	m_acce2 = 0.0;
 }
 
 void CBaseEffect::Action(){
@@ -87,6 +92,9 @@ void CBaseEffect::Action(){
 			return;
 		}
 	}
+
+	m_acce2 += m_addAcce2;
+	m_accelerate += m_acce2;
 
 	//ˆÚ“®
 	Move();
@@ -186,11 +194,12 @@ void CBaseEffect::Draw(){
 	//•`‰æ
 	if (m_scroll) {
 		CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
-		CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos + subPos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD + m_drawAnimeRotate, m_image[m_imageInfo.m_animePos]);
 	}
 	else {
-		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD, m_image[m_imageInfo.m_animePos]);
+		CDxFunc::MyDrawRotaGraph(m_pos, m_size, m_angle + m_imageInfo.m_rotationAngle + 90.0 / CFunc::RAD + m_drawAnimeRotate, m_image[m_imageInfo.m_animePos]);
 	}
+	m_drawAnimeRotate += m_drawAddAnimeRotate;
 
 	SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 255 ) ;
 }

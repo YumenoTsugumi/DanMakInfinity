@@ -18,7 +18,7 @@ public:
 	//コンストラクタ
 	//発射最大数を設定する
 	//デフォルト1024
-	CItemManager(int m_num = 512);
+	CItemManager(int m_num = 1024);
 	virtual ~CItemManager();
 
 	//メイン描画

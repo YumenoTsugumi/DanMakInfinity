@@ -39,6 +39,34 @@ long long CBattleScene::m_hiScore = 0;
 long long CBattleScene::m_score = 0;
 int CBattleScene::m_rank = 0;
 
+
+int CBattleScene::m_spawneSmallCount = 0;
+int CBattleScene::m_spawneMediumCount = 0;
+int CBattleScene::m_spawneLargeCount = 0;
+int CBattleScene::m_spawneDropItemCount = 0;
+int CBattleScene::m_destroySpawneSmallCount = 0;
+int CBattleScene::m_destroySpawneMediumCount = 0;
+int CBattleScene::m_destroySpawneLargeCount = 0;
+int CBattleScene::m_getSpawneDropItemCount = 0;
+int CBattleScene::m_usedBomb = 0;
+int CBattleScene::m_missCount = 0;
+void CBattleScene::StageCountReset()
+{
+	m_spawneSmallCount = 0;
+	m_spawneMediumCount = 0;
+	m_spawneLargeCount = 0;
+	m_spawneDropItemCount = 0;
+	m_destroySpawneSmallCount = 0;
+	m_destroySpawneMediumCount = 0;
+	m_destroySpawneLargeCount = 0;
+	m_getSpawneDropItemCount = 0;
+	m_usedBomb = 0;
+	m_missCount = 0;
+}
+
+
+constexpr int bgFeedTime = 60; // 背景のフェードアウト時間
+
 // 取得アイテム合計数
 int CBattleScene::m_takeItemRankCount[3] = { 0,0,0 }; // それぞれのランク毎
 
@@ -46,8 +74,8 @@ CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
 	m_playerBullet(256),
 	m_player(),
-	m_bg(),
-	//testLauncher(nullptr),
+	m_bgA(),
+	m_bgB(),
 	m_ui()
 {
 	//シーン,	フェードイン時間60, フェードアウト時間60, 
@@ -77,16 +105,30 @@ void CBattleScene::Init(CGame* gameP) {
 
 	SetBattleScene(this);
 	m_stageManager.SetBattleScene(this);
+	m_player.SetBattleScene(this);
 
 	// デバッグ用の全敵表示
-	//DebugAllEnemyDirection();
 	m_initPlayerPos = m_player.m_pos;
 
-	m_bg.SetInitPlayerPos(m_player.m_pos);
+	m_bgA.SetInitPlayerPos(m_player.m_pos);
+	m_bgB.SetInitPlayerPos(m_player.m_pos);
+	m_bgA.Set();
+	m_bgB.Set();
+
+	m_activeBg = &m_bgA;
+	m_activeBg->SetFeedAlpha(1.0);
+	m_nonActiveBg = &m_bgB;
+	m_nonActiveBg->SetFeedAlpha(0.0);
 
 	m_ui.Init();
 	m_battleResultUI.Init();
 	m_battleResultUIReset = true;
+	m_feedoutCount = 0;
+	m_feedinCount = 0;
+
+	m_haveLife = 3;
+	m_haveBomb = 3;
+
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -117,15 +159,18 @@ void CBattleScene::Main(CInputAllStatus *input){
 	////どんな状態でもアクションする処理
 	m_stageManager.Main(); //敵スポーン
 
-	m_bg.Action();
+	m_bgA.Action();
+	m_bgB.Action();
 	m_player.Action(input);
 	RemoveBullet(); // 弾消し処理
 
-	m_bg.SetPlayerMovedPos(m_player.m_pos);
+	m_bgA.SetPlayerMovedPos(m_player.m_pos);
+	m_bgB.SetPlayerMovedPos(m_player.m_pos);
 	CBaseBullet::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
 	CBaseEnemy::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
 	CBaseLauncher::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
-	m_bg.SetBattleScene(this);
+	m_bgA.SetBattleScene(this);
+	m_bgB.SetBattleScene(this);
 	SetPlayerPos(m_player.m_pos);
 
 	m_playerBullet.Action();
@@ -140,7 +185,11 @@ void CBattleScene::Main(CInputAllStatus *input){
 	Collision_Enemy_PulyerBullet();
 	Collision_Item_Player();
 
-	m_bg.Draw();
+	//m_bgA.Draw();
+	//m_bgA.Draw();
+	m_nonActiveBg->Draw();
+	m_activeBg->Draw();
+	
 	m_effectManager.Draw(0); // 0 一番ボトム
 
 	m_enemyManager.Draw();
@@ -160,14 +209,9 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	m_ui.Draw();
 
-	StageManager::StageManageStatus status = m_stageManager.GetStatus();
-	if (status == StageManager::StageManageStatus::ResultDrawWait) {
-		if (m_battleResultUIReset) {
-			m_battleResultUI.Set(9999, 8765, 0, 3, 2, 5555, 12345678, 10);
-			m_battleResultUIReset = false;
-		}
-		m_battleResultUI.Draw();
-	}
+	// ステージクリアリザルト
+	StageClearResult();
+
 
 	m_effectManager.Draw(60); // 60 UI
 
@@ -176,6 +220,115 @@ void CBattleScene::Main(CInputAllStatus *input){
 	DebugCommand();
 
 }
+
+std::tuple<CBattleScene::ClearRank, int, int> CBattleScene::CalcClearBounus(double destoryLargeEnemyRatio, double destoryMediumEnemyRatio, double destorySmallEnemyRatio,
+	double usedBomb, double missCount, double getItemRatio)
+{
+	int sumBombMiss = usedBomb + missCount;
+	int gameLimitRank = GetRank();
+	if (gameLimitRank > 100)gameLimitRank = 100;
+	int rankScore = gameLimitRank * gameLimitRank;
+
+	// 最大値 1000*100*100*(1～20くらい？)
+	// =200,000,000
+	int totalBombMiss = m_haveLife * 3 + m_haveBomb;
+
+	//S	敵の撃破率がすべて85％以上　かつ　アイテムの取得率が90％以上
+	//	ボムとミスの合計が1回以内
+	if (destoryLargeEnemyRatio >= 8000 && destoryMediumEnemyRatio >= 8000 && destorySmallEnemyRatio >= 8000 &&
+		getItemRatio >= 9000 && sumBombMiss <= 1) {
+		return std::make_tuple(CBattleScene::ClearRank::Rank_S, 1000 * rankScore * totalBombMiss, 5);
+	}
+	//A	敵の撃破率がすべて60％以上　かつ　アイテムの取得率が80％以上
+	//	ボムとミスの合計が2回以内
+	if (destoryLargeEnemyRatio >= 6000 && destoryMediumEnemyRatio >= 6000 && destorySmallEnemyRatio >= 6000 &&
+		getItemRatio >= 8000 && sumBombMiss <= 2) {
+		return std::make_tuple(CBattleScene::ClearRank::Rank_A, 500 * rankScore * totalBombMiss, 4);
+	}
+	//B	敵の撃破率の合計が50％*3以上　かつ　アイテムの取得率が70％以上
+	//	ボムとミスの合計が3回以内
+	int aveRatio = (destoryLargeEnemyRatio + destoryMediumEnemyRatio + destorySmallEnemyRatio) / 3;
+	if (aveRatio >= 5000 && getItemRatio >= 7000 && sumBombMiss <= 3) {
+		return std::make_tuple(CBattleScene::ClearRank::Rank_B, 300 * rankScore * totalBombMiss, 3);
+	}
+	//C	敵の撃破率の合計が40％*3以上　かつ　アイテムの取得率が60％以上
+	//	ボムとミスの合計が4回以内
+	if (aveRatio >= 4000 && getItemRatio >= 6000 && sumBombMiss <= 4) {
+		return std::make_tuple(CBattleScene::ClearRank::Rank_C, 200 * rankScore * totalBombMiss, 2);
+	}
+	//D	敵の撃破率の合計が30％*3以上　かつ　アイテムの取得率が50％以上
+	//	ボムとミスの合計が5回以内
+	if (aveRatio >= 3000 && getItemRatio >= 5000 && sumBombMiss <= 5) {
+		return std::make_tuple(CBattleScene::ClearRank::Rank_D, 100 * rankScore * totalBombMiss, 1);
+	}
+	//E	いずれも満たさない
+	return std::make_tuple(CBattleScene::ClearRank::Rank_D, 100 * rankScore * totalBombMiss, 0);
+}
+void CBattleScene::StageClearResult()
+{
+	StageManager::StageManageStatus status = m_stageManager.GetStatus();
+	if (status != StageManager::StageManageStatus::ResultDrawWait) {
+		return;
+	}
+
+	if (m_battleResultUIReset) {
+		m_battleResultUIReset = false;
+		// 小型機率、中型機率、大型機率、ボム、ミス、アイテム率、クリアボーナス、ランク上昇
+		int destroySpawneSmallRatio = 0;
+		if (m_spawneSmallCount > 0)destroySpawneSmallRatio = ((double)m_destroySpawneSmallCount / m_spawneSmallCount) * 10000;
+		int destroySpawneMediumRatio = 0;
+		if (m_spawneMediumCount > 0)destroySpawneMediumRatio = ((double)m_destroySpawneMediumCount / m_spawneMediumCount) * 10000;
+		int destroySpawneLargeRatio = 0;
+		if (m_spawneLargeCount > 0)destroySpawneLargeRatio = ((double)m_destroySpawneLargeCount / m_spawneLargeCount) * 10000;
+		int getDropItemRatio = 0;
+		if (m_spawneDropItemCount > 0)getDropItemRatio = ((double)m_getSpawneDropItemCount / m_spawneDropItemCount) * 10000;
+
+		auto tuple = CalcClearBounus(destroySpawneLargeRatio, destroySpawneMediumRatio, destroySpawneSmallRatio, m_usedBomb, m_missCount, getDropItemRatio);
+		ClearRank resultRank = std::get<0>(tuple);
+		int score = std::get<1>(tuple);
+		int gameRank = std::get<2>(tuple);
+		m_battleResultUI.Set(
+			destroySpawneLargeRatio, destroySpawneMediumRatio, destroySpawneSmallRatio,
+			m_usedBomb, m_missCount, getDropItemRatio, (int)resultRank, score, gameRank);
+	}
+	m_battleResultUI.Draw();
+	CBattleResultUI::BattleResultUIStatus uiStatus = m_battleResultUI.GetStatus();
+	if (uiStatus == CBattleResultUI::BattleResultUIStatus::FeedOut ||
+		uiStatus == CBattleResultUI::BattleResultUIStatus::Finish) {
+		// リザルトUI表示が終わったら
+		if (m_feedoutCount < bgFeedTime) {
+			m_feedoutCount++;
+		}
+		double feedoutAlpha = 1.0 - (double)m_feedoutCount / bgFeedTime;
+		m_activeBg->SetFeedAlpha(feedoutAlpha);
+		if (m_feedoutCount == bgFeedTime) { // 表の背景を消去
+			m_activeBg->SetFeedAlpha(0.0);
+
+			if (m_feedinCount < bgFeedTime) {
+				m_feedinCount++;
+			}
+			double feedinAlpha = (double)m_feedinCount / bgFeedTime;
+			m_nonActiveBg->SetFeedAlpha(feedinAlpha);
+			if (m_feedinCount == bgFeedTime) {
+				m_nonActiveBg->SetFeedAlpha(1.0);
+				// 裏の背景を描画完了
+				m_activeBg->Set();
+
+				// 初期化処理
+				CBackGroundPatternA* temp = m_nonActiveBg;
+				m_nonActiveBg = m_activeBg;
+				m_activeBg = temp;
+				m_feedinCount = 0;
+				m_feedoutCount = 0;
+
+				m_battleResultUIReset = true;
+				m_stageManager.StageReset(); // スポーンリセット
+				StageCountReset(); // 倒したカウントのリセット
+			}
+		}
+	}
+}
+
 
 // ランクUP
 void CBattleScene::AddRank(int delta)
@@ -199,7 +352,9 @@ void CBattleScene::AddItem(int itemRank) // itemRank 1 2 3
 		return;
 	}
 	m_takeItemRankCount[itemRank-1]++;
-	int addScore = (itemRank) * (m_rank* m_rank);
+	int limitRank = m_rank;
+	if (limitRank > 100) limitRank = 100;
+	int addScore = (itemRank) * (limitRank * limitRank);
 	AddScore(addScore);
 }
 
@@ -231,6 +386,7 @@ void CBattleScene::RemoveBullet()
 			CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, 20720);
 			eff->SetSize(1.0, 0, 1.0);
 			CBattleScene::m_itemManager.Add(eff);
+			CBattleScene::AddDropItemCount();
 		}
 	}
 
@@ -255,7 +411,7 @@ void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
 		CBaseItem* eff = new CBaseItem(EDirType::Abs, bullet->m_pos, speed, ang, 0, 0, -0.1, 0, 20720);
 		eff->SetSize(1.0, 0, 1.0);
 		CBattleScene::m_itemManager.Add(eff);
-		
+		CBattleScene::AddDropItemCount();
 	}
 }
 
@@ -263,7 +419,10 @@ void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
 void CBattleScene::DestoryAllEnemyNothingItemDrop() {
 	m_enemyManager.DestoryAllEnemyNothingItemDrop();
 }
-
+void CBattleScene::DamageAllEnemy(int damage)
+{
+	m_enemyManager.DamageAllEnemy(damage);
+}
 
 // 全敵表示
 void CBattleScene::DebugAllEnemyDirection()

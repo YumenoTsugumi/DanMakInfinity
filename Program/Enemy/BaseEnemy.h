@@ -35,7 +35,7 @@ public:
 	virtual void Draw();
 
 	void DestoryAllEnemyNothingItemDrop();
-
+	void DamageAllEnemy(int damage);
 	int Add(CBaseEnemy* enemy);
 };
 

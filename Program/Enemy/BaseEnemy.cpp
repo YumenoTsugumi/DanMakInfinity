@@ -49,6 +49,16 @@ void CEnemyManager::Draw() {
 
 //配列の空きを探し代入
 int CEnemyManager::Add(CBaseEnemy* Bullet) {
+	if (Bullet->m_size == EnemySize::Small) {
+		CBattleScene::AddSpawneSmallCount();
+	}
+	else if (Bullet->m_size == EnemySize::Medium) {
+		CBattleScene::AddSpawneMediumCount();
+	}
+	else if (Bullet->m_size == EnemySize::Large) {
+		CBattleScene::AddSpawneLargeCount();
+	}
+
 	for (int i = m_order; i < m_enemyTotalNum; i++) {
 		//挿入位置が最大値なら挿入位置を0に戻す
 		if (m_enemy[i] == nullptr) {
@@ -98,6 +108,17 @@ void CEnemyManager::DestoryAllEnemyNothingItemDrop()
 		m_enemy[i]->Die(false); // アイテムを落とさない
 	}
 }
+void CEnemyManager::DamageAllEnemy(int damage)
+{
+	for (int i = 0; i < m_enemyTotalNum; i++) {
+		if (m_enemy[i] == nullptr) {
+			continue;
+		}
+		m_enemy[i]->Damaged(damage);
+	}
+}
+
+
 //------------------------------------------------------
 // 本体
 //------------------------------------------------------
@@ -212,6 +233,18 @@ void CBaseEnemy::Die(bool dropItem) {
 	}
 
 	if (dropItem) {
+		// dropItemする＝倒したということなのでカウントする
+		if (m_size == EnemySize::Small) {
+			CBattleScene::AddDestorySpawneSmallCount();
+		}
+		else if (m_size == EnemySize::Medium) {
+			CBattleScene::AddDestorySpawneMediumCount();
+		}
+		else if (m_size == EnemySize::Large) {
+			CBattleScene::AddDestorySpawneLargeCount();
+		}
+
+
 		// アイテム
 		int itemCount = (m_size + 1) * 10; // 大30　中20　小10
 		for (int ii = 0; ii < itemCount; ii++) {
@@ -221,7 +254,9 @@ void CBaseEnemy::Die(bool dropItem) {
 			CBaseItem* eff = new CBaseItem(EDirType::Abs, m_pos + addPos, speed, ang, 0, 0, -0.1, 0, 20720);
 			eff->SetSize(1.0, 0, 1.0);
 			CBattleScene::m_itemManager.Add(eff);
+			CBattleScene::AddDropItemCount();
 		}
+		
 
 		// 大型機の場合、全部弾消し
 		if (m_size == EnemySize::Large) {

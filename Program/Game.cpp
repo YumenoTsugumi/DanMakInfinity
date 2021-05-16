@@ -147,6 +147,14 @@ void CGame::ImageLoad()
 
 	m_resourceManager.Add(new CImage("ResourceX\\player\\hitMaker.png"), "hitMaker.png", 850);
 
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\bombA.png", 1, 1, 1, 64, 99, 0, 0.0), "bombA", 980);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\sq.png", 1, 1, 1, 101, 103, 0, 0.0), "sq", 981);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_0.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_0", 982);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_1.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_1", 983);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_2.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_2", 984);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_3.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_3", 985);
+
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\PlayerBulletA.png", 1, 1, 1, 40, 40, 0, 0.0), "playerBulletA", 990);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBulletM.png", 1, 1, 1, 100, 200, 0, 0.0), "playerBulletM", 997);
@@ -260,8 +268,6 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_04.png"), "bg_planet_04", 10104);
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_05.png"), "bg_planet_05", 10105);
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_06.png"), "bg_planet_06", 10106);
-	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_07.png"), "bg_planet_07", 10107);
-	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_08.png"), "bg_planet_08", 10108);
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_09.png"), "bg_planet_09", 10109);
 
 

@@ -38,6 +38,19 @@ public:
 	int m_waitCount;
 	void SetWaitTime(int waitTime);
 
+	// 画像だけを回転させる
+	double m_drawAddAnimeRotate;
+	double m_drawAnimeRotate;
+	void SetDrawAnimeRotateDeg(double drawAddAnimeRotate) {
+		m_drawAddAnimeRotate = CFunc::ToRad(drawAddAnimeRotate);
+	}
+
+	void SetAddAcce2(double addAcce2) {
+		m_addAcce2 = addAcce2;
+	}
+	double m_addAcce2; // 加速度 m_acce2 += m_addAcce2;
+	double m_acce2; // 加速度　vx += m_acce2;
+
 
 	//その濃さ　0～255	使用時にはintにキャストする 
 	double m_blendDepth;

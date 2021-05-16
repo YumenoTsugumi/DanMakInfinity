@@ -23,6 +23,18 @@ public:
 	virtual void Action();
 	virtual void Draw();
 
+	void Set();
+
+	int m_bgIndex; // 使用している背景のインデックス
+	static std::vector<int> m_usedBgIndex; // 使用した背景のインデックス
+
+	int m_planetIndex; // 使用している背景のインデックス
+	static std::vector<int> m_usedPlanetIndex; // 使用した背景のインデックス
+
+	double m_feedAlpha;
+	void SetFeedAlpha(double alpha);
+	//---------------------------------------------
+
 	double m_scrollNearY; // 近い背景
 	double m_scrollFarwayY; // 遠く背景
 
@@ -39,6 +51,8 @@ public:
 
 
 	double m_scrollPlanetY; // 星のスクロール速度
+	double m_sizePlanet;
+	double m_angleAngle;
 	CPos m_posPlanet; // 星の座標
 	CImage* m_imagePlanet; // 星のイメージ
 

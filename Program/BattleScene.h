@@ -69,11 +69,49 @@ public:
 	bool m_battleResultUIReset;
 	CBattleResultUI m_battleResultUI; // 勝利画面
 
-	CBackGroundPatternA m_bg; // 背景
+	int m_feedinCount;
+	int m_feedoutCount;
+	CBackGroundPatternA* m_activeBg;
+	CBackGroundPatternA* m_nonActiveBg;
+	CBackGroundPatternA m_bgA; // 背景1
+	CBackGroundPatternA m_bgB; // 背景2
 
 	CBattleSceneUI m_ui;
 
-	
+	//-------------------------
+	// ステージ毎
+	static int m_spawneSmallCount;
+	static int m_spawneMediumCount;
+	static int m_spawneLargeCount;
+	static int m_spawneDropItemCount;
+	static void AddSpawneSmallCount() { m_spawneSmallCount++; }
+	static void AddSpawneMediumCount() { m_spawneMediumCount++; }
+	static void AddSpawneLargeCount() { m_spawneLargeCount++; }
+	static void AddDropItemCount() { m_spawneDropItemCount++; }
+
+	static int m_destroySpawneSmallCount;
+	static int m_destroySpawneMediumCount;
+	static int m_destroySpawneLargeCount;
+	static int m_getSpawneDropItemCount;
+	static void AddDestorySpawneSmallCount() { m_destroySpawneSmallCount++; }
+	static void AddDestorySpawneMediumCount() { m_destroySpawneMediumCount++; }
+	static void AddDestorySpawneLargeCount() { m_destroySpawneLargeCount++; }
+	static void AddGetDropItemCount() { m_getSpawneDropItemCount++; }
+
+	static int m_usedBomb;
+	static int m_missCount;
+	static void AddUsedBomb() { m_usedBomb++; }
+	static void AddMissCount() { m_missCount++; }
+
+	static void StageCountReset();
+
+	enum ClearRank {
+		Rank_S = 0, Rank_A = 1, Rank_B = 2, Rank_C = 3, Rank_D = 4, Rank_E = 5,
+	};
+	void StageClearResult();
+	std::tuple<ClearRank, int ,int> CalcClearBounus(double destoryLargeEnemyRatio,double destoryMediumEnemyRatio,double destorySmallEnemyRatio,
+		double usedBomb,double missCount,double getItemRatio);
+
 	// 取得アイテム合計数
 	static int m_takeItemRankCount[3]; // それぞれのランク毎にとった個数
 	static void AddItem(int itemRank);
@@ -85,6 +123,9 @@ public:
 	}
 	// ランク
 
+	// プレイヤーの情報
+	int m_haveBomb;
+	int m_haveLife;
 
 	// スコア
 	static long long m_hiScore;
@@ -121,6 +162,7 @@ public:
 	static int m_bulletRemoveCount;
 
 	void DestoryAllEnemyNothingItemDrop(); // 全敵破壊
+	void DamageAllEnemy(int damage);
 
 	// BattleSceneCollision.cppにて実装
 	void Collision_Enemy_PulyerBullet(); // 敵　時機の弾

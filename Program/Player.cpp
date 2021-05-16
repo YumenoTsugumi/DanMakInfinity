@@ -29,6 +29,9 @@ void CPlayer::Init()
 	m_posBitAngleL[1] = 180.0;
 	m_posBitAngleR[0] = 0;
 	m_posBitAngleR[1] = 180.0;
+
+	m_bombOn = false;
+	m_bombCount = 0;
 }
 
 void CPlayer::SetBulletManager(CBulletManager* playerBullet)
@@ -90,7 +93,169 @@ void CPlayer::Action(CInputAllStatus* input)
 		}
 		m_bulletMainShotCount++;
 	}
+	if (input->GetBtnOnOff(INPUT_DEF_CANCEL) == true) {
+		BomberSet();
+	}
+	Bomber();
+
+	// 無敵時間
+	MutekiTime();
 }
+
+constexpr int startDist = 200;
+constexpr int endDist = 50;
+constexpr int mutekiTime = 60 * 3;
+
+void CPlayer::MutekiTime() {
+	//if (m_mutekiCount <= 0) {
+	//	return;
+	//}
+	//m_mutekiCount--;
+
+	//if (m_dist > endDist) {
+	//	m_dist -= (double)(startDist- endDist) / mutekiTime;
+	//}
+
+	//for (int ii = 0; ii < 3;ii++) {
+	//	CPos p;
+	//	p.x = cos(CFunc::ToRad(90 + 3 * m_mutekiCount + 120 * ii)) * m_dist;
+	//	p.y = sin(CFunc::ToRad(90 + 3 * m_mutekiCount + 120 * ii)) * m_dist;
+
+	//	CPos pp(CFunc::RandI(0, 30), CFunc::RandI(0, 30));
+	//	double ang = 270 + CFunc::RandD(-30, 30);
+	//	double speed = 0;
+	//	CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_pos + p, speed, ang, 0, 0.0, 0.0, 0, 981);
+	//	double size = 2.0;
+	//	eff->SetSize(size, -0.08);
+	//	eff->SetBlend(64, +10.0, 255);
+	//	eff->SetBlendType(DX_BLENDMODE_ADD);
+	//	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+	//	eff->SetDrawAnimeRotateDeg(10.0);
+	//	eff->SetRemoveCount(30);	//60frで削除
+
+	//	CBattleScene::m_effectManager.Add(eff);
+	//}
+
+}
+
+constexpr int bomberStartDist = 600;
+constexpr int bomberEndDist = 50;
+constexpr int bomberTime1 = 60 * 1; // 爆発が収束する時間
+constexpr int bomberTime2 = bomberTime1 + 60*0.3; // 爆発が始まる時間
+constexpr int bomberFinishTime = bomberTime2 + 60 * 2; // 終わる時間
+constexpr int bomberTotalDamage = 600;
+void CPlayer::BomberSet() {
+	if (!m_bombOn) {
+		m_bombOn = true;
+		m_bombCount = 0;
+		m_mutekiCount = mutekiTime;
+		m_bomberDist = bomberStartDist;
+		m_bomberPos = m_pos + CPos(0, -300);
+		if (m_bomberPos.y <= 100) {
+			m_bomberPos.y = 100;
+		}
+	}
+}
+void CPlayer::Bomber()
+{
+	if (!m_bombOn)return;
+
+	int fireball_image4[4] = { 982 ,983 ,984 ,985 };
+	int image4[4] = { 20503 ,20501 ,20501 ,20501 };
+
+	if (m_bombCount <= bomberTime1) {
+		
+		if (m_bomberDist > bomberEndDist) {
+			m_bomberDist -= (double)(bomberStartDist - bomberEndDist) / bomberTime1;
+		}
+		if (m_bombCount % 4 == 0) {
+			for (int ii = 0; ii < 3; ii++) {
+				CPos p;
+				p.x = cos(CFunc::ToRad(90 + 3 * m_bombCount + 120 * ii)) * m_bomberDist;
+				p.y = sin(CFunc::ToRad(90 + 3 * m_bombCount + 120 * ii)) * m_bomberDist;
+				p.x += CFunc::RandD(-10, 10);
+				p.y += CFunc::RandD(-10, 10);
+
+				CPos pp(CFunc::RandI(0, 30), CFunc::RandI(0, 30));
+				double ang = 270 + CFunc::RandD(-30, 30);
+				double speed = 0;
+				CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos + p, speed, ang, 0, 0.0, 0.0, 0, 20503);
+				//double size = 0.8 - (double)ii * 0.1;
+				double size = 0.5;
+				eff->SetSize(size, +0.0);
+				//eff->SetWaitTime(ii * 4);
+				eff->SetBlend(255, +0.0);
+				eff->SetBlendType(DX_BLENDMODE_NOBLEND);
+				eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+				eff->SetRemoveCount(60);	//60frで削除
+
+				CBattleScene::m_effectManager.Add(eff);
+			}
+		}
+
+		for (int ii = 0; ii < 3; ii++) {
+			if (m_bombCount % 1 == 0) {
+				double posAngle = CFunc::RandD(0, 360);
+				CPos p;
+				p.x = cos(CFunc::ToRad(posAngle)) * m_bomberDist * 1.25;
+				p.y = sin(CFunc::ToRad(posAngle)) * m_bomberDist * 1.25;
+
+				double dirAngle = CFunc::ToDeg(CFunc::GetTwoPointAngle(m_bomberPos + p, m_bomberPos)) + 180.0;
+
+				int imageIndex = CFunc::RandI(0, 3);
+				double speed = 0.5;
+				CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos + p, speed, dirAngle, 0, 0.0, 15.0, 0, fireball_image4[imageIndex]);
+				eff->SetAddAcce2(0.001);
+				double size = 0.2;
+				eff->SetSize(size, +0.0);
+				eff->SetBlend(255, +0.0);
+				eff->SetRemoveCount(30);	//60frで削除
+				CBattleScene::m_effectManager.Add(eff);
+			}
+		}
+	}
+
+	if (m_bombCount >= bomberTime2) {
+		if (m_bombCount % 1 == 0) {
+			double dirAngle = CFunc::RandD(0, 360);
+
+			int imageIndex = CFunc::RandI(0, 3);
+			double speed = CFunc::RandD(7, 8);
+			double acceSpeed = CFunc::RandD(0.1, 0.3);
+			//
+			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos, speed, dirAngle, 0, acceSpeed, 15.0, 0, 20503);
+			double size = 1.0;
+			eff->SetSize(size, +0.0);
+			eff->SetBlend(255, -1.0, 0);
+			eff->SetRemoveCount(60);	//60frで削除
+			CBattleScene::m_effectManager.Add(eff);
+		}
+
+		if (m_bombCount % 1 == 0) {
+			double dirAngle = CFunc::RandD(0, 360);
+
+			int imageIndex = CFunc::RandI(0, 3);
+			double speed = CFunc::RandD(2, 3);
+			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos, speed, dirAngle, 0, 0.0, 15.0, 0, fireball_image4[3]);
+			//eff->SetAddAcce2(0.031);
+			double size = 1.0;
+			eff->SetSize(size, +0.0);
+			eff->SetBlend(255, -10.0, 0);
+			eff->SetRemoveCount(30);	//60frで削除
+			CBattleScene::m_effectManager.Add(eff);
+		}
+	}
+
+	m_scene->SetBulletRemoveTime(CBattleScene::BulletRemoveType::Nothing, 30);
+	m_scene->DamageAllEnemy(bomberTotalDamage / bomberFinishTime);
+
+	m_bombCount++;
+	if (m_bombCount > bomberFinishTime) {
+		m_bombCount = 0;
+		m_bombOn = false;
+	}
+}
+
 void CPlayer::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);

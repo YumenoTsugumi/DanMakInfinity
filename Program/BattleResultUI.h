@@ -78,6 +78,7 @@ public:
 				int usedBomb,
 				int missCount,
 				int getItemRatio,
+				int gameResultIndex,
 				int getScore,
 				int getRank
 	);
@@ -90,8 +91,8 @@ public:
 	int m_destoryMediumEnemyRatio;
 	int m_destorySmallEnemyRatio;
 	int m_drawDestoryLargeEnemyRatio;
-	int m_drawDdestoryMediumEnemyRatio;
-	int m_drawDdestorySmallEnemyRatio;
+	int m_drawDestoryMediumEnemyRatio;
+	int m_drawDestorySmallEnemyRatio;
 	void DrawDestoryRatio(int destoryEnemyRatio, int posX, int posY);
 	void DrawDigitNumber2(int number, int posX, int posY);
 
@@ -129,6 +130,8 @@ public:
 	// 上昇ランク
 	int m_getRank;
 
+	// リザルトランク
+	int m_resultRank;
 
 	// 全体のαlpha
 	double m_allAlphaRatio;

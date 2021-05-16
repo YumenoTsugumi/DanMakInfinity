@@ -218,6 +218,7 @@ void CBaseItem::SetPreRecovery()
 // アイテムによるスコア加算
 void CBaseItem::GetItemAddScore() {
 	CBattleScene::AddItem(m_itemRank);
+	CBattleScene::AddGetDropItemCount();
 }
 
 void CBaseItem::SetRemove()

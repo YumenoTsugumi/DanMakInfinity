@@ -16,7 +16,17 @@ public:
 	double m_posBitAngleL[2];
 	double m_posBitAngleR[2];
 
-	
+	// 無敵時間
+	int m_mutekiCount;
+	void MutekiTime();
+
+	CPos m_bomberPos;
+	double m_bomberDist;
+	bool m_bombOn;
+	int m_bombCount;
+	void Bomber();
+	void BomberSet();
+
 	CImage* m_playerImage;
 	CImage* m_bitRImage;
 	int m_slowMove;	//0(MOVE_HI)通常　1(MOVE_SLOW)低速
@@ -38,6 +48,10 @@ public:
 	void Shot();
 	void MainShot();
 	
+	void SetBattleScene(CBattleScene* scene) {
+		m_scene = scene;
+	}
+	CBattleScene* m_scene;
 };
 
 //---------------------------------------------------------------------------------
