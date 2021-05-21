@@ -15,6 +15,8 @@
 #include "BattleResultUI.h"
 #include "StageManager.h"
 
+constexpr int RankBasedDigit = 10000;
+
 class CBattleScene : public CScene{
 public:
 	//------------------
@@ -124,18 +126,26 @@ public:
 	// ランク
 
 	// プレイヤーの情報
-	int m_haveBomb;
-	int m_haveLife;
+	static int m_haveBomb;
+	static int m_haveLife;
+	static int GetHaveBomb() { return m_haveBomb; }
+	static int GetHaveLife() { return m_haveLife; }
+	static void BombDecrement() { m_haveBomb--; }
+	static void UseDecrement() { m_haveLife--; }
 
 	// スコア
 	static long long m_hiScore;
 	static long long m_score;
-	static int m_rank;
+	static int m_rank; // rankは10000で1を管理する
+	static double m_rankRatio; // 1.0 0.5～10.0
 	static long long GetHiScore() {	return m_hiScore;	}
 	static long long GetScore() { return m_score; }
 	static void AddScore(int addScore);
-	static int GetRank() { return m_rank; }
+	static int GetRank() { return m_rank / RankBasedDigit; }
 	static void AddRank(int delta);
+	static long long GetRankRatio() { return m_rankRatio; }
+	static void AddRankRatio(); // ステージ中のspan
+	static void AddRankRatioByStageClear(int resultrank); // S0 E5
 	
 	static CPos m_playerPos;
 	static CPos GetPlayerPos() {return m_playerPos;	}

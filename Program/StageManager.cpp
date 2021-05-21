@@ -13,16 +13,19 @@
 #include "Spawner.h"
 #include "Game.h"
 
-const int toSecond = 60;
-const int FormationSpawneFinishTiming = toSecond * 1.2; // 1編隊の全敵をスポーンする時間(秒)
+constexpr int toSecond = 60;
+constexpr int FormationSpawneFinishTiming = toSecond * 1.2; // 1編隊の全敵をスポーンする時間(秒)
 
-const int FormationSpawneSmallATiming = toSecond * 3; // 3秒ごとに編隊をスポーンする間隔(秒)
-const int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊をスポーンする間隔(秒)
-const int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔(秒)
-const int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間隔(秒)
+constexpr int FormationSpawneSmallATiming = toSecond * 3; // 3秒ごとに編隊をスポーンする間隔(秒)
+constexpr int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊をスポーンする間隔(秒)
+constexpr int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔(秒)
+constexpr int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間隔(秒)
 
-const int TotalSpawneTime = toSecond * 11; // 敵をスポーンしつづける時間（秒
-const int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 7; // 最後敵をスポーンしてからちょっと待つ時間（秒
+constexpr int TotalSpawneTime = toSecond * 11; // 敵をスポーンしつづける時間（秒
+constexpr int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 7; // 最後敵をスポーンしてからちょっと待つ時間（秒
+
+constexpr int RankUpTotalCount = 20; // 1回のステージでランクアップする回数
+constexpr int RankUpTiming = TotalSpawneTime / RankUpTotalCount;
 
 StageManager::StageManager()
 {
@@ -55,6 +58,9 @@ void StageManager::Main()
 		return;
 	}
 
+	if (m_count % RankUpTiming == 0 && m_count != 0) {
+		CBattleScene::AddRankRatio();
+	}
 
 #if 0
 	//if (m_count  == 1) {

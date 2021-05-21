@@ -147,19 +147,26 @@ void CGame::ImageLoad()
 
 	m_resourceManager.Add(new CImage("ResourceX\\player\\hitMaker.png"), "hitMaker.png", 850);
 
-	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\bombA.png", 1, 1, 1, 64, 99, 0, 0.0), "bombA", 980);
-	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\sq.png", 1, 1, 1, 101, 103, 0, 0.0), "sq", 981);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\playerBarrier1.png"), "playerBarrier1", 980);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\playerBarrier2.png"), "playerBarrier2", 981);
 
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_0.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_0", 982);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_1.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_1", 983);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_2.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_2", 984);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\fireball_3.png", 1, 1, 1, 256, 256, 0, 0.0), "fireball_3", 985);
 
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\bombLine.png", 1, 1, 1, 64, 576, 0, 0.0), "bombLine", 986);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\BombIcon.png"), "BombIcon", 987);
+	m_resourceManager.Add(new CImage("ResourceX\\player\\BombText.png"), "BombText", 988);
+
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\PlayerBulletA.png", 1, 1, 1, 40, 40, 0, 0.0), "playerBulletA", 990);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBullet.png", 1, 1, 1, 64, 128, 0, 0.0), "playerBullet", 998);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\playerBulletM.png", 1, 1, 1, 100, 200, 0, 0.0), "playerBulletM", 997);
 
-	m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\player\\rens.png", 1, 1, 1, 175, 175, 0, 0.0), "rens", 998);
+
+
+	//m_resourceManager.Add(new CImage("Resource\\pChan.png"), "pChan", 999);
 
 	//画像
 	//レーザー用の画像読み込み
@@ -197,6 +204,12 @@ void CGame::ImageLoad()
 	}
 	m_resourceManager.Add(new CImages("Resource\\UI_fullhd2\\scoreText.png", 10,10,1,80,80), "scoreText", 1030);
 
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\c%d.png", ii);
+		std::string format2 = MyFormat("c%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1040 + ii);
+	}
+
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1150);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1151);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku.png"), "RankWaku", 1152);
@@ -231,11 +244,8 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\uiaura.png"), "uiaura", 1260);
 
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
-
-
-
-
 }
+
 void CGame::ImageLoadByThread()
 {
 

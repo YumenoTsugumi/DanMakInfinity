@@ -50,6 +50,9 @@ int CBattleScene::m_destroySpawneLargeCount = 0;
 int CBattleScene::m_getSpawneDropItemCount = 0;
 int CBattleScene::m_usedBomb = 0;
 int CBattleScene::m_missCount = 0;
+int CBattleScene::m_haveBomb = 0;
+int CBattleScene::m_haveLife = 0;
+double CBattleScene::m_rankRatio = 1.0;
 void CBattleScene::StageCountReset()
 {
 	m_spawneSmallCount = 0;
@@ -93,7 +96,7 @@ void CBattleScene::Init(CGame* gameP) {
 
 	m_hiScore = 0;
 	m_score = 0;
-	m_rank = 1;
+	m_rank = 1 * RankBasedDigit;
 	m_bulletRemoveTime = m_bulletRemoveCount = 0;
 
 	m_game = gameP;
@@ -209,6 +212,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 	m_ui.Draw();
 
+
 	// ステージクリアリザルト
 	StageClearResult();
 
@@ -274,6 +278,7 @@ void CBattleScene::StageClearResult()
 	if (m_battleResultUIReset) {
 		m_battleResultUIReset = false;
 		// 小型機率、中型機率、大型機率、ボム、ミス、アイテム率、クリアボーナス、ランク上昇
+		// 10000は　99.99％を桁を9999にするため
 		int destroySpawneSmallRatio = 0;
 		if (m_spawneSmallCount > 0)destroySpawneSmallRatio = ((double)m_destroySpawneSmallCount / m_spawneSmallCount) * 10000;
 		int destroySpawneMediumRatio = 0;
@@ -333,9 +338,29 @@ void CBattleScene::StageClearResult()
 // ランクUP
 void CBattleScene::AddRank(int delta)
 {
+	delta *= RankBasedDigit;
 	m_rank += delta;
-	if (m_rank < 1)m_rank = 1;
-	if (m_rank > 999)m_rank = 999;
+	if (m_rank < 1* RankBasedDigit)m_rank = 1 * RankBasedDigit;
+	if (m_rank > 999 * RankBasedDigit)m_rank = 999 * RankBasedDigit;
+}
+// 1ステージで20回呼ばれるので　2上がる計算
+constexpr double addRankBase = 0.1;
+void CBattleScene::AddRankRatio() // ステージ中のspan
+{
+	m_rankRatio += 0.01;
+	m_rank += addRankBase * m_rankRatio * RankBasedDigit;
+}
+void CBattleScene::AddRankRatioByStageClear(int resultrank) // S0 E5
+{
+	double tmp = 0;
+	if (resultrank == 0)tmp = 0.1;
+	else if (resultrank == 1)tmp = 0.08;
+	else if (resultrank == 2)tmp = 0.06;
+	else if (resultrank == 3)tmp = 0.04;
+	else if (resultrank == 4)tmp = 0.02;
+	else if (resultrank == 5)tmp = 0.01;
+	m_rankRatio += tmp;
+	m_rank += resultrank * m_rankRatio * RankBasedDigit;
 }
 
 // スコア追加
@@ -352,7 +377,7 @@ void CBattleScene::AddItem(int itemRank) // itemRank 1 2 3
 		return;
 	}
 	m_takeItemRankCount[itemRank-1]++;
-	int limitRank = m_rank;
+	int limitRank = GetRank();
 	if (limitRank > 100) limitRank = 100;
 	int addScore = (itemRank) * (limitRank * limitRank);
 	AddScore(addScore);

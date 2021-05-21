@@ -25,6 +25,9 @@ void CPlayer::Init()
 	m_bitRImage = (CImage*)CGame::GetResource(801);
 	m_hitMakerImage = (CImage*)CGame::GetResource(850);
 
+	m_playerBarrier1 = (CImage*)CGame::GetResource(980);
+	m_playerBarrier2 = (CImage*)CGame::GetResource(981);
+
 	m_posBitAngleL[0] = 0;
 	m_posBitAngleL[1] = 180.0;
 	m_posBitAngleR[0] = 0;
@@ -32,6 +35,9 @@ void CPlayer::Init()
 
 	m_bombOn = false;
 	m_bombCount = 0;
+
+	m_barrierAngle = 0.0;
+	m_barrierAlpha = 1.0;
 }
 
 void CPlayer::SetBulletManager(CBulletManager* playerBullet)
@@ -102,41 +108,6 @@ void CPlayer::Action(CInputAllStatus* input)
 	MutekiTime();
 }
 
-constexpr int startDist = 200;
-constexpr int endDist = 50;
-constexpr int mutekiTime = 60 * 3;
-
-void CPlayer::MutekiTime() {
-	//if (m_mutekiCount <= 0) {
-	//	return;
-	//}
-	//m_mutekiCount--;
-
-	//if (m_dist > endDist) {
-	//	m_dist -= (double)(startDist- endDist) / mutekiTime;
-	//}
-
-	//for (int ii = 0; ii < 3;ii++) {
-	//	CPos p;
-	//	p.x = cos(CFunc::ToRad(90 + 3 * m_mutekiCount + 120 * ii)) * m_dist;
-	//	p.y = sin(CFunc::ToRad(90 + 3 * m_mutekiCount + 120 * ii)) * m_dist;
-
-	//	CPos pp(CFunc::RandI(0, 30), CFunc::RandI(0, 30));
-	//	double ang = 270 + CFunc::RandD(-30, 30);
-	//	double speed = 0;
-	//	CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_pos + p, speed, ang, 0, 0.0, 0.0, 0, 981);
-	//	double size = 2.0;
-	//	eff->SetSize(size, -0.08);
-	//	eff->SetBlend(64, +10.0, 255);
-	//	eff->SetBlendType(DX_BLENDMODE_ADD);
-	//	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
-	//	eff->SetDrawAnimeRotateDeg(10.0);
-	//	eff->SetRemoveCount(30);	//60frで削除
-
-	//	CBattleScene::m_effectManager.Add(eff);
-	//}
-
-}
 
 constexpr int bomberStartDist = 600;
 constexpr int bomberEndDist = 50;
@@ -144,18 +115,38 @@ constexpr int bomberTime1 = 60 * 1; // 爆発が収束する時間
 constexpr int bomberTime2 = bomberTime1 + 60*0.3; // 爆発が始まる時間
 constexpr int bomberFinishTime = bomberTime2 + 60 * 2; // 終わる時間
 constexpr int bomberTotalDamage = 600;
+
+constexpr int startDist = 200;
+constexpr int endDist = 50;
+constexpr int mutekiTime = bomberFinishTime + 60 * 1;
+constexpr int mutekiTimeAlphaDown = mutekiTime * 0.1;
+
 void CPlayer::BomberSet() {
+	int bomb = CBattleScene::GetHaveBomb();
+	if (bomb <= 0) {
+		return;
+	}
 	if (!m_bombOn) {
 		m_bombOn = true;
 		m_bombCount = 0;
 		m_mutekiCount = mutekiTime;
+		m_barrierAlpha = 1.0;
 		m_bomberDist = bomberStartDist;
 		m_bomberPos = m_pos + CPos(0, -300);
 		if (m_bomberPos.y <= 100) {
 			m_bomberPos.y = 100;
 		}
+		CBattleScene::BombDecrement();
 	}
 }
+
+void CPlayer::MutekiTime() {
+	if (m_mutekiCount <= 0) {
+		return;
+	}
+	m_mutekiCount--;
+}
+
 void CPlayer::Bomber()
 {
 	if (!m_bombOn)return;
@@ -216,6 +207,8 @@ void CPlayer::Bomber()
 	}
 
 	if (m_bombCount >= bomberTime2) {
+		m_scene->DamageAllEnemy(bomberTotalDamage / bomberFinishTime);
+
 		if (m_bombCount % 1 == 0) {
 			double dirAngle = CFunc::RandD(0, 360);
 
@@ -237,7 +230,6 @@ void CPlayer::Bomber()
 			int imageIndex = CFunc::RandI(0, 3);
 			double speed = CFunc::RandD(2, 3);
 			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos, speed, dirAngle, 0, 0.0, 15.0, 0, fireball_image4[3]);
-			//eff->SetAddAcce2(0.031);
 			double size = 1.0;
 			eff->SetSize(size, +0.0);
 			eff->SetBlend(255, -10.0, 0);
@@ -245,9 +237,30 @@ void CPlayer::Bomber()
 			CBattleScene::m_effectManager.Add(eff);
 		}
 	}
+	if (m_bombCount >= bomberTime2 && m_bombCount <= bomberFinishTime - 30) {
+		if (m_bombCount == bomberTime2) {
+			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos, 0.0, 0.0, 0, 0.0, 0.0, 0, 998);
+			eff->SetSize(0.0, +0.15);
+			eff->SetBlend(255, -4.0, 0);
+			eff->SetRemoveCount(60);	//60frで削除
+			CBattleScene::m_effectManager.Add(eff);
+		}
+		if (m_bombCount % 2 == 0) {
+			double dirAngle = CFunc::RandD(0, 360);
+
+			int imageIndex = CFunc::RandI(0, 3);
+			double speed = 0.0;
+			CBaseEffect* eff = new CBaseEffect(10, EDirType::Abs, m_bomberPos, speed, dirAngle, 0, 0.0, 15.0, 0, 986);
+			double size = 2.0;
+			eff->SetSize(size, +0.0);
+			eff->SetBlend(255, -10.0, 0);
+			eff->SetRemoveCount(60);	//60frで削除
+			CBattleScene::m_effectManager.Add(eff);
+		}
+	}
 
 	m_scene->SetBulletRemoveTime(CBattleScene::BulletRemoveType::Nothing, 30);
-	m_scene->DamageAllEnemy(bomberTotalDamage / bomberFinishTime);
+	
 
 	m_bombCount++;
 	if (m_bombCount > bomberFinishTime) {
@@ -258,19 +271,31 @@ void CPlayer::Bomber()
 
 void CPlayer::Draw()
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	
+	if (m_mutekiCount > 0) {
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * m_barrierAlpha);
+		CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 2.4, m_barrierAngle, m_playerBarrier1->m_iamge);
+		CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 2.4, -m_barrierAngle, m_playerBarrier1->m_iamge);
+		m_barrierAngle += 0.02;
 
+		if (m_mutekiCount < mutekiTimeAlphaDown) {
+			m_barrierAlpha -= (double)1.0 / mutekiTimeAlphaDown;
+			if (m_barrierAlpha < 0) {
+				m_barrierAlpha = 0.0;
+			}
+		}
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 1.0, 0.0, m_playerImage->m_iamge);
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 0.75, m_hitMakerRotateAngle, m_hitMakerImage->m_iamge);
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 0.75, -m_hitMakerRotateAngle, m_hitMakerImage->m_iamge);
 	m_hitMakerRotateAngle += CFunc::ToRad(1.0);
 
-
 	m_posBitAngleL[0] += 3.0;
 	m_posBitAngleL[1] += 3.0;
 	m_posBitAngleR[0] += 3.0;
 	m_posBitAngleR[1] += 3.0;
-
 
 	CPos posAng1;
 	posAng1.x = cos(m_posBitAngleL[0] / 57.27) * 40;

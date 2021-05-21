@@ -38,6 +38,12 @@ public:
 	int m_bulletMainShotCount;
 	CBulletManager* m_playerBullet; // 上位のシーンからポインタをもらう
 
+	// バリア中のイメージ
+	double m_barrierAlpha;
+	double m_barrierAngle;
+	CImage* m_playerBarrier1;
+	CImage* m_playerBarrier2;
+
 	CPlayer();
 	~CPlayer();
 	void Init();

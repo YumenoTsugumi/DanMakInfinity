@@ -287,6 +287,7 @@ void CBattleResultUI::Draw(){
 			CBattleScene::AddScore(addCountDownRatio);
 		}
 		else if (addCountDownRatio - m_drawGetScore > 0 && m_drawGetScore > 0) {
+			CBattleScene::AddRank(m_getRank);
 			CBattleScene::AddScore(m_drawGetScore);
 			m_drawGetScore = 0;
 		}

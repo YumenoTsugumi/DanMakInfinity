@@ -27,6 +27,7 @@ protected:
 	std::vector<CImage*> m_textNumber;
 	std::vector<CImage*> m_textBigNumber;
 	std::vector<CImage*> m_textItemTakeNumber;
+	std::vector<CImage*> m_RankBigNumber;
 	CImage* m_text0g;
 	CImage* m_textComma;
 	CImage* m_textCommag;
@@ -36,6 +37,14 @@ protected:
 
 	// 外側
 	CImage* m_UIFoundation;
+
+	// ボム
+	double m_bombIconSize;
+	double m_bombIconSize2;
+	CImage* m_bombIcon;
+	CImage* m_bombText;
+	// 残機
+	CImage* m_playerIcon;
 
 	// アイテム
 	CImages* m_textScoreItem;
@@ -48,4 +57,5 @@ protected:
 
 	void DrawGameAreaUI(); // 画面内のUI描画
 	void DrawOutArea(); // 画面外の描画
+	void DrawOutArea_Rank(); // 画面外の描画rank
 };
