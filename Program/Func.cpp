@@ -287,7 +287,6 @@ int CFunc::GetDigit(long long number)
 // zeroumeDigitが6でnumberが12345　なら　012,345になる
 void CFunc::GetDigitArray(int zeroDigit, long long number, std::vector<int>& indexAry)
 {
-
 	int count = 0;
 	if(number == 0){
 		for (int ii = zeroDigit; ii > 0; ii--) {

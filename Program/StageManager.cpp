@@ -21,7 +21,7 @@ constexpr int FormationSpawneSmallBTiming = toSecond * 5; // 5秒ごとに編隊
 constexpr int FormationSpawneMediumATiming = toSecond * 8; // 8秒ごとに編隊をスポーンする間隔(秒)
 constexpr int FormationSpawneLargeATiming = toSecond * 10; // 10秒ごとに編隊をスポーンする間隔(秒)
 
-constexpr int TotalSpawneTime = toSecond * 11; // 敵をスポーンしつづける時間（秒
+constexpr int TotalSpawneTime = toSecond * 20; // 敵をスポーンしつづける時間（秒
 constexpr int TotalSpawneTime_EndTime = TotalSpawneTime + toSecond * 7; // 最後敵をスポーンしてからちょっと待つ時間（秒
 
 constexpr int RankUpTotalCount = 20; // 1回のステージでランクアップする回数
@@ -38,6 +38,8 @@ StageManager::~StageManager()
 
 void StageManager::StageReset()
 {
+	m_count = 0;
+	status = Now;
 }
 
 void StageManager::Main()
@@ -59,7 +61,7 @@ void StageManager::Main()
 	}
 
 	if (m_count % RankUpTiming == 0 && m_count != 0) {
-		CBattleScene::AddRankRatio();
+		CBattleScene::AddRankRatioByStageSpan();
 	}
 
 #if 0

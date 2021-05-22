@@ -27,6 +27,7 @@ protected:
 	std::vector<CImage*> m_textNumber;
 	std::vector<CImage*> m_textBigNumber;
 	std::vector<CImage*> m_textItemTakeNumber;
+	std::vector<CImage*> m_textItemTakeOther; // %,.
 	std::vector<CImage*> m_RankBigNumber;
 	CImage* m_text0g;
 	CImage* m_textComma;
@@ -69,4 +70,5 @@ protected:
 	std::vector<int> m_rankAnime_KeepRank; // ランク　後ろにどんどん追加する
 	int m_rankAnime_UpdateCount; // 画面更新タイミング
 	int m_rankAnime_RankUpDown; // ランクが上がるのか下がるのか（その量）
+	CImage* m_imageRankRatio; // ランク上昇率画像
 };

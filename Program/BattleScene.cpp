@@ -345,9 +345,16 @@ void CBattleScene::AddRank(int delta)
 }
 // 1ステージで20回呼ばれるので　2上がる計算
 constexpr double addRankBase = 0.1;
-void CBattleScene::AddRankRatio() // ステージ中のspan
+void CBattleScene::AddRankRatio(double delta)
 {
-	m_rankRatio += 0.01;
+	m_rankRatio += delta;
+	if (m_rankRatio > 10.0)m_rankRatio = 10.0;
+	if (m_rankRatio < 0.1)m_rankRatio = 0.1;
+}
+
+void CBattleScene::AddRankRatioByStageSpan() // ステージ中のspan
+{
+	AddRankRatio(0.01);
 	m_rank += addRankBase * m_rankRatio * RankBasedDigit;
 }
 void CBattleScene::AddRankRatioByStageClear(int resultrank) // S0 E5
@@ -359,7 +366,7 @@ void CBattleScene::AddRankRatioByStageClear(int resultrank) // S0 E5
 	else if (resultrank == 3)tmp = 0.04;
 	else if (resultrank == 4)tmp = 0.02;
 	else if (resultrank == 5)tmp = 0.01;
-	m_rankRatio += tmp;
+	AddRankRatio(tmp);
 	m_rank += resultrank * m_rankRatio * RankBasedDigit;
 }
 

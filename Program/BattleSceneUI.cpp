@@ -37,6 +37,11 @@ void CBattleSceneUI::Init() {
 	}
 	m_textScoreItem = (CImages*)CGame::GetResource(1030);
 
+	m_textItemTakeOther.push_back((CImage*)CGame::GetResource(1031));
+	m_textItemTakeOther.push_back((CImage*)CGame::GetResource(1032));
+	m_textItemTakeOther.push_back((CImage*)CGame::GetResource(1033));
+
+
 	// 外側
 	m_UIFoundation = (CImage*)CGame::GetResource(1500);
 
@@ -50,6 +55,8 @@ void CBattleSceneUI::Init() {
 	m_bombIcon = (CImage*)CGame::GetResource(987);
 	m_bombText = (CImage*)CGame::GetResource(988);
 	m_playerIcon = (CImage*)CGame::GetResource(800);
+
+	m_imageRankRatio = (CImage*)CGame::GetResource(1034);
 
 	m_rankAnime_PreRank = 1000; // ランクアニメ）アニメが始まった時のランクの値
 	m_rankAnime_TargetRank = 1000; // ランクアニメ）最終的なランクの値
@@ -297,8 +304,9 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 	// 画面外の描画rank
 	CPos basePos = CPos(GameWindowAreaRight +25, 230);
 	CPos basePosEd = basePos + CPos(430, 230);
-	//DrawBoxAA(basePos.x, basePos.y, basePosEd.x, basePosEd.y, GetColor(255,255,255), FALSE);
 
+	//-----------------------------------------------------
+	// 背景のランク
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 96);
 	int rank = CBattleScene::GetRank();
 	if (rank < 100) {
@@ -324,21 +332,17 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 		CDxFunc::MyDrawRotaGraph(rankNumberX + 240, rankNumberY, 0.7, 0.0, m_RankBigNumber[low]->m_iamge);
 	}
 
+	int gosaX = 40;
 	int bottomLineY = basePosEd.y - 2; // [0]
-	DrawLineAA(basePos.x, bottomLineY, basePosEd.x,  bottomLineY, GetColor(255, 255, 255));
-
+	DrawLineAA(basePos.x, bottomLineY, basePosEd.x - gosaX, bottomLineY, GetColor(255, 255, 255));
 	int centerLineY = basePos.y + (basePosEd.y - basePos.y) / 2; // [2]
-	DrawLineAA(basePos.x, centerLineY, basePosEd.x,  centerLineY, GetColor(255, 255, 255));
-
+	DrawLineAA(basePos.x, centerLineY, basePosEd.x - gosaX, centerLineY, GetColor(255, 255, 255));
 	int topLineY = basePos.y + 2; // [4]
-	DrawLineAA(basePos.x, topLineY, basePosEd.x,  topLineY, GetColor(255, 255, 255));
-
-
+	DrawLineAA(basePos.x, topLineY, basePosEd.x - gosaX, topLineY, GetColor(255, 255, 255));
 	int bottomcenterLineY = bottomLineY + (centerLineY - bottomLineY)/2; // [1]
-	DrawLineAA(basePos.x, bottomcenterLineY, basePosEd.x,  bottomcenterLineY, GetColor(255, 255, 255));
-
+	DrawLineAA(basePos.x, bottomcenterLineY, basePosEd.x - gosaX, bottomcenterLineY, GetColor(255, 255, 255));
 	int centertopLineY = centerLineY + (topLineY - centerLineY) / 2; // [3]
-	DrawLineAA(basePos.x, centertopLineY, basePosEd.x,  centertopLineY, GetColor(255, 255, 255));
+	DrawLineAA(basePos.x, centertopLineY, basePosEd.x - gosaX, centertopLineY, GetColor(255, 255, 255));
 
 	//-----------------------------------------------------
 	// ランクのアニメーション
@@ -400,22 +404,30 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 	}	
 
 	// 各線とか文字の描写
-	char tempStr1[80], tempStr2[80], tempStr3[80], tempStr4[80], tempStr5[80];
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
 	int range = finalMax / 4;
-	sprintf_s(tempStr1, "%00d", drawRangeMin);
-	sprintf_s(tempStr2, "%00d", range * 1);
-	sprintf_s(tempStr3, "%00d", range * 2);
-	sprintf_s(tempStr4, "%00d", range * 3);
-	sprintf_s(tempStr5, "%00d", (int)finalMax);
+	auto RankDraw = [&](double x, double y, std::vector<int> indexAry) {
+		for (int ii = 0; ii < indexAry.size(); ii++) {
+			CDxFunc::MyDrawRotaGraph(x - ii*12+20, y+5, 0.30, 0, m_textScoreItem->m_images[indexAry[ii]]);
+		}
+	};
 	int stringX = basePosEd.x - 16 - 4;
 	int stringGosaY = 6;
-	DrawString(stringX, bottomLineY - stringGosaY, tempStr1, GetColor(255, 255, 255));
-	DrawString(stringX, bottomcenterLineY - stringGosaY, tempStr2, GetColor(255, 255, 255));
-	DrawString(stringX, centerLineY - stringGosaY, tempStr3, GetColor(255, 255, 255));
-	DrawString(stringX, centertopLineY - stringGosaY, tempStr4, GetColor(255, 255, 255));
-	DrawString(stringX, topLineY - stringGosaY, tempStr5, GetColor(255, 255, 255));
+	std::vector<int> indexAry1, indexAry2, indexAry3, indexAry4, indexAry5;
+	CFunc::GetDigitArray(3, drawRangeMin, indexAry1);
+	RankDraw(stringX, bottomLineY - stringGosaY, indexAry1);
 
-	
+	CFunc::GetDigitArray(3, range * 1, indexAry2);
+	RankDraw(stringX, bottomcenterLineY - stringGosaY, indexAry2);
+
+	CFunc::GetDigitArray(3, range * 2, indexAry3);
+	RankDraw(stringX, centerLineY - stringGosaY, indexAry3);
+
+	CFunc::GetDigitArray(3, range * 3, indexAry4);
+	RankDraw(stringX, centertopLineY - stringGosaY, indexAry4);
+
+	CFunc::GetDigitArray(3, (int)finalMax, indexAry5);
+	RankDraw(stringX, topLineY - stringGosaY, indexAry5);
 
 	m_rankAnime_UpdateCount++;
 	if (m_rankAnime_UpdateCount % updateTiming == 0) {
@@ -425,7 +437,21 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 		}
 	}
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	// ランク上昇
+	CDxFunc::MyDrawRotaGraph(basePos.x + 80, basePos.y + 287, 0.40, 0, m_imageRankRatio->m_iamge);
+
+	double rankRatio = CBattleScene::GetRankRatio(); // 1.0   0.5～10.0    100.00%
+	int rankRatioPer = rankRatio * 100;
+	std::vector<int> ratioIndexAry;
+	CFunc::GetDigitArray(3, rankRatioPer, ratioIndexAry);
+	for (int ii = 0; ii < ratioIndexAry.size(); ii++) {
+		CDxFunc::MyDrawRotaGraph(basePos.x + 385 - ii*20, basePos.y + 287, 0.50, 0, m_textScoreItem->m_images[ratioIndexAry[ii]]);
+	}
+	CDxFunc::MyDrawRotaGraph(basePos.x + 385 + 30, basePos.y + 287, 0.50, 0, m_textItemTakeOther[0]->m_iamge);
+
+
+	// ランクアニメーション
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 	int relX = 0;
 	double relY = 0;
 	double preX = basePos.x;
@@ -450,15 +476,20 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 		DrawCircleAA(postX, postY, 4, GetColor(255, 0, 0), TRUE);
 		preX = postX;
 		preY = postY;
+
+		if (ii == m_rankAnime_KeepRank.size() - 1) {
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+			// 現地点
+			double nowRankHeight = 1.0 - (double)rank / (finalMax);
+			int centerX = basePos.x + (basePosEd.x - basePos.x) / 2;
+			int centerY = basePos.y + (basePosEd.y - basePos.y) * nowRankHeight;
+			m_rankAnime_WaveAnimeSize += 0.1;
+			if (m_rankAnime_WaveAnimeSize > 5.0)m_rankAnime_WaveAnimeSize = 0.5;
+			DrawCircle(postX, postY, 5 * m_rankAnime_WaveAnimeSize, GetColor(255, 0, 0), FALSE);
+			DrawCircle(postX, postY, 5, GetColor(255, 0, 0), TRUE);
+		}
 	}
 
-	// 現地点
-	//double nowRankHeight = 1.0 - (double)rank / (finalMax);
-	//int centerX = basePos.x + (basePosEd.x - basePos.x) / 2;
-	//int centerY = basePos.y + (basePosEd.y - basePos.y) * nowRankHeight;
-	//m_rankAnime_WaveAnimeSize += 0.1;
-	//if (m_rankAnime_WaveAnimeSize > 5.0)m_rankAnime_WaveAnimeSize = 0.5;
-	//DrawCircle(centerX, centerY, 5 * m_rankAnime_WaveAnimeSize, GetColor(255, 0, 0), FALSE);
-	//DrawCircle(centerX, centerY, 5, GetColor(255, 0, 0), TRUE);
+
 }
 

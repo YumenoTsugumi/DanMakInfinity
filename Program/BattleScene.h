@@ -52,7 +52,6 @@ public:
 		return m_player.m_pos - GetBackGroundscrollSmall();
 	}
 
-	// CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 	static CBattleScene* m_scene;
 	static void SetBattleScene(CBattleScene* scene) {
 		m_scene = scene;
@@ -143,8 +142,9 @@ public:
 	static void AddScore(int addScore);
 	static int GetRank() { return m_rank / RankBasedDigit; }
 	static void AddRank(int delta);
-	static long long GetRankRatio() { return m_rankRatio; }
-	static void AddRankRatio(); // ステージ中のspan
+	static double GetRankRatio() { return m_rankRatio; }
+	static void AddRankRatio(double delta);
+	static void AddRankRatioByStageSpan(); // ステージ中のspan
 	static void AddRankRatioByStageClear(int resultrank); // S0 E5
 	
 	static CPos m_playerPos;

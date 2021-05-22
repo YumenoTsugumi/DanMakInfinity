@@ -202,7 +202,12 @@ void CGame::ImageLoad()
 		std::string format2 = MyFormat("s%d", ii);
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1020 + ii);
 	}
-	m_resourceManager.Add(new CImages("Resource\\UI_fullhd2\\scoreText.png", 10,10,1,80,80), "scoreText", 1030);
+	m_resourceManager.Add(new CImages("Resource\\UI_fullhd2\\scoreText.png", 10, 10, 1, 80, 80), "scoreText", 1030);
+
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore_p.png"), "TextHiScore_p", 1031);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore_c.png"), "TextHiScore_c", 1032);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore_d.png"), "TextHiScore_d", 1033);
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankRatio.png"), "RankRatio", 1034);
 
 	for (int ii = 0; ii < 10; ii++) {
 		std::string format1 = MyFormat("Resource\\UI_fullhd2\\c%d.png", ii);
