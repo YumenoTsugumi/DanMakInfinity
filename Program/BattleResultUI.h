@@ -135,5 +135,6 @@ public:
 
 	// ‘S‘Ì‚Ìƒ¿lpha
 	double m_allAlphaRatio;
+
 };
 

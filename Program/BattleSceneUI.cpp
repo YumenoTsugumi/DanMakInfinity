@@ -2,6 +2,9 @@
 #include "Game.h"
 #include "GameDefine.h"
 #include "BattleScene.h"
+
+constexpr int updateTiming = 60*1;
+
 CBattleSceneUI::CBattleSceneUI(){
 
 }
@@ -47,6 +50,15 @@ void CBattleSceneUI::Init() {
 	m_bombIcon = (CImage*)CGame::GetResource(987);
 	m_bombText = (CImage*)CGame::GetResource(988);
 	m_playerIcon = (CImage*)CGame::GetResource(800);
+
+	m_rankAnime_PreRank = 1000; // ランクアニメ）アニメが始まった時のランクの値
+	m_rankAnime_TargetRank = 1000; // ランクアニメ）最終的なランクの値
+	m_rankAnime_UpRank = 0; // ランクアニメ）アニメ中に上がっているランクを記録する
+	m_rankAnime_Once = false; // ランクアニメ）m_rankAnime_PreRankの設定を最初の一度
+	m_rankAnime_Count = 0; // ランクアニメ）アニメーションを制御するためのカウンター
+	m_rankAnime_WaveAnimeSize = 1.0; // ランクアニメ）原点の波紋用のアニメ
+	m_rankAnime_UpdateCount = 0;
+	m_rankAnime_RankUpDown = 0;
 }
 void CBattleSceneUI::Draw() {
 	DrawGameAreaUI();
@@ -312,31 +324,6 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 		CDxFunc::MyDrawRotaGraph(rankNumberX + 240, rankNumberY, 0.7, 0.0, m_RankBigNumber[low]->m_iamge);
 	}
 
-	//std::vector<double> lineY;
-	//if (rank <= 7) {
-	//	lineY = { 1,3,5,7,9 }; // 10
-	//}
-	//else if (rank <= 15) { // 20
-	//	lineY = { 1,5,10,15,20 };
-	//}
-	//else if (rank <= 22) { // 30
-	//	lineY = { 1,7,15,22,27 };
-	//}
-	//else if (rank <= 50) {
-	//	lineY = { 5,15,25,35,45 };
-	//}
-	//else if (rank <= 100) {
-	//	lineY = { 1,25,50,75,100 };
-	//}
-	double lineY[5];
-	lineY[0] = 1;
-	lineY[1] = 25;
-	lineY[2] = 50;
-	lineY[3] = 75;
-	lineY[4] = 100;
-
-	
-
 	int bottomLineY = basePosEd.y - 2; // [0]
 	DrawLineAA(basePos.x, bottomLineY, basePosEd.x,  bottomLineY, GetColor(255, 255, 255));
 
@@ -353,61 +340,18 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 	int centertopLineY = centerLineY + (topLineY - centerLineY) / 2; // [3]
 	DrawLineAA(basePos.x, centertopLineY, basePosEd.x,  centertopLineY, GetColor(255, 255, 255));
 
-
+	//-----------------------------------------------------
+	// ランクのアニメーション
 	static int aaa = 0;
 	if (aaa == 0) {
 		SetFontSize(16);
 		aaa++;
 	}
-	int stringX = basePosEd.x - 16 - 4;
-	int stringGosaY = 6;
-
-#if 0
-	{
-		int nowDrawRangeMin = 1;
-		int nowDrawRangeMax = 1000;
-
-		for (int ii = 0; ii <= 999; ii += 10) {
-			if (rank <= ii) {
-				nowDrawRangeMin = 0;
-				nowDrawRangeMax = ii * 2;
-				if (nowDrawRangeMax >= 1000)nowDrawRangeMax = 1000;
-				break;
-			}
-		}
-
-		char tempStr1[80], tempStr2[80], tempStr3[80], tempStr4[80], tempStr5[80];
-		int range = nowDrawRangeMax / 4;
-		sprintf_s(tempStr1, "%00d", nowDrawRangeMin);
-		sprintf_s(tempStr2, "%00d", range * 1);
-		sprintf_s(tempStr3, "%00d", range * 2);
-		sprintf_s(tempStr4, "%00d", range * 3);
-		sprintf_s(tempStr5, "%00d", nowDrawRangeMax);
-		DrawString(stringX, bottomLineY - stringGosaY, tempStr1, GetColor(255, 255, 255));
-		DrawString(stringX, bottomcenterLineY - stringGosaY, tempStr2, GetColor(255, 255, 255));
-		DrawString(stringX, centerLineY - stringGosaY, tempStr3, GetColor(255, 255, 255));
-		DrawString(stringX, centertopLineY - stringGosaY, tempStr4, GetColor(255, 255, 255));
-		DrawString(stringX, topLineY - stringGosaY, tempStr5, GetColor(255, 255, 255));
-
-		double nowRankHeight = 1.0 - (double)rank / (nowDrawRangeMax); // ここたぶんあれ
-
-		int centerX = basePos.x + (basePosEd.x - basePos.x) / 2;
-		int centerY = basePos.y + (basePosEd.y - basePos.y) * nowRankHeight;
-
-		// 現地点
-		static double animeSize = 1.0;
-		animeSize += 0.1;
-		if (animeSize > 5.0)animeSize = 0.5;
-		DrawCircle(centerX, centerY, 5 * animeSize, GetColor(255, 0, 0), FALSE);
-		DrawCircle(centerX, centerY, 5, GetColor(255, 0, 0), TRUE);
-	}
-#endif
 
 	int drawRangeMin = 1;
 	int drawRangeMax = 1000;
 
-	static int nowDrawRangeMax = 1000;
-	static int targetDrawRangeMax = 1000;
+	// 現状のランクの幅を計算　10　なら　0～20
 	for (int ii = 0; ii <= 999; ii += 10) {
 		if (rank <= ii) {
 			drawRangeMin = 0;
@@ -418,56 +362,103 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 	}
 	double finalMax;
 	bool anime = false;
-	static int once = false;
-	if (nowDrawRangeMax != drawRangeMax && !anime && once) {
-		targetDrawRangeMax = drawRangeMax;
+	
+	if (m_rankAnime_PreRank != drawRangeMax && !anime && m_rankAnime_Once) {
+		m_rankAnime_TargetRank = drawRangeMax;
 		anime = true;
+		if (m_rankAnime_PreRank < drawRangeMax) {
+			m_rankAnime_RankUpDown = +1;
+		}
+		else {
+			m_rankAnime_RankUpDown = -1;
+		}
 	}
-	static int chageCount = 0;
-	once = true;
+	
+	m_rankAnime_Once = true;
 	if (anime) {
 		constexpr int AnimeTime = 30;
-		static int count = 0;
-		if (count++ > AnimeTime) {
+		
+		if (m_rankAnime_Count++ > AnimeTime) {
 			anime = false;
-			count = 0;
-			chageCount = 0;
-			nowDrawRangeMax = targetDrawRangeMax;
+			m_rankAnime_Count = 0;
+			m_rankAnime_UpRank = 0;
+			m_rankAnime_PreRank = m_rankAnime_TargetRank;
 		}
-		chageCount += 1;
-		finalMax = nowDrawRangeMax + chageCount;
+		m_rankAnime_UpRank += m_rankAnime_RankUpDown;
+		finalMax = m_rankAnime_PreRank + m_rankAnime_UpRank;
+		if (m_rankAnime_RankUpDown > 0 && finalMax > m_rankAnime_TargetRank) { // +方向なら
+			finalMax = m_rankAnime_TargetRank;
+		}
+		if (m_rankAnime_RankUpDown < 0 && finalMax < m_rankAnime_TargetRank) { // -方向なら
+			finalMax = m_rankAnime_TargetRank;
+		}
+
 	}
 	else {
 		finalMax = drawRangeMax;
-		nowDrawRangeMax = drawRangeMax;
-	}
-	//nowDrawRangeMax = finalMax;
-	
+		m_rankAnime_PreRank = drawRangeMax;
+	}	
 
+	// 各線とか文字の描写
 	char tempStr1[80], tempStr2[80], tempStr3[80], tempStr4[80], tempStr5[80];
 	int range = finalMax / 4;
 	sprintf_s(tempStr1, "%00d", drawRangeMin);
 	sprintf_s(tempStr2, "%00d", range * 1);
 	sprintf_s(tempStr3, "%00d", range * 2);
 	sprintf_s(tempStr4, "%00d", range * 3);
-	sprintf_s(tempStr5, "%00d", finalMax);
+	sprintf_s(tempStr5, "%00d", (int)finalMax);
+	int stringX = basePosEd.x - 16 - 4;
+	int stringGosaY = 6;
 	DrawString(stringX, bottomLineY - stringGosaY, tempStr1, GetColor(255, 255, 255));
 	DrawString(stringX, bottomcenterLineY - stringGosaY, tempStr2, GetColor(255, 255, 255));
 	DrawString(stringX, centerLineY - stringGosaY, tempStr3, GetColor(255, 255, 255));
 	DrawString(stringX, centertopLineY - stringGosaY, tempStr4, GetColor(255, 255, 255));
 	DrawString(stringX, topLineY - stringGosaY, tempStr5, GetColor(255, 255, 255));
 
-	double nowRankHeight = 1.0 - (double)rank / (finalMax);
+	
 
-	int centerX = basePos.x + (basePosEd.x - basePos.x) / 2;
-	int centerY = basePos.y + (basePosEd.y - basePos.y) * nowRankHeight;
+	m_rankAnime_UpdateCount++;
+	if (m_rankAnime_UpdateCount % updateTiming == 0) {
+		m_rankAnime_KeepRank.push_back(rank);
+		if (m_rankAnime_KeepRank.size() > 30) {
+			m_rankAnime_KeepRank.erase(m_rankAnime_KeepRank.begin());
+		}
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	int relX = 0;
+	double relY = 0;
+	double preX = basePos.x;
+	double preY = basePos.y + (basePosEd.y - basePos.y);
+	for (int ii = 0; ii < m_rankAnime_KeepRank.size(); ii++) {
+		int preRank = m_rankAnime_KeepRank[ii];
+		relX = (ii+1) * 10;
+		relY = 1.0 - (double)preRank / (finalMax);
+		if (relY <= 0.0) {
+			relY = 0.0;
+		}
+
+		double postX = basePos.x + relX;
+		double postY = basePos.y + (basePosEd.y - basePos.y) * relY;
+		if (ii == 0) {
+			preX = postX;
+			preY = postY;
+		}
+
+		DrawLineAA(preX, preY, postX, postY, GetColor(255, 0, 0), 3);
+		
+		DrawCircleAA(postX, postY, 4, GetColor(255, 0, 0), TRUE);
+		preX = postX;
+		preY = postY;
+	}
 
 	// 現地点
-	static double animeSize = 1.0;
-	animeSize += 0.1;
-	if (animeSize > 5.0)animeSize = 0.5;
-	DrawCircle(centerX, centerY, 5 * animeSize, GetColor(255, 0, 0), FALSE);
-	DrawCircle(centerX, centerY, 5, GetColor(255, 0, 0), TRUE);
-
+	//double nowRankHeight = 1.0 - (double)rank / (finalMax);
+	//int centerX = basePos.x + (basePosEd.x - basePos.x) / 2;
+	//int centerY = basePos.y + (basePosEd.y - basePos.y) * nowRankHeight;
+	//m_rankAnime_WaveAnimeSize += 0.1;
+	//if (m_rankAnime_WaveAnimeSize > 5.0)m_rankAnime_WaveAnimeSize = 0.5;
+	//DrawCircle(centerX, centerY, 5 * m_rankAnime_WaveAnimeSize, GetColor(255, 0, 0), FALSE);
+	//DrawCircle(centerX, centerY, 5, GetColor(255, 0, 0), TRUE);
 }
 

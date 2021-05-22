@@ -58,4 +58,15 @@ protected:
 	void DrawGameAreaUI(); // 画面内のUI描画
 	void DrawOutArea(); // 画面外の描画
 	void DrawOutArea_Rank(); // 画面外の描画rank
+
+	// 外UIのランクアニメーション
+	int m_rankAnime_PreRank = 1000; // ランクアニメ）アニメが始まった時のランクの値
+	int m_rankAnime_TargetRank = 1000; // ランクアニメ）最終的なランクの値
+	int m_rankAnime_UpRank = 0; // ランクアニメ）アニメ中に上がっているランクを記録する
+	int m_rankAnime_Once = false; // ランクアニメ）m_rankAnime_PreRankの設定を最初の一度
+	int m_rankAnime_Count = 0; // ランクアニメ）アニメーションを制御するためのカウンター
+	double m_rankAnime_WaveAnimeSize = 1.0; // ランクアニメ）原点の波紋用のアニメ
+	std::vector<int> m_rankAnime_KeepRank; // ランク　後ろにどんどん追加する
+	int m_rankAnime_UpdateCount; // 画面更新タイミング
+	int m_rankAnime_RankUpDown; // ランクが上がるのか下がるのか（その量）
 };
