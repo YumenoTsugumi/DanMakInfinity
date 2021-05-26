@@ -24,7 +24,7 @@ public:
 };
 
 
-
+//-------------------------------------------------
 // 上から画面上に移動して、弾をうって退場する敵
 class CEnemyM02 : public CBaseEnemy {
 public:
@@ -42,6 +42,44 @@ public:
 	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 }; 
 
+//-------------------------------------------------
+// 
+class CEnemyM03 : public CBaseEnemy {
+public:
+	CEnemyM03(const CPos& pos);
+	~CEnemyM03();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CLauncherM03 : public CBaseLauncher {
+public:
+	double m_shotAngle;
+	CLauncherM03(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherM03() override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
+
+
+//-------------------------------------------------
+// 
+class CEnemyM04 : public CBaseEnemy {
+public:
+	CEnemyM04(const CPos& pos);
+	~CEnemyM04();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CLauncherM04 : public CBaseLauncher {
+public:
+	double m_shotAngle;
+	CLauncherM04(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherM04() override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
+
+//-------------------------------------------------
 // ためうちの敵
 class CLauncherM08;
 class CEnemyM08 : public CBaseEnemy {

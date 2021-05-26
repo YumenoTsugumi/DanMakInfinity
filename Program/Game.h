@@ -56,6 +56,13 @@ public:
 	//static CRect GetGameRect() { return CRect(m_gameRectLT, m_gameRectRB); }
 	static CRect GetGameRect() { return CRect(CPos(GameWindowAreaLeft, GameWindowAreaTop), CPos(GameWindowAreaRight, GameWindowAreaBottom)); }
 
+	static CPos ToGamePos(CPos ratioPos);
+	static CPos ToGamePos(double ratioPosX, double ratioPosY);
+	static double ToGamePosX(double ratioPosX);
+	static double ToGamePosY(double ratioPosY);
+	static double ToGameSizeX(double ratioPosX);
+	static double ToGameSizeY(double ratioPosY);
+
 	//--------------------------------------------------------------
 	// めんどくさいので共通化
 	//--------------------------------------------------------------

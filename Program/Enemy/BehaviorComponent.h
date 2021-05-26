@@ -157,3 +157,31 @@ protected:
 	CBezierMotion m_outMove;
 	bool m_leaveStart; // 動き始めた瞬間に座標を補正するよう
 };
+
+
+//-------------------------------------------------------------------------------------
+// 小型機
+//-------------------------------------------------------------------------------------
+// A地点から出てきて、うねうね動く
+class CInStepBehavior : public CBehaviorComponent {
+public:
+	CInStepBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed);
+	virtual ~CInStepBehavior();
+	virtual void Action(CPos& updatePos);
+	virtual void DebugPrint();
+	virtual double GetDirection();
+	virtual BehaviorStatus GetBehaviorStatus();
+protected:
+	CPos m_initPos;
+	CPos m_targetPos;
+	double m_inSpeed;
+
+	BehaviorStatus m_moveStatus; // 移動状態
+	CCVLM_CertainAmountStop m_inMove;
+
+	CCVLM_CertainAmountStop m_straight;
+
+	CPos m_stepTargetPos;
+	int m_stepCount;
+	double m_uneuneSpeed;
+};

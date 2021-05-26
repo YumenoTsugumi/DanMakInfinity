@@ -17,10 +17,6 @@ CEnemyS01::CEnemyS01(const CPos& pos) : CBaseEnemy(pos){
 	Init(SmallHp, Small, collisions);
 
 	AddLauncher(new CLauncherS01(m_rank, m_pos, CPos(0, 14)));
-	//if (m_rank >= 50) {
-	//	AddLauncher(new CLauncherS01_50(m_rank, m_pos, CPos(21, 31)));
-	//	AddLauncher(new CLauncherS01_50(m_rank, m_pos, CPos(-21, 31)));
-	//}
 }
 CEnemyS01::~CEnemyS01() {}
 void CEnemyS01::Draw() {
@@ -257,7 +253,7 @@ bool CLauncherS03_50::Action(const CPos& newEnemyPos, const CPos& nowRelativePos
 }
 
 //----------------------------------------------------------------------------------------------------------
-// CEnemyS04 真下に発射
+// CEnemyS04 3つを時期狙い
 //----------------------------------------------------------------------------------------------------------
 CEnemyS04::CEnemyS04(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyS4");
@@ -324,13 +320,13 @@ bool CLauncherS04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	
 	if (m_count == initTime) {
 		//m_shotAngleRock = true;
-		m_shotAngle = 90.0;
+		m_shotAngle = 0;
 		m_shotSpeed = 6.0 * RankSpeed();
 	}
 	if (m_count >= startTime && m_count <= endTime) {
 		if (m_count % span == 0) {
 			m_shotSpeed += 1.4 * RankSpeed();
-			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, m_shotSpeed, m_shotAngle, 0, 0, 0, 0, 41);
+			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, m_shotSpeed, m_shotAngle, 0, 0, 0, 0, 41);
 			CBaseLauncher::m_bulletManager->Add(b);
 		}
 		if (m_count == endTime) {
@@ -540,6 +536,8 @@ bool CLauncherS07::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		return true;
 	}
 	m_count++;
+
+	return true;
 }
 
 

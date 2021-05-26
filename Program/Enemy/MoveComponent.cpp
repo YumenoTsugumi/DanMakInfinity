@@ -94,6 +94,14 @@ void CCVLM_CertainAmountStop::ResetTargetPos(const CPos& nowPos, const CPos& tar
 	m_vel.y = m_speed * sin(m_angle);
 }
 
+/* 敵の動きのクラス構造
+* enemy class
+* BehaviorComp 入場～退場　制御するクラス
+* MoveComp 単一の動き（直線移動、曲線移動）
+
+*/
+
+
 ArrivalStatus CCVLM_CertainAmountStop::Action(CPos& updatePos) {
 
 	if (!m_noArrival && m_moveDistance >= m_maxDistance) {
@@ -312,16 +320,16 @@ CPos CBezierMotion::GetNowPos()
 
 void CBezierMotion::DebugPrint()
 {
-	unsigned int cr = GetColor(255, 0, 0); 
-	for (int ii = 0; ii < m_vezier.size()-1; ii++) {
-		CPos p1 = m_vezier[ii];
-		CPos p2 = m_vezier[ii + 1];
-		DrawLine(p1.x, p1.y, p2.x, p2.y, cr);    // 線を描画
-	}
+	//unsigned int cr = GetColor(255, 0, 0); 
+	//for (int ii = 0; ii < m_vezier.size()-1; ii++) {
+	//	CPos p1 = m_vezier[ii];
+	//	CPos p2 = m_vezier[ii + 1];
+	//	DrawLine(p1.x, p1.y, p2.x, p2.y, cr);    // 線を描画
+	//}
 
-	for (int ii = 0; ii < m_controlPointArray.size(); ii++) {
-		DrawCircle(m_controlPointArray[ii].x, m_controlPointArray[ii].y, 6, cr);    // 線を描画
-	}
+	//for (int ii = 0; ii < m_controlPointArray.size(); ii++) {
+	//	DrawCircle(m_controlPointArray[ii].x, m_controlPointArray[ii].y, 6, cr);    // 線を描画
+	//}
 }
 void CBezierMotion::SetDepartureAcce(double inAcce, double inMaxSpeed) {
 	m_departureAcceFlag = true;

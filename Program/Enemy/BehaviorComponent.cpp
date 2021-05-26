@@ -2,7 +2,7 @@
 #include "MoveComponent.h"
 #include "BehaviorComponent.h"
 #include "BattleScene.h"
-
+#include "Game.h"
 
 
 CBehaviorComponent::CBehaviorComponent() :
@@ -304,4 +304,87 @@ BehaviorStatus CBezierInOutBehavior::GetBehaviorStatus()
 	return BehaviorStatus::Shot;
 }
 
+
+//-------------------------------------------------------------------------------------
+// 小型機
+//-------------------------------------------------------------------------------------
+// A地点から出てきて、うねうね動く
+CInStepBehavior::CInStepBehavior(const CPos& initPos, const CPos& targetPos, double inSpeed) :
+	CBehaviorComponent(),
+	m_inMove(initPos, targetPos, inSpeed), // 入場時の設定
+	m_straight(CPos(0, 0), CPos(0, 0), 0) // とりあえずダミー
+{
+	m_initPos = initPos;
+	m_targetPos = targetPos;
+	m_inSpeed = inSpeed;
+
+	m_moveStatus = BehaviorStatus::Admitting;
+	m_inMove.SetArrivalAcce(-0.5, 0, 0.7); // 入場時(7割の位置)で目的地近くでは減速(0.5)する
+}
+
+CInStepBehavior::~CInStepBehavior(){}
+
+void CInStepBehavior::Action(CPos& updatePos)
+{
+	if (m_waitTime > 0) {
+		if (m_waitCount <= m_waitTime) {
+			m_waitCount++;
+			return;
+		}
+	}
+
+	if (m_moveStatus == BehaviorStatus::Admitting) {
+		ArrivalStatus arrivalStatus = m_inMove.Action(updatePos);
+		if (arrivalStatus == ArrivalStatus::Arrival) {
+			m_moveStatus = BehaviorStatus::Shot;
+
+			//CPos sub = m_stepTargetPos - updatePos;
+			//for (int ii = 0; ii < 20; ii++) {
+			//	CPos pp = updatePos + (sub / 20) * ii;
+
+			//	double ang = CFunc::RandF(0, 360);
+			//	double speed = 0.2;
+			//	CBaseEffect* eff = new CBaseEffect(60, EDirType::Abs, pp, speed, ang, 0, 0, 0, 0, 2);
+			//	eff->SetSize(1.0, +0.0);
+			//	//eff->SetWaitTime(CFunc::RandI(1, 15));
+			//	eff->SetBlend(255, -5.0, 0);
+			//	eff->SetBlendType(DX_BLENDMODE_ADD);
+			//	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+			//	eff->SetRemoveCount(10);	//60frで削除
+			//	CBattleScene::m_effectManager.Add(eff);
+			//}
+
+			m_stepCount = 0;
+		}
+	}
+	else if (m_moveStatus == BehaviorStatus::Shot) {
+
+		m_straight.Action(updatePos);
+		if (m_stepCount++ > 60) {
+			do {
+				double ang = CFunc::RandD(0, 360);
+				double length = CFunc::RandD(150, 300);
+				m_stepTargetPos.x = updatePos.x + cos(ang) * length;
+				m_stepTargetPos.y = updatePos.y + sin(ang) * length;
+				if (m_stepTargetPos.x > CGame::CGame::ToGamePosX(0.0) &&
+					m_stepTargetPos.x < CGame::CGame::ToGamePosX(1.0) &&
+					m_stepTargetPos.y > CGame::CGame::ToGamePosY(0.0) &&
+					m_stepTargetPos.y < CGame::CGame::ToGamePosY(0.5)) {
+					break;
+				}
+			} while (1);
+			m_straight = CCVLM_CertainAmountStop(updatePos, m_stepTargetPos, 5.0);
+			m_straight.SetArrivalAcce(-0.1, 0, 0.5); // 入場時(7割の位置)で目的地近くでは減速(0.5)する
+			m_stepCount = 0;
+		}
+	}
+}
+
+BehaviorStatus CInStepBehavior::GetBehaviorStatus(){
+	return m_moveStatus;
+}
+double CInStepBehavior::GetDirection(){
+	return m_inMove.GetDirection();
+}
+void CInStepBehavior::DebugPrint(){}
 

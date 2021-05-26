@@ -22,7 +22,6 @@ public:
 	int m_random; // なんか乱数
 };
 
-
 // 上から真ん中まで動いて停止　その後撤退 
 class SpawnerSmallTop_Stop : public SpawnerMoveStopMove {
 public:								
@@ -41,7 +40,6 @@ public:
 	StartLRPos m_LRPettern; // 出現パターン
 	double m_spawnerTargetPosX; // 出現後の移動先の位置
 	double m_appearancePosition; // 出現位置誤差
-
 };
 
 // 上から真ん中まで動いて停止　その後撤退 (Line)
@@ -114,6 +112,18 @@ public:
 	std::vector<CPos> m_posAry;
 	StartLRPos m_spawnerPosition; // 出現位置
 };
+
+
+// ずっとプレイヤーを時期狙い
+class SpawnerSmallTop_TracePlayer : public SpawnerBase {
+public:
+	SpawnerSmallTop_TracePlayer(EnemySize spawnerSize);
+	virtual ~SpawnerSmallTop_TracePlayer();
+	virtual void Spawne() override;
+	std::vector<CPos> m_posAry;
+};
+
+
 
 // ---------------------------
 // 止まらず動き続けるパターン

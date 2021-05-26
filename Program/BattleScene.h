@@ -143,6 +143,7 @@ public:
 	static int GetRank() { return m_rank / RankBasedDigit; }
 	static void AddRank(int delta);
 	static double GetRankRatio() { return m_rankRatio; }
+	static void SetRankRatio(double ratio);
 	static void AddRankRatio(double delta);
 	static void AddRankRatioByStageSpan(); // ステージ中のspan
 	static void AddRankRatioByStageClear(int resultrank); // S0 E5
@@ -150,6 +151,11 @@ public:
 	static CPos m_playerPos;
 	static CPos GetPlayerPos() {return m_playerPos;	}
 	static void SetPlayerPos(const CPos pos) {m_playerPos = pos;}
+
+	// 現在ステージ
+	static int m_nowStage;
+	static int GetNowStage() { return m_nowStage; }
+	static void AddNowStage() { m_nowStage++; };
 
 	// その他
 	//CPos testLauncherPos; // テスト砲台位置

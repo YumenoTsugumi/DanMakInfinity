@@ -47,6 +47,19 @@ public:
 		m_scene = scene;
 	}
 	CBattleScene* m_scene;
+
+
+	//------------------------------------------------------------
+	// デバッガー
+	int m_spawneEnemySize;
+	int m_spawneEnemyIndex;
+	int m_spawneEnemyMoveType;
+	void DebugSpawner();
+
+	// デバッグ
+	int DebugGetSmallMax();
+	int DebugGetMediumMax();
+	int DebugGetLargeMax();
 };
 
 class SpawnerBase {
@@ -72,34 +85,51 @@ public:
 	double ToSecond(double millSecond);
 
 
-	// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
-	// FulHDなら (480,20)(1440,1060)の範囲
-	CPos ToGamePos(CPos ratioPos);
-	CPos ToGamePos(double ratioPosX, double ratioPosY);
-	// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
-	double ToGamePosX(double ratioPosX); 
-	// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
-	double ToGamePosY(double ratioPosY);
+	//// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+	//// FulHDなら (480,20)(1440,1060)の範囲
+	//CPos ToGamePos(CPos ratioPos);
+	//CPos ToGamePos(double ratioPosX, double ratioPosY);
+	//// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+	//double CGame::ToGamePosX(double ratioPosX); 
+	//// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+	//double CGame::ToGamePosY(double ratioPosY);
 
-	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
-	double ToGameSizeX(double ratioPosX);
-	// 0.0～1.0で画面サイズに比例する大きさが返ってくる
-	double ToGameSizeY(double ratioPosY);
+	//// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+	//double ToGameSizeX(double ratioPosX);
+	//// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+	//double ToGameSizeY(double ratioPosY);
 
 	int m_maxSpawneCount; // スポーン数　小12体　中4体　大2体
-	void SetSpawner(EnemySize spawnerSize);
-	EnemySize m_spawnerSize; // 出現する敵のサイズ
-	CBaseEnemy* GetEnemy(const CPos& pos);
 
+	EnemySize m_spawnerSize; // 出現する敵のサイズ
 	void SetSpeedBySize();
 
-	int m_index; // 出現する敵（子クラスで使用）
+	int m_index; // 出現する敵（子クラスで使用）(コンストラクタで設定)
+	void SetEnemyIndex(int index) {m_index	= index;};// (コンストラクタの値を後から上書き)
+
+	CBaseEnemy* GetStopEnemy(const CPos& pos);
+	void SetStopSpawner(EnemySize spawnerSize);
+	CBaseEnemy* GetNonStopEnemy(const CPos& pos);
+	void SetNonStopSpawner(EnemySize spawnerSize);
 private:
-	int GetSmallEnemyIndex();
-	CBaseEnemy* GetSmallEnemy(int index, const CPos& pos);
-	int GetMediumEnemyIndex();
-	CBaseEnemy* GetMediumEnemy(int index, const CPos& pos);
-	int GetLargeEnemyIndex();
-	CBaseEnemy* GetLargeEnemy(int index, const CPos& pos);
+	// 入場して、攻撃して、退場する
+	int GetSmallStopEnemyIndex();
+	CBaseEnemy* GetSmallStopEnemy(int index, const CPos& pos);
+	int GetMediumStopEnemyIndex();
+	CBaseEnemy* GetMediumStopEnemy(int index, const CPos& pos);
+	int GetLargeStopEnemyIndex();
+	CBaseEnemy* GetLargeStopEnemy(int index, const CPos& pos);
+
+	// 動き続ける敵
+	int GetSmallNonStopEnemyIndex(); 
+	CBaseEnemy* GetSmallNonStopEnemy(int index, const CPos& pos);
+	int GetMediumNonStopEnemyIndex();
+	CBaseEnemy* GetMediumNonStopEnemy(int index, const CPos& pos);
+	int GetLargeNonStopEnemyIndex();
+	CBaseEnemy* GetLargeNonStopEnemy(int index, const CPos& pos);
+
+	// 入場して、ずっと滞在する// 退場せずにステップ動作する
+	int GetMediumStepEnemyIndex(); 
+	CBaseEnemy* GetMediumStepEnemy(int index, const CPos& pos);
 };
 

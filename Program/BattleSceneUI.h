@@ -29,12 +29,17 @@ protected:
 	std::vector<CImage*> m_textItemTakeNumber;
 	std::vector<CImage*> m_textItemTakeOther; // %,.
 	std::vector<CImage*> m_RankBigNumber;
+
 	CImage* m_text0g;
 	CImage* m_textComma;
 	CImage* m_textCommag;
 
 	CImage* m_rankWaku;
 	CImage* m_rankWaku2;
+
+	// 現在のステージ
+	std::vector<CImage*> m_stageNumber;
+	CImage* m_stageLogo;
 
 	// 外側
 	CImage* m_UIFoundation;
@@ -59,6 +64,7 @@ protected:
 	void DrawGameAreaUI(); // 画面内のUI描画
 	void DrawOutArea(); // 画面外の描画
 	void DrawOutArea_Rank(); // 画面外の描画rank
+	void DrawOutArea_Stage(); // 画面外　現在のステージ
 
 	// 外UIのランクアニメーション
 	int m_rankAnime_PreRank = 1000; // ランクアニメ）アニメが始まった時のランクの値

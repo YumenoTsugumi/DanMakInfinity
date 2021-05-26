@@ -215,6 +215,14 @@ void CGame::ImageLoad()
 		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1040 + ii);
 	}
 
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("Resource\\UI_fullhd2\\UIStageNumber%d.png", ii);
+		std::string format2 = MyFormat("UIStageNumber%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 1050 + ii);
+	}
+	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIStageText.png"), "UIStageText", 1060);
+
+
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextScore.png"), "TextScore", 1150);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\TextHiScore.png"), "TextHiScore", 1151);
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\RankWaku.png"), "RankWaku", 1152);
@@ -364,4 +372,47 @@ void CGame::ImageLoadByThread()
 	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 	// 要した時間をミリ秒（1/1000秒）に変換して表示
 	printfDx(" milli sec %d", msec);
+}
+
+
+// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+// FulHDなら (480,20)(1440,1060)の範囲
+CPos CGame::ToGamePos(CPos ratioPos)
+{
+	return ToGamePos(ratioPos.x, ratioPos.y);
+}
+CPos CGame::ToGamePos(double ratioPosX, double ratioPosY)
+{
+	return CPos(CGame::ToGamePosX(ratioPosX), CGame::ToGamePosY(ratioPosY));
+}
+// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+// FulHDなら (480～1440)の範囲
+double CGame::CGame::ToGamePosX(double ratioPosX)
+{
+	int min = GameWindowAreaLeft * CGame::GetWindowRatio();
+	int max = GameWindowAreaRight * CGame::GetWindowRatio();
+	return 	min + (max - min) * (ratioPosX);
+}
+// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
+// FulHDなら (20～1060)の範囲
+double CGame::CGame::ToGamePosY(double ratioPosY)
+{
+	int min = GameWindowAreaTop * CGame::GetWindowRatio();
+	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
+	return 	min + (max - min) * (ratioPosY);
+}
+
+// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+double CGame::ToGameSizeX(double ratioPosX)
+{
+	int min = GameWindowAreaLeft * CGame::GetWindowRatio();
+	int max = GameWindowAreaRight * CGame::GetWindowRatio();
+	return (max - min) * (ratioPosX);
+}
+// 0.0～1.0で画面サイズに比例する大きさが返ってくる
+double CGame::ToGameSizeY(double ratioPosY)
+{
+	int min = GameWindowAreaTop * CGame::GetWindowRatio();
+	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
+	return 	(max - min) * (ratioPosY);
 }

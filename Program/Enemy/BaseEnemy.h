@@ -138,6 +138,17 @@ public:
 
 	int m_waitShotTime; // 0になったらショット打ち始める -60～0
 	int GetWaitShotTime() { return m_waitShotTime; };
+
+
+	// 動きのパターン
+	enum MoveType {
+		InShotOut = 0,// 入場＆ショット＆退去
+		MoveingShot = 1, // 動きながらショット
+	};
+	MoveType m_moveType;
+	void SetMoveType(MoveType type) {
+		m_moveType = type;
+	}
 };
 
 /*

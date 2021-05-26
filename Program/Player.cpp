@@ -118,7 +118,7 @@ constexpr int bomberTotalDamage = 600;
 
 constexpr int startDist = 200;
 constexpr int endDist = 50;
-constexpr int mutekiTime = bomberFinishTime + 60 * 1;
+constexpr int mutekiTime = bomberFinishTime + 60 * 3;
 constexpr int mutekiTimeAlphaDown = mutekiTime * 0.1;
 
 void CPlayer::BomberSet() {
@@ -137,6 +137,11 @@ void CPlayer::BomberSet() {
 			m_bomberPos.y = 100;
 		}
 		CBattleScene::BombDecrement();
+
+		double ratio = CBattleScene::GetRankRatio() * 0.8;
+		if (ratio < 1.0)ratio = 1.0;
+		CBattleScene::SetRankRatio(ratio);
+		CBattleScene::AddRank(-5);
 	}
 }
 
@@ -335,11 +340,14 @@ void CPlayer::Shot()
 
 	int bulletImageA = 990;
 
+	double angleL = 270 - 0;
+	double angleR = 270 + 0;
+
 	CPos posAng1;
 	posAng1.x = cos(m_posBitAngleL[0] / 57.27) * 40;
 	posAng1.y = 0 * sin(m_posBitAngleL[0] / 57.27) * 20;
 	{
-		CPlayerBullet* b1 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng1.x, m_pos.y + 100 + posAng1.y), speed, 270.0, 0, 0, 0, 0, bulletImageA);
+		CPlayerBullet* b1 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng1.x, m_pos.y + 100 + posAng1.y), speed, angleL, 0, 0, 0, 0, bulletImageA);
 		m_playerBullet->Add(b1);
 	}
 
@@ -347,7 +355,7 @@ void CPlayer::Shot()
 	posAng2.x = cos(m_posBitAngleL[1] / 57.27) * 40;
 	posAng2.y = 0 * sin(m_posBitAngleL[1] / 57.27) * 20;
 	{
-		CPlayerBullet* b2 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng2.x, m_pos.y + 100 + posAng2.y), speed, 270.0, 0, 0, 0, 0, bulletImageA);
+		CPlayerBullet* b2 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng2.x, m_pos.y + 100 + posAng2.y), speed, angleL, 0, 0, 0, 0, bulletImageA);
 		m_playerBullet->Add(b2);
 	}
 
@@ -355,7 +363,7 @@ void CPlayer::Shot()
 	posAng3.x = cos(m_posBitAngleR[0] / 57.27) * 40;
 	posAng3.y = 0 * sin(m_posBitAngleR[0] / 57.27) * 20;
 	{
-		CPlayerBullet* b3 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng3.x, m_pos.y + 100 + posAng3.y), speed, 270.0, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
+		CPlayerBullet* b3 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng3.x, m_pos.y + 100 + posAng3.y), speed, angleR, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
 		m_playerBullet->Add(b3);
 	}
 
@@ -363,7 +371,7 @@ void CPlayer::Shot()
 	posAng4.x = cos(m_posBitAngleR[1] / 57.27) * 40;
 	posAng4.y = 0 * sin(m_posBitAngleR[1] / 57.27) * 20;
 	{
-		CPlayerBullet* b4 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng4.x, m_pos.y + 100 + posAng4.y), speed, 270.0, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
+		CPlayerBullet* b4 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng4.x, m_pos.y + 100 + posAng4.y), speed, angleR, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
 		m_playerBullet->Add(b4);
 	}
 

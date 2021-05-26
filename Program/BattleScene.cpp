@@ -8,7 +8,7 @@
 #include "BaseBullet.h"
 #include "CustomBullet.h"
 #include "HomingBullet.h"
-
+#include "BaseEffect.h"
 //#include "EnemySmall.h"
 //#include "EnemyMedium.h"
 //#include "EnemyLarge.h"
@@ -53,6 +53,7 @@ int CBattleScene::m_missCount = 0;
 int CBattleScene::m_haveBomb = 0;
 int CBattleScene::m_haveLife = 0;
 double CBattleScene::m_rankRatio = 1.0;
+int CBattleScene::m_nowStage = 1;
 void CBattleScene::StageCountReset()
 {
 	m_spawneSmallCount = 0;
@@ -304,6 +305,9 @@ void CBattleScene::StageClearResult()
 		if (m_feedoutCount < bgFeedTime) {
 			m_feedoutCount++;
 		}
+		if (m_feedoutCount == 1) {
+			AddNowStage(); // ステージのカウントアップ
+		}
 		double feedoutAlpha = 1.0 - (double)m_feedoutCount / bgFeedTime;
 		m_activeBg->SetFeedAlpha(feedoutAlpha);
 		if (m_feedoutCount == bgFeedTime) { // 表の背景を消去
@@ -329,6 +333,8 @@ void CBattleScene::StageClearResult()
 				m_battleResultUIReset = true;
 				m_stageManager.StageReset(); // スポーンリセット
 				StageCountReset(); // 倒したカウントのリセット
+
+				
 			}
 		}
 	}
@@ -343,17 +349,16 @@ void CBattleScene::AddRank(int delta)
 	if (m_rank < 1* RankBasedDigit)m_rank = 1 * RankBasedDigit;
 	if (m_rank > 999 * RankBasedDigit)m_rank = 999 * RankBasedDigit;
 }
-// 1ステージで20回呼ばれるので　2上がる計算
-constexpr double addRankBase = 0.1;
 void CBattleScene::AddRankRatio(double delta)
 {
 	m_rankRatio += delta;
 	if (m_rankRatio > 10.0)m_rankRatio = 10.0;
 	if (m_rankRatio < 0.1)m_rankRatio = 0.1;
 }
-
+// 1ステージで20回呼ばれるので　2上がる計算
 void CBattleScene::AddRankRatioByStageSpan() // ステージ中のspan
 {
+	constexpr double addRankBase = 0.1;
 	AddRankRatio(0.01);
 	m_rank += addRankBase * m_rankRatio * RankBasedDigit;
 }
@@ -368,6 +373,12 @@ void CBattleScene::AddRankRatioByStageClear(int resultrank) // S0 E5
 	else if (resultrank == 5)tmp = 0.01;
 	AddRankRatio(tmp);
 	m_rank += resultrank * m_rankRatio * RankBasedDigit;
+}
+void CBattleScene::SetRankRatio(double ratio)
+{
+	m_rankRatio = ratio;
+	if (m_rankRatio > 10.0)m_rankRatio = 10.0;
+	if (m_rankRatio < 0.1)m_rankRatio = 0.1;
 }
 
 // スコア追加
@@ -424,7 +435,7 @@ void CBattleScene::RemoveBullet()
 
 	m_bulletRemoveCount++;
 }
-#include "BaseEffect.h"
+
 void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
 {
 	for (int ii = 0; ii < m_bulletManager.m_bulletTotalNum; ii++) {
@@ -448,7 +459,8 @@ void CBattleScene::RemoveBulletByMidiumEnemy(int id) // 弾消し処理
 }
 
 // 全敵破壊
-void CBattleScene::DestoryAllEnemyNothingItemDrop() {
+void CBattleScene::DestoryAllEnemyNothingItemDrop() 
+{
 	m_enemyManager.DestoryAllEnemyNothingItemDrop();
 }
 void CBattleScene::DamageAllEnemy(int damage)
@@ -459,23 +471,6 @@ void CBattleScene::DamageAllEnemy(int damage)
 // 全敵表示
 void CBattleScene::DebugAllEnemyDirection()
 {
-	//static int count = 0;
-	//if (count == 0) {
-	//	for (int ii = 0; ii < 3; ii++) {
-	//		CEnemyS007* e1 = new CEnemyS007(CPos(900, 200));
-
-	//		std::vector<CPos> poss = {
-	//			CPos(100, -100), CPos(300, 500), CPos(500, 500), CPos(700, -100),
-	//		};
-
-	//		CBezierBehavior* move = new CBezierBehavior(poss, 3.0);
-	//		e1->SetBehaviorComponent(move, ii*120);
-	//		e1->SetDrawSize(1.0 + ii*2);
-	//		m_enemyManager.Add(e1);
-	//	}
-
-	//}
-	//count++;
 }
 
 // デバッグコマンド

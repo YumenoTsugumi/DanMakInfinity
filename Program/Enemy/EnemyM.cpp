@@ -194,6 +194,163 @@ bool CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	return true;
 }
 
+//----------------------------------------------------------------------------------------------------------
+// CEnemyM03
+//----------------------------------------------------------------------------------------------------------
+CEnemyM03::CEnemyM03(const CPos& pos) : CBaseEnemy(pos) {
+	m_image = (CImage*)CGame::GetResource("enemyM3");
+	//m_shotTiming = true;
+	m_drawSizeRatio = 1.3;
+	std::vector<Collision> collisions = {
+		Collision(CPos(0,-9), 34.0),
+		Collision(CPos(35,24), 24.0),
+		Collision(CPos(-35,24), 24.0) };
+	Init(600, Medium, collisions);
+
+	AddLauncher(new CLauncherM03(m_rank, m_pos, CPos(36, 46)));
+	AddLauncher(new CLauncherM03(m_rank, m_pos, CPos(-36, 46)));
+}
+CEnemyM03::~CEnemyM03() {
+}
+void CEnemyM03::Draw() {
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	double angle = GetFinalDirectionRad() - CFunc::ToRad(90.0);
+
+	BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+
+	DebugCollisionDraw();
+	DebugLauncherDraw();
+}
+
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CEnemyM03::GetFinalDirectionRad() {
+	return CFunc::GetTwoPointAngle(m_target, m_pos);
+}
+
+CLauncherM03::CLauncherM03(int rank, const CPos& enemyPos, const CPos& relativePos) :
+	CBaseLauncher(rank, enemyPos, relativePos) {
+};
+
+CLauncherM03::~CLauncherM03() {}
+
+bool CLauncherM03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+{
+	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
+	if (!waitShot) return true;
+
+	int startTime = 0; // 弾を撃ち始めるまでの時間
+	int endTime = startTime + 25; // 弾を撃っている時間
+	int resetTime = endTime + 400; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
+	int span = 5; // 弾を撃つ間隔
+
+	if (m_count == startTime) {
+		m_shotAngle = CFunc::ToDeg(CFunc::GetTwoPointAngle(m_target, m_parent->m_pos));
+	}
+	if (m_count >= startTime && m_count <= endTime) {
+		if (m_count % span == 0) {
+			double speed = 10.0 * RankSpeed();
+
+			double angle = CFunc::ToDeg(CFunc::GetTwoPointAngle(m_target, m_parent->m_pos));
+			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
+			b->SetShotEnemyId(m_parent->GetEnemyId());
+			CBaseLauncher::m_bulletManager->Add(b);
+			
+		}
+
+	}
+	if (m_count == resetTime) {
+		//m_shotAngleRock = false;
+	}
+
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return true;
+	}
+	m_count++;
+	return true;
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------
+// CEnemyM04
+//----------------------------------------------------------------------------------------------------------
+CEnemyM04::CEnemyM04(const CPos& pos) : CBaseEnemy(pos) {
+	m_image = (CImage*)CGame::GetResource("enemyM4");
+	//m_shotTiming = true;
+	m_drawSizeRatio = 1.3;
+	std::vector<Collision> collisions = {
+		Collision(CPos(0,-9), 34.0),
+		Collision(CPos(35,24), 24.0),
+		Collision(CPos(-35,24), 24.0) };
+	Init(600, Medium, collisions);
+
+	AddLauncher(new CLauncherM04(m_rank, m_pos, CPos(36, 46)));
+	AddLauncher(new CLauncherM04(m_rank, m_pos, CPos(-36, 46)));
+}
+CEnemyM04::~CEnemyM04() {
+}
+void CEnemyM04::Draw() {
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	double angle = GetFinalDirectionRad() - CFunc::ToRad(90.0);
+
+	BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
+
+	DebugCollisionDraw();
+	DebugLauncherDraw();
+}
+
+// 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+double CEnemyM04::GetFinalDirectionRad() {
+	return CFunc::GetTwoPointAngle(m_target, m_pos);
+}
+
+CLauncherM04::CLauncherM04(int rank, const CPos& enemyPos, const CPos& relativePos) :
+	CBaseLauncher(rank, enemyPos, relativePos) {
+};
+
+CLauncherM04::~CLauncherM04() {}
+
+bool CLauncherM04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
+{
+	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
+	if (!waitShot) return true;
+
+	int startTime = 0; // 弾を撃ち始めるまでの時間
+	int endTime = startTime + 45; // 弾を撃っている時間
+	int resetTime = endTime + 180; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
+	int span = 20; // 弾を撃つ間隔
+
+	if (m_count == startTime) {
+		m_shotAngle = CFunc::ToDeg(CFunc::GetTwoPointAngle(m_target, m_parent->m_pos));
+	}
+	if (m_count >= startTime && m_count <= endTime) {
+		if (m_count % span == 0) {
+			for (int ii = 0; ii < 5; ii++) {
+				double speed = CFunc::RandD(7.5, 9) * RankSpeed();
+
+				double angle = CFunc::RandD(-4,4);
+				CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 1);
+				b->SetShotEnemyId(m_parent->GetEnemyId());
+				CBaseLauncher::m_bulletManager->Add(b);
+			}
+
+		}
+
+	}
+	if (m_count == resetTime) {
+		//m_shotAngleRock = false;
+	}
+
+	if (m_count >= resetTime) {
+		m_count = 0;
+		return true;
+	}
+	m_count++;
+	return true;
+}
+
+
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -242,6 +399,7 @@ void CEnemyM08::Draw() {
 	DebugLauncherDraw();
 }
 
+//-------------------------------------------------------------------------
 // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
 double CEnemyM08::GetFinalDirectionRad()
 {

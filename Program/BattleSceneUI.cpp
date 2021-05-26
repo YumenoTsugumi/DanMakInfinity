@@ -58,6 +58,14 @@ void CBattleSceneUI::Init() {
 
 	m_imageRankRatio = (CImage*)CGame::GetResource(1034);
 
+	// ステージの番号の表示
+	for (int ii = 0; ii < 10; ii++) {
+		CImage* img1 = (CImage*)CGame::GetResource(1050 + ii);
+		m_stageNumber.push_back(img1);
+	}
+	m_stageLogo = (CImage*)CGame::GetResource(1060);
+
+
 	m_rankAnime_PreRank = 1000; // ランクアニメ）アニメが始まった時のランクの値
 	m_rankAnime_TargetRank = 1000; // ランクアニメ）最終的なランクの値
 	m_rankAnime_UpRank = 0; // ランクアニメ）アニメ中に上がっているランクを記録する
@@ -287,6 +295,7 @@ void CBattleSceneUI::DrawOutArea()
 	DrawItemGetCounter(GameWindowAreaRight + 40 + 40 + 100 + 40 + 100+40, 20, 140, 0.5, rank1ItemCount);
 
 	DrawOutArea_Rank();
+	DrawOutArea_Stage();
 }
 
 void CBattleSceneUI::DrawItemGetCounter(double x, double xGap, double y, double size, int value)
@@ -344,13 +353,6 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 	int centertopLineY = centerLineY + (topLineY - centerLineY) / 2; // [3]
 	DrawLineAA(basePos.x, centertopLineY, basePosEd.x - gosaX, centertopLineY, GetColor(255, 255, 255));
 
-	//-----------------------------------------------------
-	// ランクのアニメーション
-	static int aaa = 0;
-	if (aaa == 0) {
-		SetFontSize(16);
-		aaa++;
-	}
 
 	int drawRangeMin = 1;
 	int drawRangeMax = 1000;
@@ -493,3 +495,23 @@ void CBattleSceneUI::DrawOutArea_Rank() {
 
 }
 
+
+// 画面外　現在のステージ
+void CBattleSceneUI::DrawOutArea_Stage()
+{
+	// 画面外の描画rank
+	CPos basePos = CPos(GameWindowAreaRight + 25, 630);
+	CPos basePosEd = basePos + CPos(430, 230);
+	
+	int nowStage = CBattleScene::GetNowStage();
+	std::vector<int> stageAry1;
+	CFunc::GetDigitArray(3, nowStage, stageAry1);
+
+	
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	CDxFunc::MyDrawRotaGraph(basePos.x + 180, basePos.y + 290, 1.205, 0, m_stageLogo->m_iamge);
+	for (int ii = 0; ii < stageAry1.size(); ii++) {
+		CDxFunc::MyDrawRotaGraph(basePos.x + 380 - ii * 70, basePos.y + 370, 1.205, 0, m_stageNumber[stageAry1[ii]]->m_iamge);
+	}
+
+}
