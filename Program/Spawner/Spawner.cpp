@@ -114,11 +114,8 @@ void SpawnerSmallTop_Stop::Spawne()
 		CInOutBehavior* move = GetReturnPettern(m_spawnerIndex ,pos, targetPos);
 		enemy->SetBehaviorComponent(move);
 
-		// 配信中に書き換えたので、後でちゃんと治すこと
-		//CBehaviorComponent* component =  new CInStepBehavior(pos, targetPos, 7 );
-		//enemy->SetBehaviorComponent(component);
-
 		CBattleScene::m_enemyManager.Add(enemy);
+		m_spawnerIndex++;
 	}
 }
 
@@ -176,6 +173,7 @@ void SpawnerSmallLeftRight_Stop::Spawne()
 
 		enemy->SetBehaviorComponent(move);
 		CBattleScene::m_enemyManager.Add(enemy);
+		m_spawnerIndex++;
 	}
 }
 
@@ -199,7 +197,6 @@ SpawnerSmall_Line_Top_Stop::SpawnerSmall_Line_Top_Stop(EnemySize spawnerSize) : 
 					43210
 	*/
 	m_inPettern = CFunc::RandI(0, 3);
-	//m_inPettern = 2;
 
 	for (int ii = 0; ii < m_maxSpawneCount; ii++) {
 		if (m_inPettern == 0) {
@@ -384,20 +381,19 @@ void SpawnerSmall_Line_LeftRight_Stop::Spawne()
 	}
 	m_count++;
 
-	if (m_inPettern >= 0 && m_inPettern <= 9) {
-		if (m_count % m_spawneTiming == 0) {
-			CPos pos = m_inPos[m_spawnerIndex];
-			CPos targetPos = m_targetPos[m_spawnerIndex];
+	if (m_count % m_spawneTiming == 0) {
+		CPos pos = m_inPos[m_spawnerIndex];
+		CPos targetPos = m_targetPos[m_spawnerIndex];
 
-			CBaseEnemy* enemy = GetStopEnemy(pos);
-			CInOutBehavior* move = GetReturnPettern(m_spawnerIndex, pos, targetPos);
+		CBaseEnemy* enemy = GetStopEnemy(pos);
+		CInOutBehavior* move = GetReturnPettern(m_spawnerIndex, pos, targetPos);
 
-			enemy->SetBehaviorComponent(move);
-			CBattleScene::m_enemyManager.Add(enemy);
+		enemy->SetBehaviorComponent(move);
+		CBattleScene::m_enemyManager.Add(enemy);
 
-			m_spawnerIndex++;
-		}
+		m_spawnerIndex++;
 	}
+
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -415,9 +411,9 @@ SpawnerSmallTop_NoStop_Uturn::SpawnerSmallTop_NoStop_Uturn(EnemySize spawnerSize
 
 		double stY = 0.05 + CFunc::RandD(0, 0.08);
 		double edY = 0.4 + CFunc::RandD(0, 0.08);
-		if (CFunc::RandI(0, 1)) {
-			std::swap(stY, edY);
-		}
+		//if (CFunc::RandI(0, 1)) {
+		//	std::swap(stY, edY);
+		//}
 		if (m_spawnerPosition == StartLRPos::Left) {
 			m_posAry = std::vector<CPos>{
 				CPos(CGame::ToGamePosX(-0.2), CGame::ToGamePosY(stY)),
@@ -462,7 +458,6 @@ void SpawnerSmallTop_NoStop_Uturn::Spawne()
 		CBezierBehavior* move = new CBezierBehavior(m_posAry, m_speed);
 		enemy->SetBehaviorComponent(move);
 		CBattleScene::m_enemyManager.Add(enemy);
-
 		m_spawnerIndex++;
 	}
 }
@@ -690,130 +685,140 @@ void SpawnerSmallTop_TracePlayer::Spawne() {
 
 
 
+//-----------------------------------------------------------------------
+// 上から真ん中まで動いて、そのままうごうご(中型機)
+SpawnerMediumTop_Step::SpawnerMediumTop_Step(EnemySize spawnerSize) : SpawnerMoveStopMove(spawnerSize)
+{
+	SetStepSpawner(spawnerSize);
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneTiming = m_maxCount / m_maxSpawneCount;
 
 
+	int rand = CFunc::RandI(0, 2);
+	if (rand == 0) { // 完全ランダム
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(CFunc::RandD(0.20, 0.80));
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x,y));
+		}
+	} else if (rand == 1) { // 連続0123
+		double rx = CFunc::RandD(0.10, 0.60);
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(rx + ii * 0.05);
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x, y));
+		}
+	} else if (rand == 2) { // 連続3210
+		double rx = CFunc::RandD(0.30, 0.90);
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(rx - ii * 0.05);
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x, y));
+		}
+	}
+	int rand2 = CFunc::RandI(0, 1);
+	if (rand2 == 0) {
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double goalAddY = CGame::ToGamePosY(0.20) + CGame::ToGamePosY(CFunc::RandD(0.05, 0.4));
+			m_targetAry.push_back(CPos(0, goalAddY));
+		}
+	}
+	else {
+		double goalAddY = CGame::ToGamePosY(0.20) + CGame::ToGamePosY(CFunc::RandD(0.05, 0.4));
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			m_targetAry.push_back(CPos(0, goalAddY));
+		}
+	}
+}
+SpawnerMediumTop_Step::~SpawnerMediumTop_Step() {}
+void SpawnerMediumTop_Step::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
 
+	if (m_count % m_spawneTiming == 0) {
+		CPos pos = m_posAry[m_spawnerIndex];
+		double goalAddY = m_targetAry[m_spawnerIndex].y;
+		CBaseEnemy* enemy = GetStepEnemy(pos);
+		CPos targetPos = pos + CPos(0, goalAddY);
+		CBehaviorComponent* component =  new CInStepBehavior(pos, targetPos, 7 );
+		enemy->SetBehaviorComponent(component);
 
-
-
-
-
-
-
-
-
+		CBattleScene::m_enemyManager.Add(enemy);
+		m_spawnerIndex++;
+	}
+}
 
 //------------------------------------------------------------------------
 // ノンストップゆっくり上から下に
+SpawnerMediumTop_Down::SpawnerMediumTop_Down(EnemySize spawnerSize) : SpawnerBase(spawnerSize)
+{
+	SetNonStopSpawner(spawnerSize);
+	m_maxCount = ToSecond(FormationSpawneFinishTiming);
+	m_spawneTiming = m_maxCount / m_maxSpawneCount;
 
-//SpawnerSmallTop_NoStop::SpawnerSmallTop_NoStop(EnemySize spawnerSize) : SpawnerBase(spawnerSize)
-//{
-//	m_maxCount = ToSecond(FormationSpawneFinishTiming);
-//	m_spawneCount = SpawneCount;
-//	m_spawneTiming = m_maxCount / m_spawneCount;
-//	m_appearancePosition = CFunc::RandD(-0.15, +0.15); // 出現位置の誤差
-//
-//	m_index = GetSmallEnemyIndex();
-//}
-//
-//SpawnerSmallTop_NoStop::~SpawnerSmallTop_NoStop() {}
-//
-//void SpawnerSmallTop_NoStop::Spawne()
-//{
-//	if (m_count >= m_maxCount) {
-//		m_deleteFlg = true;
-//		return;
-//	}
-//	m_count++;
-//
-//	if (m_count % m_spawneTiming == 0) {
-//
-//		double x = CGame::ToGamePosX(CFunc::RandD(0.20, 0.80) + m_appearancePosition);
-//		double y = CGame::ToGamePosY(-0.1);
-//		double goalAddY = CGame::ToGamePosY(1.20);
-//		CPos pos(x, y);
-//		CBaseEnemy* enemy = GetSmallEnemy(m_index, pos);
-//		CPos targetPos = pos + CPos(0, goalAddY);
-//
-//		CGoTargetBehavior* move = new CGoTargetBehavior(pos, targetPos, 1.15, 999);
-//
-//		enemy->SetBehaviorComponent(move);
-//		enemy->SetMovingShot();
-//		CBattleScene::m_enemyManager.Add(enemy);
-//	}
-//}
+	int rand = CFunc::RandI(0, 3);
+	if (rand == 0) { // 完全ランダム
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(CFunc::RandD(0.20, 0.80));
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x, y));
+		}
+	}
+	else if (rand == 1) { // 連続0123
+		double rx = CFunc::RandD(0.10, 0.50);
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(rx + ii * 0.10);
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x, y));
+		}
+	}
+	else if (rand == 2) { // 連続3210
+		double rx = CFunc::RandD(0.50, 0.90);
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(rx - ii * 0.10);
+			double y = CGame::ToGamePosY(-0.1);
+			m_posAry.push_back(CPos(x, y));
+		}
+	}
+	else if (rand == 3) { // 縦
+		double rx = CFunc::RandD(0.10, 0.90);
+		for (int ii = 0; ii < m_maxSpawneCount; ii++) {
+			double x = CGame::ToGamePosX(rx);
+			double y = CGame::ToGamePosY(-0.1 - ii * 0.05);
+			m_posAry.push_back(CPos(x, y));
+		}
+	}
+}
+
+SpawnerMediumTop_Down::~SpawnerMediumTop_Down() {}
+
+void SpawnerMediumTop_Down::Spawne()
+{
+	if (m_count >= m_maxCount) {
+		m_deleteFlg = true;
+		return;
+	}
+	m_count++;
+
+	if (m_count % m_spawneTiming == 0) {
+		CPos pos = m_posAry[m_spawnerIndex];
+		
+		CBaseEnemy* enemy = GetNonStopEnemy(pos);
+		CPos targetPos = pos + CPos(0, CGame::ToGameSizeY(0.3));
+		CPos returnPos = pos + CPos(0, CGame::ToGameSizeY(1.3));
+
+		CInOutBehavior* move = new CInOutBehavior(pos, targetPos, returnPos, 7, 1.0, 0);
+
+		enemy->SetBehaviorComponent(move);
+		enemy->SetMovingShot();
+
+		CBattleScene::m_enemyManager.Add(enemy);
+		m_spawnerIndex++;
+	}
+}
 
 
-
-
-//------------------------------------------------------------------------------
-//
-//CBaseEnemy* SpawnerMedium::GetEnemy(const CPos& pos)
-//{
-//	return new CEnemyS01(pos);
-//}
-//
-//
-//SpawnerMedium::SpawnerMedium(EnemySize spawnerSize) : SpawnerBase(spawnerSize) {
-//	m_maxCount = ToSecond(2.5);
-//	m_spawneTiming = ToSecond(0.4);
-//	spawnerPettern = CFunc::RandI(0, 1); // 出現位置
-//
-//	m_appearancePosition = -0.1;
-//}
-//
-//SpawnerMedium::~SpawnerMedium() {
-//
-//}
-//void SpawnerMedium::Spawne()
-//{
-//
-//	if (m_count >= m_maxCount) {
-//		m_deleteFlg = true;
-//		return;
-//	}
-//	m_count++;
-//
-//	// 左上から１体ずつ4帯
-//	if (spawnerPettern == 0 || 1) {
-//		double x;
-//
-//		if (m_count % m_spawneTiming == 0) {
-//			x = CGame::ToGamePosX(m_appearancePosition);
-//			m_appearancePosition += 0.2;
-//		
-//			double y = CGame::ToGamePosY(-0.1);
-//			CPos pos1(x, y);
-//			CPos pos2(x, y + CGame::ToGamePosY(1.20));
-//			CEnemyM02* e2 = new CEnemyM02(CPos(x, y));
-//			CGoTargetBehavior* move = new CGoTargetBehavior(pos1, pos2, 1.35, 0);
-//
-//			e2->SetBehaviorComponent(move);
-//
-//			CBattleScene::m_enemyManager.Add(e2);
-//		}
-//	}
-//	//if (m_count % m_spawneTiming == 0) {
-//	//	double x;
-//	//	if (iVal[0] == 0) {
-//	//		x = CGame::ToGamePosX(CFunc::RandD(0.05, 0.4));
-//	//	}
-//	//	else if (iVal[0] == 1) {
-//	//		x = CGame::ToGamePosX(CFunc::RandD(0.3, 0.7));
-//	//	}
-//	//	else if (iVal[0] == 2) {
-//	//		x = CGame::ToGamePosX(CFunc::RandD(0.6, 0.95));
-//	//	}
-//
-//	//	double y = CGame::ToGamePosY(-0.1);
-//	//	double goalAddY = CGame::ToGamePosY(0.20) + CGame::ToGamePosY(CFunc::RandD(0.05, 0.4));
-//	//	CPos pos1(x, y);
-//	//	CEnemyM02* e1 = new CEnemyM02(pos1);
-//	//	CInOutBehavior* move = new CInOutBehavior(pos1, pos1 + CPos(0, goalAddY), 7, 10, 180);
-//	//	e1->SetBehaviorComponent(move);
-//
-//	//	CBattleScene::m_enemyManager.Add(e1);
-//	//}
-//}
-//
-//

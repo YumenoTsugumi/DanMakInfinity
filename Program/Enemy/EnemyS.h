@@ -16,12 +16,6 @@ public:
 	virtual ~CLauncherS01() override;
 	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
-class CLauncherS01_50 : public CBaseLauncher {
-public:
-	CLauncherS01_50(int rank, const CPos& enemyPos, const CPos& relativePos);
-	virtual ~CLauncherS01_50() override;
-	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
-};
 
 //----------------------------------------------------------------------------------------------------------
 // CEnemyS02

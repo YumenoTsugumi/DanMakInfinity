@@ -124,45 +124,29 @@ public:
 };
 
 
+// ---------------------------
+// 上から真ん中まで動いて、そのままうごうご(中型機)
+// ---------------------------
+class SpawnerMediumTop_Step : public SpawnerMoveStopMove {
+public:
+	SpawnerMediumTop_Step(EnemySize spawnerSize);
+	virtual ~SpawnerMediumTop_Step();
+	virtual void Spawne() override;
+	double m_appearancePosition; // 出現位置誤差
+	std::vector<CPos> m_posAry;
+	std::vector<CPos> m_targetAry;
+};
+
 
 // ---------------------------
 // 止まらず動き続けるパターン
 // ---------------------------
 // 上から出てきて、ゆっくり下がって、そのまま真下に行く
-//class SpawnerSmallTop_NoStop : public SpawnerBase {
-//public:
-//	SpawnerSmallTop_NoStop(EnemySize spawnerSize);
-//	virtual ~SpawnerSmallTop_NoStop();
-//	virtual void Spawne() override;
-//	double m_returnAngle;
-//	int m_returnPettern; // 帰りのパターン
-//	double m_appearancePosition; // 出現位置誤差
-//};
-//
-//
-//	
-//class SpawnerSmallTop_Repeat_Stop : public SpawnerBase {
-//public:
-//	SpawnerSmallTop_Repeat_Stop(EnemySize spawnerSize);
-//	virtual ~SpawnerSmallTop_Repeat_Stop();
-//	virtual void Spawne() override;
-//
-//	int spawnerPettern; // 出現パターン
-//	double spawnerTargetPosX; // 出現後の移動先の位置
-//	double m_appearancePosition; // 出現位置誤差
-//
-//	int returnPettern; // 帰りのパターン
-//};
-//
-//
-//class SpawnerMedium : public SpawnerBase {	
-//public:										
-//	SpawnerMedium(EnemySize spawnerSize);
-//	virtual ~SpawnerMedium();				
-//	virtual void Spawne() override;		
-//
-//	int spawnerPettern; // 出現パターン
-//	double m_appearancePosition; // 出現位置誤差
-//
-//	virtual CBaseEnemy* GetEnemy(const CPos& pos);
-//};											
+class SpawnerMediumTop_Down : public SpawnerBase {
+public:
+	SpawnerMediumTop_Down(EnemySize spawnerSize);
+	virtual ~SpawnerMediumTop_Down();
+	virtual void Spawne() override;
+
+	std::vector<CPos> m_posAry;
+};

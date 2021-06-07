@@ -12,7 +12,6 @@
 //----------------------------------------------------------------------------------------------------------
 CEnemyM01::CEnemyM01(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM1");
-	//m_shotTiming = true;
 	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,9), 24.0),
@@ -98,8 +97,8 @@ bool CLauncherM01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 				CBaseLauncher::m_bulletManager->Add(b);
 			}
 		}
-	
 	}
+
 	if (m_count == resetTime) {
 		m_shotAngleRock = false;
 	}
@@ -118,7 +117,6 @@ bool CLauncherM01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 //----------------------------------------------------------------------------------------------------------
 CEnemyM02::CEnemyM02(const CPos& pos) : CBaseEnemy(pos){
 	m_image = (CImage*)CGame::GetResource("enemyM2");
-	//m_shotTiming = true;
 	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = { 
 		Collision(CPos(0,-9), 34.0),
@@ -199,7 +197,6 @@ bool CLauncherM02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 //----------------------------------------------------------------------------------------------------------
 CEnemyM03::CEnemyM03(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM3");
-	//m_shotTiming = true;
 	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,-9), 34.0),
@@ -240,7 +237,7 @@ bool CLauncherM03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 
 	int startTime = 0; // 弾を撃ち始めるまでの時間
 	int endTime = startTime + 25; // 弾を撃っている時間
-	int resetTime = endTime + 400; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
+	int resetTime = endTime + 200; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
 	int span = 5; // 弾を撃つ間隔
 
 	if (m_count == startTime) {
@@ -273,11 +270,10 @@ bool CLauncherM03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 
 
 //----------------------------------------------------------------------------------------------------------
-// CEnemyM04
+// CEnemyM04	ランダム弾
 //----------------------------------------------------------------------------------------------------------
 CEnemyM04::CEnemyM04(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM4");
-	//m_shotTiming = true;
 	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,-9), 34.0),
@@ -318,7 +314,7 @@ bool CLauncherM04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 
 	int startTime = 0; // 弾を撃ち始めるまでの時間
 	int endTime = startTime + 45; // 弾を撃っている時間
-	int resetTime = endTime + 180; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
+	int resetTime = endTime + 150; // 弾を撃ち終わって、また弾を撃ち始めるまでの時間
 	int span = 20; // 弾を撃つ間隔
 
 	if (m_count == startTime) {
@@ -358,7 +354,6 @@ bool CLauncherM04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 //----------------------------------------------------------------------------------------------------------
 CEnemyM08::CEnemyM08(const CPos& pos) : CBaseEnemy(pos) {
 	m_image = (CImage*)CGame::GetResource("enemyM8");
-	//m_shotTiming = true;
 	m_drawSizeRatio = 1.3;
 	std::vector<Collision> collisions = {
 		Collision(CPos(0,27), 24.0),

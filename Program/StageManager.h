@@ -51,11 +51,14 @@ public:
 
 	//------------------------------------------------------------
 	// デバッガー
-	int m_spawneEnemySize;
-	int m_spawneEnemyIndex;
-	int m_spawneEnemyMoveType;
-	void DebugSpawner();
-
+	int m_debugSpawneEnemySize;
+	int m_debugSpawneEnemyIndex;
+	int m_debugSpawneEnemyMoveType;
+	void DebugIndexControl();
+	int m_debugSpawneCount;
+	void DebugContinueSpawner();
+	SpawnerBase* DebugGetMove(int index, EnemySize size);
+	std::string DebugGetMoveName(int index);
 	// デバッグ
 	int DebugGetSmallMax();
 	int DebugGetMediumMax();
@@ -107,12 +110,13 @@ public:
 	int m_index; // 出現する敵（子クラスで使用）(コンストラクタで設定)
 	void SetEnemyIndex(int index) {m_index	= index;};// (コンストラクタの値を後から上書き)
 
+
+
+
+	// 入場して、攻撃して、退場する
 	CBaseEnemy* GetStopEnemy(const CPos& pos);
 	void SetStopSpawner(EnemySize spawnerSize);
-	CBaseEnemy* GetNonStopEnemy(const CPos& pos);
-	void SetNonStopSpawner(EnemySize spawnerSize);
-private:
-	// 入場して、攻撃して、退場する
+
 	int GetSmallStopEnemyIndex();
 	CBaseEnemy* GetSmallStopEnemy(int index, const CPos& pos);
 	int GetMediumStopEnemyIndex();
@@ -121,6 +125,9 @@ private:
 	CBaseEnemy* GetLargeStopEnemy(int index, const CPos& pos);
 
 	// 動き続ける敵
+	CBaseEnemy* GetNonStopEnemy(const CPos& pos);
+	void SetNonStopSpawner(EnemySize spawnerSize);
+
 	int GetSmallNonStopEnemyIndex(); 
 	CBaseEnemy* GetSmallNonStopEnemy(int index, const CPos& pos);
 	int GetMediumNonStopEnemyIndex();
@@ -128,7 +135,10 @@ private:
 	int GetLargeNonStopEnemyIndex();
 	CBaseEnemy* GetLargeNonStopEnemy(int index, const CPos& pos);
 
-	// 入場して、ずっと滞在する// 退場せずにステップ動作する
+	// 入場して、ずっと滞在してステップ動作する
+	CBaseEnemy* GetStepEnemy(const CPos& pos);
+	void SetStepSpawner(EnemySize spawnerSize);
+
 	int GetMediumStepEnemyIndex(); 
 	CBaseEnemy* GetMediumStepEnemy(int index, const CPos& pos);
 };

@@ -142,13 +142,14 @@ public:
 
 	// 動きのパターン
 	enum MoveType {
-		InShotOut = 0,// 入場＆ショット＆退去
+		StopShot = 0,// 入場＆ショット＆退去
 		MoveingShot = 1, // 動きながらショット
 	};
 	MoveType m_moveType;
 	void SetMoveType(MoveType type) {
 		m_moveType = type;
 	}
+	MoveType GetMoveType() {return m_moveType;}
 };
 
 /*

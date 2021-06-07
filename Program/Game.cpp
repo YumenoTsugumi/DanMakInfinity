@@ -387,7 +387,7 @@ CPos CGame::ToGamePos(double ratioPosX, double ratioPosY)
 }
 // 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 // FulHDなら (480～1440)の範囲
-double CGame::CGame::ToGamePosX(double ratioPosX)
+double CGame::ToGamePosX(double ratioPosX)
 {
 	int min = GameWindowAreaLeft * CGame::GetWindowRatio();
 	int max = GameWindowAreaRight * CGame::GetWindowRatio();
@@ -395,7 +395,7 @@ double CGame::CGame::ToGamePosX(double ratioPosX)
 }
 // 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 // FulHDなら (20～1060)の範囲
-double CGame::CGame::ToGamePosY(double ratioPosY)
+double CGame::ToGamePosY(double ratioPosY)
 {
 	int min = GameWindowAreaTop * CGame::GetWindowRatio();
 	int max = GameWindowAreaBottom * CGame::GetWindowRatio();

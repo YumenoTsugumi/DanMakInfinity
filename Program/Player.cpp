@@ -113,7 +113,7 @@ constexpr int bomberStartDist = 600;
 constexpr int bomberEndDist = 50;
 constexpr int bomberTime1 = 60 * 1; // 爆発が収束する時間
 constexpr int bomberTime2 = bomberTime1 + 60*0.3; // 爆発が始まる時間
-constexpr int bomberFinishTime = bomberTime2 + 60 * 2; // 終わる時間
+constexpr int bomberFinishTime = bomberTime2 + 60 * 1; // 終わる時間
 constexpr int bomberTotalDamage = 600;
 
 constexpr int startDist = 200;

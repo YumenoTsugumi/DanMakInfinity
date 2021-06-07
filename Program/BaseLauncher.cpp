@@ -35,6 +35,10 @@ CBaseLauncher::~CBaseLauncher() {
 bool CBaseLauncher::Action(const CPos& newEnemyPos, const CPos& nowRelativePos) {
 	m_enemyPos = newEnemyPos;
 
+	if (m_parent->m_pos.y >= CGame::ToGamePosY(0.6)) {
+		return false;
+	}
+
 	if (m_parent->GetWaitShotTime() >= 0) return true;
 	return false;
 }
@@ -64,25 +68,16 @@ void CBaseLauncher::SetParent(CBaseEnemy* parent)
 
 
 /*
-ランク0　　（普通）弾速1.0　弾数1.0　間隔1.0
-
-ランク50   （普通）弾速1.5　弾数1.5　間隔*(1/1.25)
-　弾追加　　（追加）弾速1.0　弾数1.0　間隔1.0
-ランク99　（普通）弾速2.0　弾数2.0　間隔*(1/1.5)
-　弾追加　　（追加）弾速2.0　弾数2.0　間隔1.5
-ランク200 ここから適当
-　弾追加　　（追加）弾速3.0　弾数3.0　間隔1.5
- ランク300
-　弾追加　　（追加）弾速4.0　弾数4.0　間隔1.5
+ランク0  （普通）弾速1.00 弾数1.0　間隔1.0
+ランク50 （普通）弾速1.25 弾数1.5　間隔*(1/1.25) 0.8
+ランク100（普通）弾速1.50 弾数2.0　間隔*(1/1.5) 0.66
 */
-
 double CBaseLauncher::Rank10To15() {
 	return 1.0 + 0.5 * (m_rank / 100.0);
 }
-
 // ランクによる速度変化を返す
 double CBaseLauncher::RankSpeed(){
-	return 1.0 + 1.0 * (m_rank / 100.0);
+	return 1.0 + 0.5 * (m_rank / 100.0);
 }
 // ランクによる弾の総数を返す
 double CBaseLauncher::RankBulletNum(){

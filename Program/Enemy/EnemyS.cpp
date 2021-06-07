@@ -22,9 +22,7 @@ CEnemyS01::~CEnemyS01() {}
 void CEnemyS01::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	double angle = CFunc::GetTwoPointAngle(m_target, m_pos) - CFunc::ToRad(90.0);
-
 	BaseDraw(m_pos, m_drawSizeRatio, angle, m_image->m_iamge, TRUE, FALSE);
-
 	DebugCollisionDraw();
 	DebugLauncherDraw();
 }
@@ -34,7 +32,6 @@ double CEnemyS01::GetFinalDirectionRad()
 {
 	return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
-
 
 CLauncherS01::CLauncherS01(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
@@ -46,10 +43,12 @@ bool CLauncherS01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	if (!waitShot) return true;
 
 	double speed = 8.2 * RankSpeed();
-	int span = (int)(30.0 * RankSpan());
+	int span = (int)(25.0 * RankSpan());
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.5;
+	}
 	int loop = RankRapidA();
-
-	if (m_count > span) {	
+	if (m_count > span) {
 		for (int ii = 0; ii < loop; ii++) {
 			double speedTmp = SpeedRange(speed, ii, loop);
 			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speedTmp, 0.0, 0, 0, 0, 0, 11);
@@ -58,38 +57,11 @@ bool CLauncherS01::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		m_count = 0;
 		return true;
 	}
+		
+
 	m_count++;
 	return true;
 }
-
-CLauncherS01_50::CLauncherS01_50(int rank, const CPos& enemyPos, const CPos& relativePos) :
-	CBaseLauncher(rank, enemyPos, relativePos) {
-};
-CLauncherS01_50::~CLauncherS01_50() {}
-bool CLauncherS01_50::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
-{
-	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
-	if (!waitShot) return true;
-
-	double speed = 2.0 * RankSpeed();
-	int span = (int)(60.0 * RankSpan());
-	int loop = RankRapidA();
-
-	if (m_count > span) {
-		for (int ii = 0; ii < loop; ii++) {
-			double speedTmp = SpeedRange(speed, ii, loop);
-			double angle = CFunc::RandD(-4, 4);
-			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speedTmp, angle, 0, 0, 0, 0, 2);
-			CBaseLauncher::m_bulletManager->Add(b);
-		}
-		m_count = 0;
-		return true;
-	}
-	m_count++;
-	return true;
-}
-
-
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -131,15 +103,18 @@ bool CLauncherS02::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
 	if (!waitShot) return true;
 
+
 	// 3 + n way弾を撃つ 
 	double speed = 7.35 * RankSpeed();
 	int way = 3 + RankWay();
-
 	int startTime = 0;
 	int endTime = startTime + 40;
 	int resetTime = endTime + 60;
-	int span = 50 * RankSpan();
-	if (m_count >= startTime && m_count <= endTime) {
+	int span = 40 * RankSpan();
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.75;
+	}
+	if (m_count >= startTime && m_count <= endTime || this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
 		if (m_count % span == 0) {
 			int st = 0 - way / 2;
 			int ed = 0 + way / 2;
@@ -174,9 +149,6 @@ CEnemyS03::CEnemyS03(const CPos& pos) : CBaseEnemy(pos) {
 
 	AddLauncher(new CLauncherS03(m_rank, m_pos, CPos(22, 30)));
 	AddLauncher(new CLauncherS03(m_rank, m_pos, CPos(-22, 30)));
-	if (m_rank >= 50) {
-		AddLauncher(new CLauncherS03_50(m_rank, m_pos, CPos(0, 7)));
-	}
 }
 CEnemyS03::~CEnemyS03() {
 }
@@ -209,10 +181,13 @@ bool CLauncherS03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int startTime = 0;
 	int endTime = startTime + 60;
 	int resetTime = endTime + 60;
-	int span = 30 * RankSpan();
+	int span = 45 * RankSpan();
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.65;
+	}
 	int loop =  1 + RankRapidA();
 	double speed = 8.8 * RankSpeed();
-	if (m_count >= startTime && m_count <= endTime) {
+	if (m_count >= startTime && m_count <= endTime || CBaseEnemy::MoveType::MoveingShot) {
 		if (m_count % span == 0) {
 			for (int ii = 0; ii < loop; ii++) {
 				double speedTmp = SpeedRange(speed, ii, loop);
@@ -227,28 +202,6 @@ bool CLauncherS03::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 		return true;
 	}
 	m_count++;
-	return true;
-}
-
-CLauncherS03_50::CLauncherS03_50(int rank, const CPos& enemyPos, const CPos& relativePos) :
-	CBaseLauncher(rank, enemyPos, relativePos) {
-};
-CLauncherS03_50::~CLauncherS03_50() {}
-bool CLauncherS03_50::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
-{
-	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
-	if (!waitShot) return true;
-
-	int span = 30 * RankSpan();
-	if (m_count % span == 0) {
-		double speed = CFunc::RandD(2.8, 4.5) * RankSpeed();
-		double angle = CFunc::RandD(-30, 30);
-		CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, speed, angle, 0, 0, 0, 0, 2);
-		CBaseLauncher::m_bulletManager->Add(b);
-	}
-
-	m_count++;
-
 	return true;
 }
 
@@ -298,12 +251,9 @@ double CEnemyS04::GetFinalDirectionRad()
 	else {
 		return CFunc::GetTwoPointAngle(m_target, m_pos);
 	}
-
-	//return CFunc::GetTwoPointAngle(m_target, m_pos);
 }
 CLauncherS04::CLauncherS04(int rank, const CPos& enemyPos, const CPos& relativePos) :
 	CBaseLauncher(rank, enemyPos, relativePos) {
-	//m_shotAngleRock = false;
 };
 CLauncherS04::~CLauncherS04() {}
 bool CLauncherS04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
@@ -311,26 +261,26 @@ bool CLauncherS04::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	bool waitShot = __super::Action(newEnemyPos, nowRelativePos);
 	if (!waitShot) return true;
 
-	// 真下に弾
 	int initTime = 25;
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		initTime = 0;
+	}
 	int startTime = 30;
 	int endTime = startTime + 80;
 	int resetTime = endTime + 160;
 	int span = 28 * RankSpan();
-	
-	if (m_count == initTime) {
-		//m_shotAngleRock = true;
-		m_shotAngle = 0;
-		m_shotSpeed = 6.0 * RankSpeed();
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.65;
 	}
-	if (m_count >= startTime && m_count <= endTime) {
+	if (m_count == initTime) {
+		m_shotAngle = 0;
+		m_shotSpeed = 6.15 * RankSpeed();
+	}
+	if (m_count >= startTime && m_count <= endTime || m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
 		if (m_count % span == 0) {
-			m_shotSpeed += 1.4 * RankSpeed();
+			m_shotSpeed += 1.9 * RankSpeed();
 			CBaseBullet* b = new CBaseBullet(EDirType::Player, m_enemyPos + nowRelativePos, m_shotSpeed, m_shotAngle, 0, 0, 0, 0, 41);
 			CBaseLauncher::m_bulletManager->Add(b);
-		}
-		if (m_count == endTime) {
-			//m_shotAngleRock = false;
 		}
 	}
 
@@ -386,17 +336,18 @@ bool CLauncherS05::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 
 	double speed = 8.65 * RankSpeed();
 
-	int startTime = 30;
+	int startTime = 15;
 	int endTime = startTime + 60;
-	int resetTime = endTime + 90;
-	int span = 24 * RankSpan();
-	if (m_count >= startTime && m_count <= endTime) {
-		if (m_count % span == 0) {
-			double angle = this->m_parent->GetToPlayerAngle();
-			double nearAngle = CFunc::GetNearAngle(angle, 30);
-			CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, speed, nearAngle, 0, 0, 0, 0, 1);
-			CBaseLauncher::m_bulletManager->Add(b);
-		}
+	int resetTime = endTime + 120;
+	int span = 12 * RankSpan();
+	if (m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.75;
+	}
+	if (m_count % span == 0) {
+		double angle = this->m_parent->GetToPlayerAngle();
+		double nearAngle = CFunc::GetNearAngle(angle, 15);
+		CBaseBullet* b = new CBaseBullet(EDirType::Abs, m_enemyPos + nowRelativePos, speed, nearAngle, 0, 0, 0, 0, 1);
+		CBaseLauncher::m_bulletManager->Add(b);
 	}
 	if (m_count >= resetTime) {
 		m_count = 0;
@@ -451,8 +402,11 @@ bool CLauncherS06::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int endTime = startTime + 120;
 	int resetTime = endTime + 120;
 	int span = 45 * RankSpan();
+	if (m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.75;
+	}
 	int loop = 2 * RankBulletNum();
-	if (m_count >= startTime && m_count <= endTime) {
+	if (m_count >= startTime && m_count <= endTime || m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
 		if (m_count % span == 0) {
 			for (int ii = 0; ii < loop;ii++) {
 				double speed = CFunc::RandD(5.5, 7.5) * RankSpeed();
