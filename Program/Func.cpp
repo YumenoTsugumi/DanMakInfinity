@@ -81,6 +81,9 @@ double CFunc::RandD(double MIN, double MAX) {
 	//if (result > max)result = max;
 	//return (double)result / 1000.0;
 }
+bool CFunc::RandB() {
+	return (bool)RandI(0, 1);
+}
 
 double CFunc::GetMax(double value1, double value2) {
 	return value1 > value2 ? value1 : value2;

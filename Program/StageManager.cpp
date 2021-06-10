@@ -70,13 +70,15 @@ void StageManager::Main()
 	}
 
 #if 1
-	if (m_count % FormationSpawneSmallATiming == 0) {
-		m_spawners.push_back(StageManager::GetTestSpawner());
+	if (m_count % (60*5) == 1) {
+		m_spawners.push_back(StageManager::GetRandomSpawner_LargeA());
 	}
 #elif 1
-	if (m_count % FormationSpawneMediumATiming == 0) {
-		m_spawners.push_back(GetTestSpawner());
-	}
+	m_debugSpawneEnemySize = 2;
+	m_debugSpawneEnemyIndex = 1;
+	m_debugSpawneEnemyMoveType = 4;
+	DebugIndexControl();
+	DebugContinueSpawner();
 #else
 	// 編隊の出現順番
 	if (m_count % FormationSpawneSmallATiming == 0 && m_count != 0) {
@@ -149,21 +151,24 @@ SpawnerBase* StageManager::GetRandomSpawner_MediumA()
 SpawnerBase* StageManager::GetRandomSpawner_LargeA()
 {
 	EnemySize size = EnemySize::Large;
-	int rand = CFunc::RandI(0, 5);
+	int rand = CFunc::RandI(0, 3);
 	switch (rand) {
-		case 0:	return new SpawnerSmallTop_Stop(size);
-		case 1: return new SpawnerSmallLeftRight_Stop(size);
-		case 2: return new SpawnerSmall_Line_Top_Stop(size);
-		case 3: return new SpawnerSmall_Line_LeftRight_Stop(size);
-		case 4: return new SpawnerMediumTop_Step(size);
-		case 5: return new SpawnerMediumTop_Down(size);
+		case 0: return new SpawnerSmallTop_NoStop_Uturn(size);
+		case 1: return new SpawnerSmallTop_NoStop_LRTurn(size);
+		case 2: return new SpawnerSmallTop_NoStop_LRCos(size);
+		case 3: return new SpawnerMediumTop_Down(size);
 	}
 	return nullptr;
 }
 
 SpawnerBase* StageManager::GetTestSpawner()
 {
-	return new SpawnerMediumTop_Down(EnemySize::Medium);
+	int aaa = CFunc::RandI(0, 3);
+	if (aaa == 0)return new SpawnerSmallTop_NoStop_Uturn(EnemySize::Large);
+	if (aaa == 1)return new SpawnerSmallTop_NoStop_LRTurn(EnemySize::Large);
+	if (aaa == 2)return new SpawnerSmallTop_NoStop_LRCos(EnemySize::Large);
+	if (aaa == 3)return new SpawnerMediumTop_Down(EnemySize::Large);
+
 #if 0
 	EnemySize ssss;
 	ssss = EnemySize::Small;
@@ -197,6 +202,7 @@ SpawnerBase* StageManager::DebugGetMove(int index, EnemySize size) {
 	if (index == 1)return new SpawnerSmallLeftRight_Stop(size);
 	if (index == 2)return new SpawnerSmall_Line_Top_Stop(size);
 	if (index == 3)return new SpawnerSmall_Line_LeftRight_Stop(size);
+
 	if (index == 4)return new SpawnerSmallTop_NoStop_Uturn(size);
 	if (index == 5)return new SpawnerSmallTop_NoStop_LRTurn(size);
 	if (index == 6)return new SpawnerSmallTop_NoStop_LRCos(size);
@@ -210,13 +216,14 @@ std::string StageManager::DebugGetMoveName(int index) {
 	if (index == 1)return "SpawnerSmallLeftRight_Stop";
 	if (index == 2)return "SpawnerSmall_Line_Top_Stop";
 	if (index == 3)return "SpawnerSmall_Line_LeftRight_Stop";
+
 	if (index == 4)return "SpawnerSmallTop_NoStop_Uturn";
 	if (index == 5)return "SpawnerSmallTop_NoStop_LRTurn";
 	if (index == 6)return "SpawnerSmallTop_NoStop_LRCos";
 	if (index == 7)return "SpawnerSmallTop_TracePlayer";
 	if (index == 8)return "SpawnerMediumTop_Step";
 	if (index == 9)return "SpawnerMediumTop_Down";
-	return nullptr;
+	return "null";
 };
 void StageManager::DebugIndexControl()
 {
@@ -263,12 +270,12 @@ void StageManager::DebugIndexControl()
 }
 void StageManager::DebugContinueSpawner()
 {
-	m_debugSpawneCount++;
-	if (m_debugSpawneCount % (60*3) == 0) {
+	if (m_debugSpawneCount % (60*10) == 0) {
 		SpawnerBase* sb = DebugGetMove(m_debugSpawneEnemyMoveType, (EnemySize)m_debugSpawneEnemySize);
 		sb->SetEnemyIndex(m_debugSpawneEnemyIndex);
 		m_spawners.push_back(sb);
 	}
+	m_debugSpawneCount++;
 }
 
 
@@ -278,7 +285,8 @@ SpawnerBase::SpawnerBase(EnemySize spawnerSize) :
 	m_count(0),
 	m_spawneTiming(0),
 	m_deleteFlg(0),
-	m_spawnerIndex(0)
+	m_spawnerIndex(0),
+	m_spawnerSize(spawnerSize)
 {
 	SetSpeedBySize();
 }
@@ -293,15 +301,15 @@ void SpawnerBase::SetStopSpawner(EnemySize spawnerSize)
 	m_spawnerSize = spawnerSize;
 	if (m_spawnerSize == EnemySize::Small) {
 		m_index = GetSmallStopEnemyIndex();
-		m_maxSpawneCount = 12;
+		m_maxSpawneCount = 9;
 	}
 	else if (m_spawnerSize == EnemySize::Medium) {
 		m_index = GetMediumStopEnemyIndex();
-		m_maxSpawneCount = 4;
+		m_maxSpawneCount = 3;
 	}
 	else if (m_spawnerSize == EnemySize::Large) {
 		m_index = GetLargeStopEnemyIndex();
-		m_maxSpawneCount = 2;
+		m_maxSpawneCount = 1;
 	}
 }
 CBaseEnemy* SpawnerBase::GetStopEnemy(const CPos& pos){
@@ -336,16 +344,22 @@ CBaseEnemy* SpawnerBase::GetSmallStopEnemy(int index, const CPos& pos){
 	assert(0);
 	return nullptr;
 }
-int StageManager::DebugGetMediumMax() { return 4; }
+int StageManager::DebugGetMediumMax() { return 10; }
 int SpawnerBase::GetMediumStopEnemyIndex(){
-	return CFunc::RandI(1, 4);
+	return CFunc::RandI(1, 10);
 }
 CBaseEnemy* SpawnerBase::GetMediumStopEnemy(int index, const CPos& pos){
 	switch (index) {
-		case 1: return new CEnemyM01(pos);
-		case 2: return new CEnemyM02(pos);
-		case 3: return new CEnemyM03(pos);
-		case 4: return new CEnemyM08(pos);
+		case 1: return new CEnemyM01(pos); // (STOP)固定角度5WAY　4～5回
+		case 2: return new CEnemyM02(pos); // (STOP,NONSTOP)エヴァッカニア第二の扇
+		case 3: return new CEnemyM03(pos); // (STOP,NONSTOP)ドルフィンみたいな　２WAY時期狙い
+		case 4: return new CEnemyM04(pos); // (STOP,NONSTOP)ランダム弾5発
+		case 5: return new CEnemyM05(pos); // (STOP,NONSTOP)V弾
+		case 6: return new CEnemyM06(pos); // (STOP,NONSTOP)芋虫連なり弾
+		case 7: return new CEnemyM07(pos); // (STOP,NONSTOP)双顎
+		case 8: return new CEnemyM08(pos); // (STOP)ためうちの敵
+		case 9: return new CEnemyM09(pos); // (STOP,NONSTOP)幅広7WAY
+		case 10: return new CEnemyM10(pos); // (STOP,NONSTOP)345WAY
 	}
 	return nullptr;
 }
@@ -366,15 +380,15 @@ void SpawnerBase::SetNonStopSpawner(EnemySize spawnerSize)
 	m_spawnerSize = spawnerSize;
 	if (m_spawnerSize == EnemySize::Small) {
 		m_index = GetSmallNonStopEnemyIndex();
-		m_maxSpawneCount = 12;
+		m_maxSpawneCount = 9;
 	}
 	else if (m_spawnerSize == EnemySize::Medium) {
 		m_index = GetMediumNonStopEnemyIndex();
-		m_maxSpawneCount = 4;
+		m_maxSpawneCount = 3;
 	}
 	else if (m_spawnerSize == EnemySize::Large) {
 		m_index = GetLargeNonStopEnemyIndex();
-		m_maxSpawneCount = 2;
+		m_maxSpawneCount = 1;
 	}
 }
 CBaseEnemy* SpawnerBase::GetNonStopEnemy(const CPos& pos) {
@@ -397,25 +411,30 @@ int SpawnerBase::GetSmallNonStopEnemyIndex() {
 }
 CBaseEnemy* SpawnerBase::GetSmallNonStopEnemy(int index, const CPos& pos) {
 	switch (index) {
-	case 1: return new CEnemyS01(pos);
-	case 2: return new CEnemyS02(pos);
-	case 3: return new CEnemyS03(pos);
-	case 4: return new CEnemyS04(pos);
-	case 5: return new CEnemyS05(pos);
-	case 6: return new CEnemyS06(pos);
-	case 7: return new CEnemyS07(pos);
+		case 1: return new CEnemyS01(pos);
+		case 2: return new CEnemyS02(pos);
+		case 3: return new CEnemyS03(pos);
+		case 4: return new CEnemyS04(pos);
+		case 5: return new CEnemyS05(pos);
+		case 6: return new CEnemyS06(pos);
+		case 7: return new CEnemyS07(pos);
 	}
 	assert(0);
 	return nullptr;
 }
 int SpawnerBase::GetMediumNonStopEnemyIndex() {
-	return CFunc::RandI(1, 3);
+	return CFunc::RandI(1, 8);
 }
 CBaseEnemy* SpawnerBase::GetMediumNonStopEnemy(int index, const CPos& pos) {
 	switch (index) {
-		case 1: return new CEnemyM02(pos); // 蟹第二の一みたいな扇弾
-		case 2: return new CEnemyM03(pos); // こうもり
-		case 3: return new CEnemyM04(pos); // こうもり
+		case 1: return new CEnemyM02(pos); // (STOP,NONSTOP)エヴァッカニア第二の扇
+		case 2: return new CEnemyM03(pos); // (STOP,NONSTOP)ドルフィンみたいな　２WAY時期狙い
+		case 3: return new CEnemyM04(pos); // (STOP,NONSTOP)ランダム弾5発
+		case 4: return new CEnemyM05(pos); // (STOP,NONSTOP)V弾
+		case 5: return new CEnemyM06(pos); // (STOP,NONSTOP)芋虫連なり弾
+		case 6: return new CEnemyM07(pos); // (STOP,NONSTOP)双顎
+		case 7: return new CEnemyM09(pos); // (STOP,NONSTOP)幅広7WAY
+		case 8: return new CEnemyM10(pos); // (STOP,NONSTOP)345WAY
 	}
 	assert(0);
 	return nullptr;
@@ -423,16 +442,17 @@ CBaseEnemy* SpawnerBase::GetMediumNonStopEnemy(int index, const CPos& pos) {
 
 int SpawnerBase::GetLargeNonStopEnemyIndex()
 {
-	return 0;
+	return CFunc::RandI(1, 1);
 }
 CBaseEnemy* SpawnerBase::GetLargeNonStopEnemy(int index, const CPos& pos)
 {
+	switch (3) {
+	case 1: return new CEnemyL01(pos);
+	case 2: return new CEnemyL02(pos);
+	case 3: return new CEnemyL03(pos);
+	}
 	return nullptr;
 }
-
-
-
-
 
 
 // 退場せずにステップ動作する
@@ -443,16 +463,15 @@ void SpawnerBase::SetStepSpawner(EnemySize spawnerSize)
 	if (m_spawnerSize == EnemySize::Small) {
 		assert(0);
 		//m_index = GetSmallStepEnemyIndex();
-		//m_maxSpawneCount = 12;
+		//m_maxSpawneCount = 9;
 	}
 	else if (m_spawnerSize == EnemySize::Medium) {
 		m_index = GetMediumStepEnemyIndex();
-		m_maxSpawneCount = 4;
+		m_maxSpawneCount = 3;
 	}
 	else if (m_spawnerSize == EnemySize::Large) {
-		assert(0);
 		//m_index = GetLargeStepEnemyIndex();
-		//m_maxSpawneCount = 2;
+		//m_maxSpawneCount = 1;
 	}
 }
 CBaseEnemy* SpawnerBase::GetStepEnemy(const CPos& pos) {
@@ -464,24 +483,41 @@ CBaseEnemy* SpawnerBase::GetStepEnemy(const CPos& pos) {
 		ep = GetMediumStepEnemy(m_index, pos);
 	}
 	else if (m_spawnerSize == EnemySize::Large) {
-		//ep = GetLargeStopEnemy(m_index, pos);
+		//ep = GetLargeStepEnemy(m_index, pos);
 	}
 	ep->SetMoveType(CBaseEnemy::MoveType::MoveingShot);
 	return ep;
 }
 int SpawnerBase::GetMediumStepEnemyIndex()
 {
-	return CFunc::RandI(1, 1);
+	return CFunc::RandI(1, 8);
 }
 CBaseEnemy* SpawnerBase::GetMediumStepEnemy(int index, const CPos& pos)
 {
 	switch (index) {
-		case 1: return new CEnemyM04(pos);
+		case 1: return new CEnemyM02(pos); // (STOP,NONSTOP)エヴァッカニア第二の扇
+		case 2: return new CEnemyM03(pos); // (STOP,NONSTOP)ドルフィンみたいな　２WAY時期狙い
+		case 3: return new CEnemyM04(pos); // (STOP,NONSTOP)ランダム弾5発
+		case 4: return new CEnemyM05(pos); // (STOP,NONSTOP)V弾
+		case 5: return new CEnemyM06(pos); // (STOP,NONSTOP)芋虫連なり弾
+		case 6: return new CEnemyM07(pos); // (STOP,NONSTOP)双顎
+		case 7: return new CEnemyM09(pos); // (STOP,NONSTOP)幅広7WAY
+		case 8: return new CEnemyM10(pos); // (STOP,NONSTOP)345WAY
 	}
 	return nullptr;
 }
 
-
+int SpawnerBase::GetLargeStepEnemyIndex()
+{
+	return CFunc::RandI(1, 1);
+}
+CBaseEnemy* SpawnerBase::GetLargeStepEnemy(int index, const CPos& pos)
+{
+	switch (index) {
+		case 1: return new CEnemyL01(pos); 
+	}
+	return nullptr;
+}
 
 //-------------------------------------------------------------
 int SpawnerBase::ToSecond(int millSecond)

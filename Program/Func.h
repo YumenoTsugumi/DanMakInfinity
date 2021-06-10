@@ -128,6 +128,7 @@ public:
 	static int RandI(int MIN,int MAX);
 	static double RandF(int MIN,int MAX);
 	static double RandD(double MIN, double MAX);
+	static bool RandB();
 	//MINMAXの取得
 	static double GetMax(double value1, double value2);
 	static double GetMin(double value1, double value2);

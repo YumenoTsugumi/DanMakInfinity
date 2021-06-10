@@ -139,7 +139,9 @@ public:
 	CBaseEnemy* GetStepEnemy(const CPos& pos);
 	void SetStepSpawner(EnemySize spawnerSize);
 
-	int GetMediumStepEnemyIndex(); 
+	int GetMediumStepEnemyIndex();
 	CBaseEnemy* GetMediumStepEnemy(int index, const CPos& pos);
+	int GetLargeStepEnemyIndex();
+	CBaseEnemy* GetLargeStepEnemy(int index, const CPos& pos);
 };
 

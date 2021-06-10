@@ -49,6 +49,15 @@ protected:
 protected:
 
 	double Rank10To15(); // ランクによる数値を返す 1.0-1.5
+	double Rank10To20(); // ランクによる数値を返す 1.0-2.0
+	double Rank10To30(); // ランクによる数値を返す 1.0-3.0
+	double Rank10To40(); // ランクによる数値を返す 
+	double Rank10To50(); // ランクによる数値を返す 
+	double Rank10To60(); // ランクによる数値を返す 
+	double Rank10To70(); // ランクによる数値を返す 
+	double Rank10To80(); // ランクによる数値を返す 
+	double Rank10To90(); // ランクによる数値を返す 
+	double Rank10To100(); // ランクによる数値を返す 
 
 	double RankSpeed(); // ランクによる速度変化を返す 1.0-2.0
 	double RankBulletNum(); // ランクによる弾の総数を返す

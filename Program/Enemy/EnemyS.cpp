@@ -473,7 +473,12 @@ bool CLauncherS07::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	int span = 45 * RankSpan();
 	int loop = 2 * RankBulletNum();
 	int way = 3 * RankBulletNum();
-	if (m_count >= startTime && m_count <= endTime) {
+
+	if (this->m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
+		span *= 1.55;
+	}
+
+	if (m_count >= startTime && m_count <= endTime || m_parent->GetMoveType() == CBaseEnemy::MoveType::MoveingShot) {
 		if (m_count % span == 0) {
 			int st = -way / 2;
 			int ed = way / 2;

@@ -385,7 +385,7 @@ CPlayerBullet::CPlayerBullet(int damage, CPos P, double speed, double angle, dou
 	CBaseBullet(EDirType::Abs, P, speed, angle, corner, acce, maxSpeed, nearAngle, image),
 	m_damage(damage)
 {
-	m_hitSize = 24.0;
+	m_hitSize = 48.0;
 }
 //CPlayerBullet::CPlayerBullet(int damage, CPos P, double speed, double angle, double corner, double acce, double maxSpeed, double nearAngle, const char* imageName) :
 //	CBaseBullet(EDirType::Abs, P, speed, angle, corner, acce, maxSpeed, nearAngle, imageName),

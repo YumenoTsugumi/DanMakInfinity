@@ -75,6 +75,33 @@ void CBaseLauncher::SetParent(CBaseEnemy* parent)
 double CBaseLauncher::Rank10To15() {
 	return 1.0 + 0.5 * (m_rank / 100.0);
 }
+double CBaseLauncher::Rank10To20() {
+	return 1.0 + 1.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To30() {
+	return 1.0 + 2.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To40() {
+	return 1.0 + 3.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To50() {
+	return 1.0 + 4.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To60() {
+	return 1.0 + 5.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To70() {
+	return 1.0 + 6.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To80() {
+	return 1.0 + 7.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To90() {
+	return 1.0 + 8.0 * (m_rank / 100.0);
+}
+double CBaseLauncher::Rank10To100() {
+	return 1.0 + 9.0 * (m_rank / 100.0);
+}
 // ランクによる速度変化を返す
 double CBaseLauncher::RankSpeed(){
 	return 1.0 + 0.5 * (m_rank / 100.0);

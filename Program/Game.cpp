@@ -110,17 +110,14 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet41.png", 1, 1, 1, 32, 64, 0, 0.0), "bullet41", 41);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet42.png", 1, 1, 1, 32, 64, 0, 0.0), "bullet42", 42);
 
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet51.png", 1, 1, 1, 32, 32, 0, 12.0), "bullet51", 51);
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet52.png", 1, 1, 1, 32, 32, 0, 12.0), "bullet52", 52);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet51.png", 1, 1, 1, 18, 90, 0, 0.0), "bullet51", 51);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet52.png", 1, 1, 1, 18, 90, 0, 0.0), "bullet52", 52);
 
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet61.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet61", 61);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet62.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet62", 62);
 
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet71.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet71", 71);
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet72.png", 1, 1, 1, 32, 32, 0, 0.0), "bullet72", 72);
-
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet81.png", 2, 2, 1, 32, 64, 6, 0.0), "bullet81", 81);
-	//m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet82.png", 2, 2, 1, 16, 32, 6, 0.0), "bullet82", 82);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet81.png", 1, 1, 1, 28, 60, 0, 0.0), "bullet81", 81);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet82.png", 1, 1, 1, 25, 60, 0, 0.0), "bullet82", 82);
 
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet91.png", 2, 2, 1, 37, 54, 6, 0.0), "bullet91", 91);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\Bullet\\bullet92.png", 2, 2, 1, 37, 54, 6, 0.0), "bullet92", 92);
