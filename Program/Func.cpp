@@ -181,6 +181,41 @@ bool CFunc::CheckLineCross(CPos p1, CPos p2, CPos p3, CPos p4) {
 	return false;
 }
 
+// 線分同士の交点
+// https://www.hiramine.com/programming/graphics/2d_segmentintersection.html
+bool CFunc::CalcIntersectionPoint(const CPos& pointA, // 線分A始点
+	const CPos& pointB, // 線分A終点
+	const CPos& pointC, // 線分B始点
+	const CPos& pointD,	// 線分B終点
+	CPos& pointIntersection, // 交点
+	double& dR, // r < 0 ：点Ｐは、点Ａより手前	r > 1 ：点Ｐは、点Ｂより奥
+	double& dS // s < 0 ：点Ｑは、点Ｃより手前	s > 1 ：点Ｑは、点Ｄより奥
+) {
+	double dBunbo = (pointB.x - pointA.x)
+					* (pointD.y - pointC.y)
+					- (pointB.y - pointA.y)
+					* (pointD.x - pointC.x);
+	if (0 == dBunbo){	
+		return false;// 平行
+	}
+	CPos vectorAC = pointC - pointA;
+	dR = ((pointD.y - pointC.y) * vectorAC.x
+		- (pointD.x - pointC.x) * vectorAC.y) / dBunbo;
+	dS = ((pointB.y - pointA.y) * vectorAC.x
+		- (pointB.x - pointA.x) * vectorAC.y) / dBunbo;
+
+	CPos p;
+	p.x = (pointB.x - pointA.x) * dR;
+	p.y = (pointB.y - pointA.y) * dR;
+	pointIntersection = pointA + p;
+
+	if (dR > 0 && dR < 1 && dS > 0 && dS < 1) {
+		return true;
+	}
+	return false;
+}
+
+
 double CFunc::GetTwoVectorAngle(CPos& p1, CPos& p2) {
 	double p1Len = p1.Length();
 	double p2Len = p2.Length();

@@ -254,6 +254,8 @@ void CGame::ImageLoad()
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\uiaura.png"), "uiaura", 1260);
 
 	m_resourceManager.Add(new CImage("Resource\\UI_fullhd2\\UIFoundation.png"), "UIFoundation", 1500);
+
+	m_resourceManager.Add(new CBulletImage("ResourceX\\Maker\\maker1.png", 1, 1, 1, 150, 150, 5, 0), "maker1", 1600);
 }
 
 void CGame::ImageLoadByThread()
@@ -360,6 +362,7 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect0.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect0", 20801);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect1.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect1", 20802);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\BulletDeleteEffect2.png", 4, 4, 1, 16, 16, 5, 0), "BulletDeleteEffect2", 20803);
+
 
 
 

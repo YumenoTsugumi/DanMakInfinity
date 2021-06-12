@@ -73,7 +73,7 @@ void CCustomBullet::Action(){
 	//”ÍˆÍŠO”»’è
 	RectOut();
 	//íœ
-	Remove();
+	//Remove();
 
 	m_count++;
 }
@@ -209,9 +209,6 @@ void CCustomBullet::Trans(){
 
 		//‚·‚×‚Äã‘‚«‚ªŠ®—¹‚µ‚½ˆ×A‰ğ•ú
 		delete wrk;
-
-		int debug = 0;
-		debug++;
 	}
 }
 

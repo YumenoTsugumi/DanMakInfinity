@@ -97,7 +97,7 @@ void CBattleScene::Init(CGame* gameP) {
 
 	m_hiScore = 0;
 	m_score = 0;
-	m_rank = 1 * RankBasedDigit;
+	m_rank = 50 * RankBasedDigit;
 	m_bulletRemoveTime = m_bulletRemoveCount = 0;
 
 	m_game = gameP;

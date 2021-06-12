@@ -87,6 +87,8 @@ public:
 	int ToSecond(int millSecond);
 	double ToSecond(double millSecond);
 
+	// 入場する際の交点にマーカーを表示する(右側左側の順番でチェックする場合rightFirstをtrueに)
+	void SetCrossMaker(const CPos& pos, const CPos& targetPos, bool topCheck = true, bool rightFirst = true);
 
 	//// 画面の位置を返却する 0.0～1.0で現在のウィンドウサイズでの位置が返ってくる
 	//// FulHDなら (480,20)(1440,1060)の範囲

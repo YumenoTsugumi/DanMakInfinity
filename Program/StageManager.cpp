@@ -69,14 +69,12 @@ void StageManager::Main()
 		CBattleScene::AddRankRatioByStageSpan();
 	}
 
-#if 1
+#if 0
 	if (m_count % (60*5) == 1) {
 		m_spawners.push_back(StageManager::GetRandomSpawner_LargeA());
 	}
-#elif 1
-	m_debugSpawneEnemySize = 2;
-	m_debugSpawneEnemyIndex = 1;
-	m_debugSpawneEnemyMoveType = 4;
+#elif 0
+
 	DebugIndexControl();
 	DebugContinueSpawner();
 #else
@@ -270,10 +268,19 @@ void StageManager::DebugIndexControl()
 }
 void StageManager::DebugContinueSpawner()
 {
-	if (m_debugSpawneCount % (60*10) == 0) {
+	static int debug = 0;
+	if (debug == 0) {
+		m_debugSpawneEnemySize = 1;
+		m_debugSpawneEnemyIndex = 1;
+		m_debugSpawneEnemyMoveType = 8;
+		debug++;
+	}
+
+	if (m_debugSpawneCount % (60*3) == 0) {
 		SpawnerBase* sb = DebugGetMove(m_debugSpawneEnemyMoveType, (EnemySize)m_debugSpawneEnemySize);
 		sb->SetEnemyIndex(m_debugSpawneEnemyIndex);
 		m_spawners.push_back(sb);
+
 	}
 	m_debugSpawneCount++;
 }
@@ -442,14 +449,15 @@ CBaseEnemy* SpawnerBase::GetMediumNonStopEnemy(int index, const CPos& pos) {
 
 int SpawnerBase::GetLargeNonStopEnemyIndex()
 {
-	return CFunc::RandI(1, 1);
+	return CFunc::RandI(1, 4);
 }
 CBaseEnemy* SpawnerBase::GetLargeNonStopEnemy(int index, const CPos& pos)
 {
-	switch (3) {
-	case 1: return new CEnemyL01(pos);
-	case 2: return new CEnemyL02(pos);
-	case 3: return new CEnemyL03(pos);
+	switch (index) {
+		case 1: return new CEnemyL01(pos);
+		case 2: return new CEnemyL02(pos);
+		case 3: return new CEnemyL03(pos);
+		case 4: return new CEnemyL04(pos);
 	}
 	return nullptr;
 }
@@ -519,6 +527,102 @@ CBaseEnemy* SpawnerBase::GetLargeStepEnemy(int index, const CPos& pos)
 	return nullptr;
 }
 
+// 入場する際の交点にマーカーを表示する
+void SpawnerBase::SetCrossMaker(const CPos& pos, const CPos& targetPos, bool topCheck /*= true*/, bool rightFirst /*= true*/)
+{
+	double l, r;
+	CPos xp;
+	bool chk;
+
+	double size;
+	if (m_spawnerSize == EnemySize::Small) {
+		size = 0.50;
+	}else if (m_spawnerSize == EnemySize::Medium) {
+		size = 0.75;
+	}else if (m_spawnerSize == EnemySize::Large) {
+		size = 1.00;
+	}
+
+	double angle;
+	bool chk1 = false, chk2 = false, chk3 = false;
+	do {
+		if (topCheck) {
+			// 上側
+			CPos tl2(CGame::ToGamePosX(-1), CGame::ToGamePosY(0.05));
+			CPos tr2(CGame::ToGamePosX(2), CGame::ToGamePosY(0.05));
+			chk2 = CFunc::CalcIntersectionPoint(pos, targetPos, tl2, tr2, xp, l, r);
+			if (chk2) {
+				angle = 90.0;
+				if (xp.x < CGame::ToGamePosX(0)) {
+					xp.x = CGame::ToGamePosX(0);
+					angle = 45.0;
+				}
+				if (xp.x > CGame::ToGamePosX(1)) {
+					xp.x = CGame::ToGamePosX(1);
+					angle = 135.0;
+				}
+				break;
+			}
+		}
+
+		if (!rightFirst) {
+			// 左側面
+			CPos tl1(CGame::ToGamePosX(0), CGame::ToGamePosY(-1));
+			CPos dl1(CGame::ToGamePosX(0), CGame::ToGamePosY(1));
+			chk1 = CFunc::CalcIntersectionPoint(pos, targetPos, tl1, dl1, xp, l, r);
+			if (chk1) {
+				angle = 0.0;
+				if (xp.y < CGame::ToGamePosY(0)) {
+					xp.y = CGame::ToGamePosY(0);
+					angle = 45.0;
+				}
+				break;
+			}
+		}
+
+		// 右側面
+		CPos tr3(CGame::ToGamePosX(1), CGame::ToGamePosY(-1));
+		CPos dr3(CGame::ToGamePosX(1), CGame::ToGamePosY(1));
+		chk3 = CFunc::CalcIntersectionPoint(pos, targetPos, tr3, dr3, xp, l, r);
+		if (chk3) {
+			angle = 180.0;
+			if (xp.y < CGame::ToGamePosY(0)) {
+				xp.y = CGame::ToGamePosY(0);
+				angle = 135.0;
+			}
+			break;
+		}
+
+		if (rightFirst) {
+			// 左側面
+			CPos tl1(CGame::ToGamePosX(0), CGame::ToGamePosY(-1));
+			CPos dl1(CGame::ToGamePosX(0), CGame::ToGamePosY(1));
+			chk1 = CFunc::CalcIntersectionPoint(pos, targetPos, tl1, dl1, xp, l, r);
+			if (chk1) {
+				angle = 0.0;
+				if (xp.y < CGame::ToGamePosY(0)) {
+					xp.y = CGame::ToGamePosY(0);
+					angle = 45.0;
+				}
+				break;
+			}
+		}
+	} while (0);
+
+	if (chk1 || chk2 || chk3) {
+		CBaseEffect* eff = new CBaseEffect(60, EDirType::Abs, xp, 0, angle, 0, 0, 0, 0, 1600);
+		eff->SetSize(size, 0);
+		eff->SetBlend(255, -5, 0);
+		eff->SetBlendType(DX_BLENDMODE_ALPHA);
+		eff->SetScroll(false);
+		eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+		eff->SetRemoveCount(255 / 5);	//60frで削除
+		CBattleScene::m_effectManager.Add(eff);
+	}
+
+}
+
+
 //-------------------------------------------------------------
 int SpawnerBase::ToSecond(int millSecond)
 {
@@ -538,6 +642,6 @@ void SpawnerBase::SetSpeedBySize()
 		m_speed = CFunc::RandD(1.5, 2.5);
 	}
 	else if (m_spawnerSize == EnemySize::Large) {
-		m_speed = CFunc::RandD(1.0, 1.3);
+		m_speed = CFunc::RandD(0.8, 1.2);
 	}
 }

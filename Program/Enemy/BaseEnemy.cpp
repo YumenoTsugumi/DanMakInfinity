@@ -135,6 +135,7 @@ CBaseEnemy::CBaseEnemy(const CPos& pos) :
 	m_rank = CBattleScene::GetRank();
 	m_enemyId = m_globalEnemyId++;
 	m_waitShotTime = -CFunc::RandI(0, 60);
+	m_SpawneWaitCount = 60*1; // 2秒間スポーン待つ
 }
 
 CBaseEnemy::~CBaseEnemy() {
@@ -142,6 +143,10 @@ CBaseEnemy::~CBaseEnemy() {
 }
 
 void CBaseEnemy::Action() {
+	if (m_SpawneWaitCount-- > 0) {
+		return;
+	}
+
 	m_waitShotTime++;
 	m_behaviorComponent->Action(m_pos);
 

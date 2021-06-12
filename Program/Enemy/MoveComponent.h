@@ -109,6 +109,7 @@ public:
 	void SetDepartureAcce(double departureAcce, double departureMaxSpeed);
 	void SetArrivalAcce(double arrivalAcce, double arrivalMinSpeed, double arrivalAcceTimingRatio = 0.8);
 
+	const std::vector<CPos>& GetVezier() { return m_vezier; };
 	CPos GetNowPos();
 protected:
 	double m_speed;

@@ -97,6 +97,8 @@ public:
 		m_shotTiming = true;
 	}
 
+	int m_SpawneWaitCount;
+
 	int m_count;
 
 	CImage* m_image;

@@ -26,24 +26,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (DxLib_Init() == -1) {//DXライブラリ初期化
 		return -1;
 	}
-	{
-		std::vector<int> indexAry, indexAry1, indexAry2, indexAry3, indexAry4, indexAry5, indexAry6, indexAry7;
-		CFunc::GetDigitArray(1, 12, indexAry1);
-		CFunc::GetDigitArray(2, 12, indexAry2);
-		CFunc::GetDigitArray(3, 12, indexAry3);
-		CFunc::GetDigitArray(4, 12, indexAry4);
-		CFunc::GetDigitArray(5, 12, indexAry5);
-		CFunc::GetDigitArray(6, 12, indexAry6);
-		CFunc::GetDigitArray(7, 12, indexAry7);
-	}
 
-	std::vector<int> indexAry, indexAry1, indexAry2, indexAry3, indexAry4, indexAry5, indexAry6, indexAry7;
-	CFunc::GetDigitArray(8, 1234, indexAry1);
-	CFunc::GetDigitArray(8, 12345, indexAry2);
-	CFunc::GetDigitArray(8, 123456, indexAry3);
-	CFunc::GetDigitArray(8, 1234567, indexAry4);
-	CFunc::GetDigitArray(8, 12345678, indexAry5);
-	CFunc::GetDigitArray(8, 0, indexAry6);
+	CPos p1_s(-10, -5);
+	CPos p1_e(10, 20);
+	CPos p2_s(0, -25);
+	CPos p2_e(0, -10);
+	CPos xp;
+	double l, r;
+	bool chk = CFunc::CalcIntersectionPoint(p1_s, p1_e, p2_s, p2_e, xp, l, r);
 
 	SetDrawScreen(DX_SCREEN_BACK); //ダブルバッファを有効に
 	srand((unsigned)time(nullptr)); //乱数初期化

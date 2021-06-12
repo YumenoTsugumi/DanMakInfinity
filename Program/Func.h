@@ -239,6 +239,16 @@ public:
 	//(0,0)-(0,50)の線分 と (0,0)-(0,0)は当たっている判定
 	static bool CheckLineCross(CPos p1, CPos p2, CPos p3, CPos p4);
 
+	// 線分同士の交点
+	// https://www.hiramine.com/programming/graphics/2d_segmentintersection.html
+	static bool CalcIntersectionPoint(const CPos& pointA,
+		const CPos& pointB,
+		const CPos& pointC,
+		const CPos& pointD,
+		CPos& pointIntersection,
+		double& dR,
+		double& dS);
+
 	//2ベクトルの角度
 	static double GetTwoVectorAngle(CPos &p1, CPos &p2);
 

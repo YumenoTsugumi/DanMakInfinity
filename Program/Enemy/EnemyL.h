@@ -92,3 +92,34 @@ public:
 	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
+
+//-------------------------------------------------
+//
+class CEnemyL04 : public CBaseEnemy {
+public:
+	double m_shotAngleL;
+	double m_shotAngleR;
+	CEnemyL04(const CPos& pos);
+	~CEnemyL04();
+	virtual void Draw();
+	virtual double GetFinalDirectionRad() override; // 敵の最終的な向き（これにより発射口や当たり判定の位置が決まる）
+};
+
+class CBaseEffect;
+class CLauncherL04a : public CBaseLauncher {
+public:
+	// エフェクトを追従
+	double m_speed;
+	double m_deltaSpeed;
+	double m_shotAngle;
+	CLauncherL04a(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherL04a() override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
+class CLauncherL04b : public CBaseLauncher {
+public:
+	CLauncherL04b(int rank, const CPos& enemyPos, const CPos& relativePos);
+	virtual ~CLauncherL04b() override;
+	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
+};
+

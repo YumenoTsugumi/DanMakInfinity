@@ -119,6 +119,7 @@ public:
 	virtual void DebugPrint();
 	virtual double GetDirection();
 	virtual BehaviorStatus GetBehaviorStatus();
+	const std::vector<CPos>& GetVezier() { return m_move.GetVezier(); };
 protected:
 	CBezierMotion m_move;
 	BehaviorStatus m_moveStatus; // 移動状態
