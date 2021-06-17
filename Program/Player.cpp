@@ -3,12 +3,17 @@
 #include "BaseBullet.h"
 #include "BattleScene.h"
 
+constexpr double TiltAngle = 1.5;
+constexpr double TiltAngleMax = 40.0;
+constexpr int ChangeShotTime = 15;
 CPlayer::CPlayer():
 	m_pos(0,0),
 	m_playerImage(nullptr),
 	m_slowMove(0),
 	m_bulletShotCount(0),
-	m_bulletMainShotCount(0)
+	m_bulletMainShotCount(0),
+	m_hitSize(1),
+	m_dieAnimetion(0)
 {
 }
 
@@ -28,16 +33,30 @@ void CPlayer::Init()
 	m_playerBarrier1 = (CImage*)CGame::GetResource(980);
 	m_playerBarrier2 = (CImage*)CGame::GetResource(981);
 
-	m_posBitAngleL[0] = 0;
-	m_posBitAngleL[1] = 180.0;
-	m_posBitAngleR[0] = 0;
-	m_posBitAngleR[1] = 180.0;
+	m_forwardAngle[0] = 0;
+	m_forwardAngle[1] = 180.0;
+	m_forwardAngle[2] = 0;
+	m_forwardAngle[3] = 180.0;
 
 	m_bombOn = false;
 	m_bombCount = 0;
 
 	m_barrierAngle = 0.0;
 	m_barrierAlpha = 1.0;
+
+	for (int ii = 0; ii < 4; ii++) {
+		m_tracePos[ii] = m_pos;
+	}
+	for (int ii = 0; ii < TraceBitNum; ii++) {
+		m_traceSubPos[ii] = m_pos;
+	}
+	m_tracePrePos = m_pos;
+	m_tiltAngle = 0.0;
+
+	m_shotChangeCount = 0;
+
+	//SetShotType(Trace, Wide);
+	SetShotType(Tilt, Forward);
 }
 
 void CPlayer::SetBulletManager(CBulletManager* playerBullet)
@@ -48,6 +67,11 @@ void CPlayer::SetBulletManager(CBulletManager* playerBullet)
 
 void CPlayer::Action(CInputAllStatus* input)
 {
+	m_dieAnimetion--;
+	if (IsDieAnimetion()) {
+		return;
+	}
+
 	//移動処理
 	double move = 11.0;
 	int moveCo = 0;
@@ -58,21 +82,52 @@ void CPlayer::Action(CInputAllStatus* input)
 	if (input->GetBtnOnOff(INPUT_DEF_DOWN) == true) {
 		moveCo++;
 	}
+	bool leftRight = false;
 	if (input->GetBtnOnOff(INPUT_DEF_RIGHT) == true) {
+		m_tiltAngle += TiltAngle;
+		if (m_tiltAngle > TiltAngleMax)m_tiltAngle = TiltAngleMax;
 		moveCo++;
+		leftRight = true;
 	}
 	if (input->GetBtnOnOff(INPUT_DEF_LEFT) == true) {
+		m_tiltAngle -= TiltAngle;
+		if (m_tiltAngle < -TiltAngleMax)m_tiltAngle = -TiltAngleMax;
 		moveCo++;
+		leftRight = true;
 	}
+	if(!leftRight) {
+		if (m_tiltAngle <= TiltAngleMax && m_tiltAngle > 0) {
+			m_tiltAngle -= TiltAngle * 3;
+			if (m_tiltAngle < 0)m_tiltAngle = 0;
+		}
+		if (m_tiltAngle >= -TiltAngleMax && m_tiltAngle < 0) {
+			m_tiltAngle += TiltAngle * 3;
+			if (m_tiltAngle > 0)m_tiltAngle = 0;
+		}
+	}
+	bool isSlow = false;
+	if (input->GetBtnOnOff(INPUT_DEF_SLOW) == true) {
+		isSlow = true;
+		if (m_shotChangeCount < ChangeShotTime) {
+			m_shotChangeCount++;
+		}
+	}
+	else {
+		if (m_shotChangeCount > 0) {
+			m_shotChangeCount--;
+		}
+	}
+
 	if (moveCo >= 2) {
-		//constexpr double r2 = 1.0 / sqrt(2.0);
 		move *= 1.0 / sqrt(2.0);
 		m_slowMove = MOVE_SLOW;
 	}
 	else {
 		m_slowMove = MOVE_HI;
 	}
-
+	if (isSlow) {
+		move /= 2.0;
+	}
 	if (input->GetBtnOnOff(INPUT_DEF_UP) == true) {
 		m_pos.y -= move;
 	}
@@ -86,9 +141,10 @@ void CPlayer::Action(CInputAllStatus* input)
 		m_pos.x -= move;
 	}
 
+	SubShotAction();
 	if (input->GetBtnOnOff(INPUT_DEF_ENTER) == true) {
 		if (m_bulletShotCount >= 3) {
-			Shot();
+			SubShotFire();
 			m_bulletShotCount = 0;
 		}
 		m_bulletShotCount++;
@@ -121,6 +177,11 @@ constexpr int endDist = 50;
 constexpr int mutekiTime = bomberFinishTime + 60 * 3;
 constexpr int mutekiTimeAlphaDown = mutekiTime * 0.1;
 
+void CPlayer::SetMuteki(int mutekiTime)
+{
+	m_mutekiCount = mutekiTime;
+	m_barrierAlpha = 1.0;
+}
 void CPlayer::BomberSet() {
 	int bomb = CBattleScene::GetHaveBomb();
 	if (bomb <= 0) {
@@ -129,8 +190,7 @@ void CPlayer::BomberSet() {
 	if (!m_bombOn) {
 		m_bombOn = true;
 		m_bombCount = 0;
-		m_mutekiCount = mutekiTime;
-		m_barrierAlpha = 1.0;
+		SetMuteki(mutekiTime);
 		m_bomberDist = bomberStartDist;
 		m_bomberPos = m_pos + CPos(0, -300);
 		if (m_bomberPos.y <= 100) {
@@ -150,6 +210,37 @@ void CPlayer::MutekiTime() {
 		return;
 	}
 	m_mutekiCount--;
+}
+bool CPlayer::IsMuteki() {
+	if (m_mutekiCount > 0) {
+		return true;
+	}
+	return false;
+}
+
+void CPlayer::Die()
+{
+	m_dieAnimetion = 60;
+	SetMuteki(60*3);
+
+	m_scene->LifeDecrement();
+
+	double ang = CFunc::RandF(0, 360);
+	CBaseEffect* eff = new CBaseEffect(50, EDirType::Abs, m_pos - CBattleScene::GetBattleScene()->GetBackGroundscrollSmall(),
+		0.1, ang, 0, 0, 0, 0, 20608);
+	eff->SetSize(1.0, +0.0);
+	eff->SetBlend(255, -2, 0);
+	eff->SetBlendType(DX_BLENDMODE_ALPHA);
+	eff->SetAnimeEndDelFlg(true);	//アニメーション終了後削除するか
+	eff->SetRemoveCount(60);	//60frで削除
+	CBattleScene::m_effectManager.Add(eff);
+}
+bool CPlayer::IsDieAnimetion()
+{
+	if (m_dieAnimetion > 0) {
+		return true;
+	}
+	return false;
 }
 
 void CPlayer::Bomber()
@@ -274,9 +365,13 @@ void CPlayer::Bomber()
 	}
 }
 
+
 void CPlayer::Draw()
 {
-	
+	if (IsDieAnimetion()) {
+		return;
+	}
+
 	if (m_mutekiCount > 0) {
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 255 * m_barrierAlpha);
 		CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 2.4, m_barrierAngle, m_playerBarrier1->m_iamge);
@@ -297,84 +392,158 @@ void CPlayer::Draw()
 	CDxFunc::MyDrawRotaGraph(m_pos.x, m_pos.y, 0.75, -m_hitMakerRotateAngle, m_hitMakerImage->m_iamge);
 	m_hitMakerRotateAngle += CFunc::ToRad(1.0);
 
-	m_posBitAngleL[0] += 3.0;
-	m_posBitAngleL[1] += 3.0;
-	m_posBitAngleR[0] += 3.0;
-	m_posBitAngleR[1] += 3.0;
-
-	CPos posAng1;
-	posAng1.x = cos(m_posBitAngleL[0] / 57.27) * 40;
-	posAng1.y = 0 * sin(m_posBitAngleL[0] / 57.27) * 20;
-	CDxFunc::MyDrawRotaGraph(m_pos.x - 100 + posAng1.x, m_pos.y + 100 + posAng1.y, 0.5, 0.0, m_bitRImage->m_iamge);
-
-	CPos posAng2;
-	posAng2.x = cos(m_posBitAngleL[1] / 57.27) * 40;
-	posAng2.y = 0 * sin(m_posBitAngleL[1] / 57.27) * 20;
-	CDxFunc::MyDrawRotaGraph(m_pos.x - 100 + posAng2.x, m_pos.y + 100 + posAng2.y, 0.5, 0.0, m_bitRImage->m_iamge);
-
-	CPos posAng3;
-	posAng3.x = cos(m_posBitAngleL[0] / 57.27) * 40;
-	posAng3.y = 0 * sin(m_posBitAngleL[0] / 57.27) * 20;
-	CDxFunc::MyDrawRotaGraph(m_pos.x + 100 + posAng3.x, m_pos.y + 100 + posAng3.y, 0.5, 0.0, m_bitRImage->m_iamge);
-
-	CPos posAng4;
-	posAng4.x = cos(m_posBitAngleL[1] / 57.27) * 40;
-	posAng4.y = 0 * sin(m_posBitAngleL[1] / 57.27) * 20;
-	CDxFunc::MyDrawRotaGraph(m_pos.x + 100 + posAng4.x, m_pos.y + 100 + posAng4.y, 0.5, 0.0, m_bitRImage->m_iamge);
+	SubShotDraw();
 }
 
+void CPlayer::SetShotType(ShotType rapid, ShotType slow) {
+	m_rapidShotType = rapid;
+	m_slowShotType = slow;
+	if (m_rapidShotType == ShotType::Forward)m_rapidSubShotGetFunc = GetSubShotForward;
+	if (m_rapidShotType == ShotType::Wide)m_rapidSubShotGetFunc = GetSubShotWide;
+	if (m_rapidShotType == ShotType::Trace)m_rapidSubShotGetFunc = GetSubShotTrace;
+	if (m_rapidShotType == ShotType::Tilt)m_rapidSubShotGetFunc = GetSubShotTilt;
+	if (m_slowShotType == ShotType::Forward)m_slowSubShotGetFunc = GetSubShotForward;
+	if (m_slowShotType == ShotType::Wide)m_slowSubShotGetFunc = GetSubShotWide;
+	if (m_slowShotType == ShotType::Trace)m_slowSubShotGetFunc = GetSubShotTrace;
+	if (m_slowShotType == ShotType::Tilt)m_slowSubShotGetFunc = GetSubShotTilt;
+}
 
-void CPlayer::MainShot()
-{
+void CPlayer::SubShotAction(){
+	SubShot_Forward_Action();
+	SubShot_Wide_Action();
+	SubShot_Trace_Action();
+	SubShot_Tilt_Action();
+
+	double ratio = (double)m_shotChangeCount / ChangeShotTime;
+
+	CPos rapidPos[4];
+	double rapidAngle[4];
+	CPos slowPos[4];
+	double slowAngle[4];
+
+	m_rapidSubShotGetFunc(this, rapidPos, rapidAngle);
+	m_slowSubShotGetFunc(this, slowPos, slowAngle);
+
+	for (int ii = 0; ii < 4; ii++) {
+		m_subShotPos[ii].x = rapidPos[ii].x + (slowPos[ii].x - rapidPos[ii].x) * ratio;
+		m_subShotPos[ii].y = rapidPos[ii].y + (slowPos[ii].y - rapidPos[ii].y) * ratio;
+		m_subShotAngle[ii] = rapidAngle[ii] + (slowAngle[ii] - rapidAngle[ii]) * ratio;
+	}
+}
+
+void CPlayer::MainShot(){
 	double speedMain = 35.0;
-	{
-		double angle = 270.0;
-		CPlayerBullet* b1 = new CPlayerBullet(30, m_pos + CPos(0, -30), speedMain, angle, 0, 0, 0, 0, 997/*"playerBullet"*/);
-		m_playerBullet->Add(b1);
-	}
+	double angle = 270.0;
+	CPlayerBullet* b1 = new CPlayerBullet(30, m_pos + CPos(0, -30), speedMain, angle, 0, 0, 0, 0, 997/*"playerBullet"*/);
+	m_playerBullet->Add(b1);
 }
 
-void CPlayer::Shot()
-{
-	double speed = 20.0;
-
+void CPlayer::SubShotDraw(){
+	CDxFunc::MyDrawRotaGraph(m_subShotPos[0], 0.5, CFunc::ToRad(m_subShotAngle[0]), m_bitRImage->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_subShotPos[1], 0.5, CFunc::ToRad(m_subShotAngle[1]), m_bitRImage->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_subShotPos[2], 0.5, CFunc::ToRad(m_subShotAngle[2]), m_bitRImage->m_iamge);
+	CDxFunc::MyDrawRotaGraph(m_subShotPos[3], 0.5, CFunc::ToRad(m_subShotAngle[3]), m_bitRImage->m_iamge);
+}
+void CPlayer::SubShotFire() {
 	int bulletImageA = 990;
+	m_playerBullet->Add(new CPlayerBullet(10, m_subShotPos[0], 20.0, 270.0 + m_subShotAngle[0], 0, 0, 0, 0, bulletImageA));
+	m_playerBullet->Add(new CPlayerBullet(10, m_subShotPos[1], 20.0, 270.0 + m_subShotAngle[1], 0, 0, 0, 0, bulletImageA));
+	m_playerBullet->Add(new CPlayerBullet(10, m_subShotPos[2], 20.0, 270.0 + m_subShotAngle[2], 0, 0, 0, 0, bulletImageA));
+	m_playerBullet->Add(new CPlayerBullet(10, m_subShotPos[3], 20.0, 270.0 + m_subShotAngle[3], 0, 0, 0, 0, bulletImageA));
+}
 
-	double angleL = 270 - 0;
-	double angleR = 270 + 0;
 
-	CPos posAng1;
-	posAng1.x = cos(m_posBitAngleL[0] / 57.27) * 40;
-	posAng1.y = 0 * sin(m_posBitAngleL[0] / 57.27) * 20;
-	{
-		CPlayerBullet* b1 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng1.x, m_pos.y + 100 + posAng1.y), speed, angleL, 0, 0, 0, 0, bulletImageA);
-		m_playerBullet->Add(b1);
+void CPlayer::SubShot_Forward_Action(){
+	m_forwardAngle[0] += 3.0;
+	m_forwardAngle[1] += 3.0;
+	m_forwardAngle[2] += 3.0;
+	m_forwardAngle[3] += 3.0;
+
+	constexpr double distX = 40;
+	constexpr double distY = 20;
+	m_forwardPos[0].x = m_pos.x - 100 + cos(CFunc::ToRad(m_forwardAngle[0])) * distX;
+	m_forwardPos[0].y = m_pos.y + 100;
+	m_forwardPos[1].x = m_pos.x - 100 + cos(CFunc::ToRad(m_forwardAngle[1])) * distX;
+	m_forwardPos[1].y = m_pos.y + 100;
+	m_forwardPos[2].x = m_pos.x + 100 + cos(CFunc::ToRad(m_forwardAngle[2])) * distX;
+	m_forwardPos[2].y = m_pos.y + 100;
+	m_forwardPos[3].x = m_pos.x + 100 + cos(CFunc::ToRad(m_forwardAngle[3])) * distX;
+	m_forwardPos[3].y = m_pos.y + 100;
+
+	m_forwardAngles[0] = 0;
+	m_forwardAngles[1] = 0;
+	m_forwardAngles[2] = 0;
+	m_forwardAngles[3] = 0;
+}
+void CPlayer::GetSubShotForward(CPlayer* player, CPos forwardPos[4], double forwardAngle[4]){
+	memcpy(forwardPos, player->m_forwardPos, sizeof(CPos[4]));
+	memcpy(forwardAngle, player->m_forwardAngles, sizeof(double[4]));
+}
+
+void CPlayer::SubShot_Wide_Action(){
+	m_widePos[0].x = m_pos.x - 60;
+	m_widePos[0].y = m_pos.y + 30;
+	m_widePos[1].x = m_pos.x - 100;
+	m_widePos[1].y = m_pos.y + 100;
+
+	m_widePos[2].x = m_pos.x + 60;
+	m_widePos[2].y = m_pos.y + 30;
+	m_widePos[3].x = m_pos.x + 100;
+	m_widePos[3].y = m_pos.y + 100;
+
+	m_wideAngle[0] = -12 - 4;
+	m_wideAngle[1] = -25 - 4;
+	m_wideAngle[2] = +12 - 4;
+	m_wideAngle[3] = +25 - 4;
+}
+void CPlayer::GetSubShotWide(CPlayer* player, CPos widePos[4], double wideAngle[4]) {
+	memcpy(widePos, player->m_widePos, sizeof(CPos[4]));
+	memcpy(wideAngle, player->m_wideAngle, sizeof(double[4]));
+}
+
+void CPlayer::SubShot_Trace_Action() {
+	if (m_tracePrePos.x != m_pos.x || m_tracePrePos.y != m_pos.y) {
+		for (int ii = TraceBitNum - 1; ii >= 1; ii--) {
+			m_traceSubPos[ii] = m_traceSubPos[ii - 1];
+		}
+		m_traceSubPos[0] = m_pos;
 	}
+	m_tracePrePos = m_pos;
 
-	CPos posAng2;
-	posAng2.x = cos(m_posBitAngleL[1] / 57.27) * 40;
-	posAng2.y = 0 * sin(m_posBitAngleL[1] / 57.27) * 20;
-	{
-		CPlayerBullet* b2 = new CPlayerBullet(10, CPos(m_pos.x - 100 + posAng2.x, m_pos.y + 100 + posAng2.y), speed, angleL, 0, 0, 0, 0, bulletImageA);
-		m_playerBullet->Add(b2);
-	}
+	m_tracePos[0] = m_traceSubPos[(int)((double)TraceBitNum * 0.25)];
+	m_tracePos[1] = m_traceSubPos[(int)((double)TraceBitNum * 0.50)];
+	m_tracePos[2] = m_traceSubPos[(int)((double)TraceBitNum * 0.75)];
+	m_tracePos[3] = m_traceSubPos[TraceBitNum-1];
 
-	CPos posAng3;
-	posAng3.x = cos(m_posBitAngleR[0] / 57.27) * 40;
-	posAng3.y = 0 * sin(m_posBitAngleR[0] / 57.27) * 20;
-	{
-		CPlayerBullet* b3 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng3.x, m_pos.y + 100 + posAng3.y), speed, angleR, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
-		m_playerBullet->Add(b3);
-	}
+	m_traceAngle[0] = 0;
+	m_traceAngle[1] = 0;
+	m_traceAngle[2] = 0;
+	m_traceAngle[3] = 0;
+}
+void CPlayer::GetSubShotTrace(CPlayer* player, CPos tracePos[4], double traceAngle[4]) {
+	memcpy(tracePos, player->m_tracePos, sizeof(CPos[4]));
+	memcpy(traceAngle, player->m_traceAngle, sizeof(double[4]));
+}
 
-	CPos posAng4;
-	posAng4.x = cos(m_posBitAngleR[1] / 57.27) * 40;
-	posAng4.y = 0 * sin(m_posBitAngleR[1] / 57.27) * 20;
-	{
-		CPlayerBullet* b4 = new CPlayerBullet(10, CPos(m_pos.x + 100 + posAng4.x, m_pos.y + 100 + posAng4.y), speed, angleR, 0, 0, 0, 0, bulletImageA/*"playerBullet"*/);
-		m_playerBullet->Add(b4);
-	}
+void CPlayer::SubShot_Tilt_Action() {
+	m_tiltPos[0].x = m_pos.x - 60;
+	m_tiltPos[0].y = m_pos.y + 100;
+	m_tiltPos[1].x = m_pos.x - 100;
+	m_tiltPos[1].y = m_pos.y + 30;
 
+	m_tiltPos[2].x = m_pos.x + 60;
+	m_tiltPos[2].y = m_pos.y + 100;
+	m_tiltPos[3].x = m_pos.x + 100;
+	m_tiltPos[3].y = m_pos.y + 30;
+
+	m_tiltAngles[0] = m_tiltAngle;
+	m_tiltAngles[1] = m_tiltAngle;
+	m_tiltAngles[2] = m_tiltAngle;
+	m_tiltAngles[3] = m_tiltAngle;
+}
+void CPlayer::GetSubShotTilt(CPlayer* player, CPos tiltPos[4], double tiltAngle[4]) {
+	memcpy(tiltPos, player->m_tiltPos, sizeof(CPos[4]));
+	memcpy(tiltAngle, player->m_tiltAngles, sizeof(double[4]));
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -443,3 +612,4 @@ void CPlayerBullet::Draw()
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
+

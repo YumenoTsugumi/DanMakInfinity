@@ -73,7 +73,7 @@ void StageManager::Main()
 	if (m_count % (60*5) == 1) {
 		m_spawners.push_back(StageManager::GetRandomSpawner_LargeA());
 	}
-#elif 0
+#elif 1
 
 	DebugIndexControl();
 	DebugContinueSpawner();
@@ -270,9 +270,9 @@ void StageManager::DebugContinueSpawner()
 {
 	static int debug = 0;
 	if (debug == 0) {
-		m_debugSpawneEnemySize = 1;
+		m_debugSpawneEnemySize = 0;
 		m_debugSpawneEnemyIndex = 1;
-		m_debugSpawneEnemyMoveType = 8;
+		m_debugSpawneEnemyMoveType = 0;
 		debug++;
 	}
 

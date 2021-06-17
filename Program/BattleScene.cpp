@@ -9,6 +9,8 @@
 #include "CustomBullet.h"
 #include "HomingBullet.h"
 #include "BaseEffect.h"
+
+#include "EnemyL.h"
 //#include "EnemySmall.h"
 //#include "EnemyMedium.h"
 //#include "EnemyLarge.h"
@@ -155,8 +157,7 @@ void CBattleScene::Main(CInputAllStatus *input){
 	//		SetBackScene();
 	//	}
 	//}
-	static int tekitouCount = 0;
-	tekitouCount++;
+
 	static int count = 0;
 	count++;
 
@@ -185,12 +186,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 	m_effectManager.Action();
 
 
-
+	Collision_EnemyBullet_Pulyer();
 	Collision_Enemy_PulyerBullet();
 	Collision_Item_Player();
 
-	//m_bgA.Draw();
-	//m_bgA.Draw();
 	m_nonActiveBg->Draw();
 	m_activeBg->Draw();
 	
@@ -219,7 +218,6 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 
 	m_effectManager.Draw(60); // 60 UI
-
 
 	// デバッグコマンド
 	DebugCommand();

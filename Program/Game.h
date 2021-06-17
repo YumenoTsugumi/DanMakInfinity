@@ -63,6 +63,9 @@ public:
 	static double ToGameSizeX(double ratioPosX);
 	static double ToGameSizeY(double ratioPosY);
 
+	static double ToAllSizeX(double ratioPosX);
+	static double ToAllSizeY(double ratioPosY);
+
 	//--------------------------------------------------------------
 	// めんどくさいので共通化
 	//--------------------------------------------------------------
@@ -71,8 +74,14 @@ public:
 
 	void Init();
 	void CreateBattleScene();
+	void CreateTitleScene();
 	void Main();
 
 	void ImageLoad();
 	static void ImageLoadByThread();
+
+	// メニュー関連
+public:
+	bool m_exitFlag;
+	void SetExit() { m_exitFlag = true; }
 };

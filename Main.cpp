@@ -46,6 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//game->SetRect(CRect(0, 0, windowX, windowY));
 
 	game->CreateBattleScene();
+	//game->CreateTitleScene();
 
 	game->Main();
 

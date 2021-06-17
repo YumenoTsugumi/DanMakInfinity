@@ -21,7 +21,6 @@ bool CInputAllStatus::GetBtnOnOff(int getKeyIndex) {
 //---------------------------------------------------------------------------------
 //	CInput
 //---------------------------------------------------------------------------------
-
 void CInput::SetKeyboard(int index, int keyboard) {
 	if (index < 0 || index >= UNION_MAX) {
 		return;
@@ -323,5 +322,6 @@ void CInput::DebugPrint() {
 	for (int j = 0; j < UNION_MAX; j++) {
 		printfDx("%d", m_inputStatus.m_btnStatus[j]);
 	}
+	printfDx("\n");
 
 }

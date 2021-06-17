@@ -3,7 +3,7 @@
 #include "BattleScene.h"
 
 // 敵　時機の弾
-void CBattleScene::Collision_Enemy_PulyerBullet() 
+void CBattleScene::Collision_Enemy_PulyerBullet()
 {
 
 	for (int jj = 0; jj < m_enemyManager.m_enemyTotalNum; jj++) {
@@ -31,11 +31,9 @@ void CBattleScene::Collision_Enemy_PulyerBullet()
 					playerBullet->Hit(); // ヒットエフェクトはココ
 					continue;
 				}
-
 			}
 		}
 	}
-
 }
 
 // アイテム　プレイヤー
@@ -47,7 +45,7 @@ void CBattleScene::Collision_Item_Player()
 			continue;
 		}
 		CBaseItem* item = (CBaseItem*)m_itemManager.m_bullet[jj];
-	
+
 		// アイテム取得範囲
 		if (item->IsTakeTime() && CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), 32, item->m_pos, 0)) {
 			item->GetItemAddScore();
@@ -57,7 +55,7 @@ void CBattleScene::Collision_Item_Player()
 		if (item->GetRecoveryFlag())continue; // アイテム自動回収フラグが立っていると、この後の処理が不要
 
 		// アイテム自動回収範囲
-		if (CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), 256+128, item->m_pos, 0)) {
+		if (CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), 256 + 128, item->m_pos, 0)) {
 			if (!item->IsTakeTime()) {
 				item->SetPreRecovery();
 				continue;
@@ -65,8 +63,24 @@ void CBattleScene::Collision_Item_Player()
 			item->SetRecovery();
 			continue;
 		}
-
-		
 	}
+}
 
+
+void CBattleScene::Collision_EnemyBullet_Pulyer()
+{
+	if (m_player.IsMuteki()) {
+		return;
+	}
+	for (int ii = 0; ii < m_bulletManager.m_bulletTotalNum; ii++) {
+		if (m_bulletManager.m_bullet[ii] == nullptr) {
+			continue;
+		}
+		CBaseBullet* bullet = (CBaseBullet*)m_bulletManager.m_bullet[ii];
+
+		if(CFunc::CollisionCircleToCircle(GetPlayerPosByScroll(), m_player.m_hitSize, bullet->m_pos, 3)){
+			m_player.Die();
+			continue;
+		}
+	}
 }

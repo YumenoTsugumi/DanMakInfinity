@@ -123,3 +123,4 @@ public:
 	virtual bool Action(const CPos& newEnemyPos, const CPos& nowRelativePos) override;
 };
 
+

@@ -130,7 +130,7 @@ public:
 	static int GetHaveBomb() { return m_haveBomb; }
 	static int GetHaveLife() { return m_haveLife; }
 	static void BombDecrement() { m_haveBomb--; }
-	static void UseDecrement() { m_haveLife--; }
+	static void LifeDecrement() { m_haveLife--; }
 
 	// スコア
 	static long long m_hiScore;
@@ -183,7 +183,7 @@ public:
 	// BattleSceneCollision.cppにて実装
 	void Collision_Enemy_PulyerBullet(); // 敵　時機の弾
 	void Collision_Item_Player(); // アイテム　時機
-
+	void Collision_EnemyBullet_Pulyer(); // 敵の弾　時機
 
 	// 敵出現ルーチン
 	void DebugAllEnemyDirection();

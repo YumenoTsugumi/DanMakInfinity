@@ -13,6 +13,9 @@ const int INPUT_DEF_UP = 2;
 const int INPUT_DEF_RIGHT = 3;
 const int INPUT_DEF_ENTER = 4;
 const int INPUT_DEF_CANCEL = 5;
+const int INPUT_DEF_SLOW = 6;
+
+
 
 // 入力状態のステータス
 const int	INPUT_NULL = (-1);	//無効
@@ -178,7 +181,7 @@ const int	INPUT_MOUSE_CENTER = MOUSE_INPUT_MIDDLE;
 //パッドのマックス数
 const int	PAD_MAX = 16;
 //ダブルクリック受付時間
-const int	DOUBLECHKTIME = 20;
+const int	DOUBLECHKTIME = 1; // 本来20だがダブルクリックは使わないので1にする
 
 //キー結合マックス数
 const int	UNION_MAX = 10;
@@ -289,6 +292,8 @@ public:
 
 ○ループ前
 
+					// スローキーに　　キーボードの左シフトに設定する
+m_input.SetKeyboard(INPUT_DEF_SLOW, INPUT_KEY_LSHIFT);
 
 ○メインループの中の最初
 ｜GetState

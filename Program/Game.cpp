@@ -2,6 +2,7 @@
 
 #include "Input.h"
 #include "BattleScene.h"
+#include "TitleScene.h"
 #include "BaseBeam.h"
 
 #include <thread>
@@ -16,7 +17,8 @@ double CGame::m_windowRatio;
 CGame::CGame() :
 	m_fpsManager(),
 	m_input(),
-	m_sceneManager()
+	m_sceneManager(),
+	m_exitFlag(false)
 {
 
 }
@@ -61,7 +63,16 @@ void CGame::CreateBattleScene()
 	m_sceneManager.AddScene(battleScene);
 }
 
+void CGame::CreateTitleScene()
+{
+	CTitleScene* titleScene = new CTitleScene(0);
+	titleScene->Init(this);	//シーンにゲームクラスポインタを渡す
+	m_sceneManager.AddScene(titleScene);
+}
+
 void CGame::Main() {
+
+	m_input.SetKeyboard(INPUT_DEF_SLOW, INPUT_KEY_LSHIFT);
 
 	// メインループ処理
 	while (ProcessMessage() == 0) {
@@ -70,6 +81,7 @@ void CGame::Main() {
 
 		//入力
 		m_input.GetState();
+		m_input.DebugPrint();
 		CInputAllStatus* inputData = m_input.GetInputStatus();
 
 		// 入力のデバッグ情報表示
@@ -80,11 +92,16 @@ void CGame::Main() {
 
 		printfDx("%f",1000.0 / m_fpsManager.GetFPS());
 
+		
+
 		ScreenFlip(); //描画範囲反映
 		
 		clsDx(); //printfDx削除
 		m_fpsManager.End(); //fpsEnd管理
 
+		if (m_exitFlag) {
+			break;
+		}
 	}
 }
 
@@ -292,6 +309,36 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_06.png"), "bg_planet_06", 10106);
 	m_resourceManager.Add(new CImage("ResourceX\\BackGround\\bg_planet_09.png"), "bg_planet_09", 10109);
 
+	// タイトル
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\TitleLog1.png"), "TitleLog1", 15001);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\TitleLog2.png"), "TitleLog2", 15002);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\TitleLog3.png"), "TitleLog3", 15003);
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\1.png"), "TitleLog_str1.", 15004);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\1a.png"),"TitleLog_str1a", 15005);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\2.png"), "TitleLog_str2.", 15006);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\2a.png"),"TitleLog_str2a", 15007);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\3.png"), "TitleLog_str3.", 15008);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\3a.png"),"TitleLog_str3a", 15009);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\4.png"), "TitleLog_str4.", 15010);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\4a.png"),"TitleLog_str4a", 15011);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\5.png"), "TitleLog_str5.", 15012);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\5a.png"),"TitleLog_str5a", 15013);
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r01.png"), "TitleLog_strRank01", 15014);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r01a.png"), "TitleLog_strRank01a", 15015);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r20.png"), "TitleLog_strRank20", 15016);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r20a.png"), "TitleLog_strRank20a", 15017);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r40.png"), "TitleLog_strRank40", 15018);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r40a.png"), "TitleLog_strRank40a", 15019);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r60.png"), "TitleLog_strRank60", 15020);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r60a.png"), "TitleLog_strRank60a", 15021);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r80.png"), "TitleLog_strRank80", 15022);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r80a.png"), "TitleLog_strRank80a", 15023);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r100.png"), "TitleLog_strRank100", 15024);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\r100a.png"), "TitleLog_strRank100a", 15025);
+
+
 
 	// 敵 small
 	for (int ii = 1; ii <= 7; ii++) {
@@ -346,6 +393,8 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\0_.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect0", 20600);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\1.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect1", 20601);
 	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\2.png", 16, 4, 4, 512, 512, 1, 0), "HitEffect2", 20602);
+	m_resourceManager.Add(new CBulletImage("ResourceX\\HitEffect\\8.png", 16, 4, 4, 512, 512, 3, 0), "HitEffect8", 20608);
+
 
 	//金塊
 	for (int ii = 0; ii < 6; ii++) {
@@ -415,4 +464,16 @@ double CGame::ToGameSizeY(double ratioPosY)
 	int min = GameWindowAreaTop * CGame::GetWindowRatio();
 	int max = GameWindowAreaBottom * CGame::GetWindowRatio();
 	return 	(max - min) * (ratioPosY);
+}
+
+// 0.0～1.0で画面全体に比例する大きさが返ってくる
+double CGame::ToAllSizeX(double ratioPosX)
+{
+	int max = WindowX * CGame::GetWindowRatio();
+	return max * ratioPosX;
+}
+double CGame::ToAllSizeY(double ratioPosY)
+{
+	int max = WindowY * CGame::GetWindowRatio();
+	return max * ratioPosY;
 }

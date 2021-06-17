@@ -479,4 +479,3 @@ bool CLauncherL04b::Action(const CPos& newEnemyPos, const CPos& nowRelativePos)
 	m_count++;
 	return true;
 }
-
