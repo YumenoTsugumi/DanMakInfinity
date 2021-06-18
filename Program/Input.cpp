@@ -17,6 +17,12 @@ bool CInputAllStatus::GetBtnOnOff(int getKeyIndex) {
 	}
 	return false;
 }
+void CInputAllStatus::Reset()
+{
+	for (int ii = 0; ii < UNION_MAX; ii++) {
+		m_btnStatus[ii] = 0;
+	}
+}
 
 //---------------------------------------------------------------------------------
 //	CInput

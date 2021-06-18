@@ -232,6 +232,8 @@ public:
 	// 指定したボタンの入力が押下されているか返す
 	bool GetBtnOnOff(int index);
 
+	void Reset();
+
 };
 
 

@@ -79,19 +79,37 @@ void CTitleScene::Init(CGame* gameP) {
 		}
 	}
 
+	// 武器選択
+	m_WeaponSelect_Left = (CImage*)CGame::GetResource(15026);
+	m_WeaponSelect_Right = (CImage*)CGame::GetResource(15027);
+	m_WeaponSelect_Rapid = (CImage*)CGame::GetResource(15028);
+	m_WeaponSelect_Slow = (CImage*)CGame::GetResource(15029);
+	m_WeaponSelect_Speed[0] = (CImage*)CGame::GetResource(15030);
+	m_WeaponSelect_Speed[1] = (CImage*)CGame::GetResource(15031);
+	m_WeaponSelect_ShotType[0] = (CImage*)CGame::GetResource(15032);
+	m_WeaponSelect_ShotType[1] = (CImage*)CGame::GetResource(15033);
+	m_WeaponSelect_Sortie[0] = (CImage*)CGame::GetResource(15034);
+	m_WeaponSelect_Sortie[1] = (CImage*)CGame::GetResource(15035);
+	for (int ii = 0; ii < 4; ii++) {
+		m_WeaponSelect_Weapon[ii][0] = (CImage*)CGame::GetResource(15036 + ii * 2);
+		m_WeaponSelect_Weapon[ii][1] = (CImage*)CGame::GetResource(15037 + ii * 2);
+	}
+	for (int ii = 0; ii < 10; ii++) {
+		m_WeaponSelect_Number[ii][0] = (CImage*)CGame::GetResource(15044 + ii);
+		m_WeaponSelect_Number[ii][1] = (CImage*)CGame::GetResource(15054 + ii);
+	}
+	m_WeaponSelect_SelectWeapon = (CImage*)CGame::GetResource(15065);
+	m_WeaponSelect_StartRank = (CImage*)CGame::GetResource(15066);
+
+	m_WeaponSelect_selectIndex = 0;
+	m_SelectedWeapon[0] = 0;
+	m_SelectedWeapon[1] = 1; // ラピッド　スロー
+	m_SelectedSpeed[0] = m_SelectedSpeed[1] = 5; // ラピッド　スロー
 }
 
 
 void CTitleScene::Main(CInputAllStatus *input){
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
-	////フェード中でなければ
-	//if(!NowFeed()){
-	//	//入力参照
-	//	if(input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH){
-	//		SetFeedOut(120);
-	//		SetBackScene();
-	//	}
-	//}
 
 	if(m_status == Status::Top){
 		Action(input);
@@ -101,10 +119,13 @@ void CTitleScene::Main(CInputAllStatus *input){
 	if (m_status == Status::PlayStandby) {
 		Action_PlayStandby(input);
 		Draw_PlayStandby();
+	} else if (m_status == Status::PlayWeaponSelect) {
+		Action_WeaponSelect(input);
+		Draw_WeaponSelect();
 	}
 }
 
-
+constexpr int TitleAnimeTime1 = 60;
 void CTitleScene::Draw()
 {
 	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.5), CGame::ToAllSizeY(0.5)), 1.0, 0, m_background->m_iamge);
@@ -112,7 +133,6 @@ void CTitleScene::Draw()
 	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.1), CGame::ToAllSizeY(0.85)), 0.2, 0, m_planet2->m_iamge);
 	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.2)), 0.1, 0, m_planet3->m_iamge);
 
-	constexpr int TitleAnimeTime1 = 60;
 	m_topTitleAnimeCount++;
 	if (m_topTitleAnimeCount <= TitleAnimeTime1) {
 		m_titleLog1Size -= (2.0 / TitleAnimeTime1);
@@ -130,7 +150,6 @@ void CTitleScene::Draw()
 		m_titleLog2Alpha += 255 / TitleAnime2TotalTime;
 		m_titleLog2Angle += CFunc::ToRad(175.0 / TitleAnime2TotalTime);
 
-		//m_titleLog3Size -= (1.0 / TitleAnimeTime1);
 		m_titleLog3Alpha += 255 / TitleAnime2TotalTime;
 	}
 	if (m_topTitleAnimeCount > TitleAnimeTime1) {
@@ -157,9 +176,17 @@ void CTitleScene::Draw()
 		}
 	}
 }
+
 void CTitleScene::Action(CInputAllStatus* input)
 {
 	if (!m_top_animetionFinishFlag) {
+		if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
+			m_top_animetionFinishFlag = true;
+			m_titleLog1Size = 1.0;
+			m_titleLog1Alpha = 255;
+			m_titleLog1Pos.x = CGame::ToAllSizeX(0.75) - CGame::ToAllSizeX(0.55);
+			m_topTitleAnimeCount = TitleAnimeTime1;
+		}
 		return;
 	}
 	if (input->m_btnStatus[INPUT_DEF_UP] == INPUT_PUSH) {
@@ -172,6 +199,7 @@ void CTitleScene::Action(CInputAllStatus* input)
 	}
 
 	if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
+		input->Reset();
 		m_selectItemFunc[m_selectIndex](this);
 	}
 	
@@ -194,7 +222,6 @@ void CTitleScene::Draw_PlayStandby()
 		int x = CGame::ToAllSizeX(0.7) - (m_playStandby_selectItemSizeMaxWigth - m_playStandby_selectItemSizeWigth[ii]) / 2;
 		int y = CGame::ToAllSizeY(0.45 + 0.08 * (double)ii);
 		CDxFunc::MyDrawRotaGraph(CPos(x, y), size, 0.0, m_playStandby_selectItem[ii][isAct]->m_iamge);
-
 	}
 }
 void CTitleScene::Action_PlayStandby(CInputAllStatus* input)
@@ -209,11 +236,109 @@ void CTitleScene::Action_PlayStandby(CInputAllStatus* input)
 	}
 
 	if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
-
+		m_selectIndex = 0;
+		input->Reset();
+		m_status = Status::PlayWeaponSelect;
 	}
 	if (input->m_btnStatus[INPUT_DEF_CANCEL] == INPUT_PUSH) {
 		m_selectIndex = 0;
 		m_status = Status::Top;
+	}
+}
+
+//------------------------------------------------------
+void CTitleScene::Draw_WeaponSelect()
+{
+	int isAct = 0;
+	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.65), CGame::ToAllSizeY(0.30)), 1.0, 0.0, m_WeaponSelect_Rapid->m_iamge);
+	{
+		isAct = (m_WeaponSelect_selectIndex == 0) ? 1 : 0;
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.40)), 1.0, 0.0, m_WeaponSelect_Speed[isAct]->m_iamge); // スピード
+		CImage* number = m_WeaponSelect_Number[m_SelectedSpeed[0]][isAct];
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.89), CGame::ToAllSizeY(0.40)), 1.0, 0.0, number->m_iamge); // スピード
+
+		isAct = (m_WeaponSelect_selectIndex == 1) ? 1 : 0;
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.68), CGame::ToAllSizeY(0.47)), 1.0, 0.0, m_WeaponSelect_ShotType[isAct]->m_iamge); // タイプ
+		CImage* text = m_WeaponSelect_Weapon[m_SelectedWeapon[0]][isAct];
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.888), CGame::ToAllSizeY(0.47)), 1.0, 0.0, text->m_iamge); // スピード
+	}
+
+	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.65), CGame::ToAllSizeY(0.60)), 1.0, 0.0, m_WeaponSelect_Slow->m_iamge);
+	{
+		isAct = (m_WeaponSelect_selectIndex == 2) ? 1 : 0;
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.70)), 1.0, 0.0, m_WeaponSelect_Speed[isAct]->m_iamge); // スピード
+		CImage* number = m_WeaponSelect_Number[m_SelectedSpeed[1]][isAct];
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.89), CGame::ToAllSizeY(0.70)), 1.0, 0.0, number->m_iamge); // スピード
+
+
+		isAct = (m_WeaponSelect_selectIndex == 3) ? 1 : 0;
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.68), CGame::ToAllSizeY(0.77)), 1.0, 0.0, m_WeaponSelect_ShotType[isAct]->m_iamge); // タイプ
+		CImage* text = m_WeaponSelect_Weapon[m_SelectedWeapon[1]][isAct];
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.888), CGame::ToAllSizeY(0.77)), 1.0, 0.0, text->m_iamge); // スピード
+	}
+
+	isAct = (m_WeaponSelect_selectIndex == 4) ? 1 : 0;
+	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.90)), 1.0, 0.0, m_WeaponSelect_Sortie[isAct]->m_iamge); // 出撃
+
+	if (m_WeaponSelect_selectIndex != 4) {
+		double lX;
+		double rX;
+		if (m_WeaponSelect_selectIndex == 0 || m_WeaponSelect_selectIndex == 2) { // スピード
+			lX = 0.85;
+			rX = 0.93;
+		} if (m_WeaponSelect_selectIndex == 1 || m_WeaponSelect_selectIndex == 3) { // ショットタイプ
+			lX = 0.824;
+			rX = 0.950;
+		}
+		double leftRightrY[4] = { 0.40, 0.47, 0.70, 0.77 };
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(lX), CGame::ToAllSizeY(leftRightrY[m_WeaponSelect_selectIndex] - 0.005)), 1.0, 0.0, m_WeaponSelect_Left->m_iamge);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(rX), CGame::ToAllSizeY(leftRightrY[m_WeaponSelect_selectIndex] - 0.005)), 1.0, 0.0, m_WeaponSelect_Right->m_iamge);
+	}
+}
+void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
+{
+	if (input->m_btnStatus[INPUT_DEF_UP] == INPUT_PUSH) {
+		m_WeaponSelect_selectIndex--;
+		if (m_WeaponSelect_selectIndex < 0)m_WeaponSelect_selectIndex = SelectWeaponMenuNum - 1;
+	}
+	if (input->m_btnStatus[INPUT_DEF_DOWN] == INPUT_PUSH) {
+		m_WeaponSelect_selectIndex++;
+		if (m_WeaponSelect_selectIndex >= SelectWeaponMenuNum)m_WeaponSelect_selectIndex = 0;
+	}
+
+	int* p = nullptr;
+	if (m_WeaponSelect_selectIndex == 0)p = &(m_SelectedSpeed[0]);
+	if (m_WeaponSelect_selectIndex == 1)p = &(m_SelectedWeapon[0]);
+	if (m_WeaponSelect_selectIndex == 2)p = &(m_SelectedSpeed[1]);
+	if (m_WeaponSelect_selectIndex == 3)p = &(m_SelectedWeapon[1]);
+	int min = 0, max = 0;
+	if (m_WeaponSelect_selectIndex == 1 || m_WeaponSelect_selectIndex == 3) {
+		min = 0;
+		max = SelectWeaponNum;
+	}
+	if (m_WeaponSelect_selectIndex == 0 || m_WeaponSelect_selectIndex == 2) {
+		min = 1;
+		max = 10;
+	}
+
+	if (input->m_btnStatus[INPUT_DEF_RIGHT] == INPUT_PUSH) {
+		(*p)++;
+		if ((*p) >= max )(*p) = min;
+	}
+	if (input->m_btnStatus[INPUT_DEF_LEFT] == INPUT_PUSH) {
+		(*p)--;
+		if (min < 0)(*p) = max-1;
+	}
+
+
+	if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
+		if (m_WeaponSelect_selectIndex == 4) {
+
+		}
+	}
+	if (input->m_btnStatus[INPUT_DEF_CANCEL] == INPUT_PUSH) {
+		//m_selectIndex = 0;
+		m_status = Status::PlayStandby;
 	}
 }
 

@@ -10,6 +10,9 @@
 constexpr int SelectItemNum = 5;
 constexpr int SelectRankItemNum = 6;
 
+constexpr int SelectWeaponMenuNum = 5;
+constexpr int SelectWeaponNum = 4; // 武器自体は4つ
+
 class CTitleScene : public CScene{
 public:
 	//------------------
@@ -78,17 +81,37 @@ public:
 	//------------------------------------------------------
 	void Draw_PlayStandby();
 	void Action_PlayStandby(CInputAllStatus* input);
+	CImage* m_WeaponSelect_StartRank;
 	int m_playStandby_selectIndex;
 	CImage* m_playStandby_selectItem[SelectRankItemNum][2]; // 非アクティブ、アクティブ
 	int m_playStandby_selectItemSizeWigth[SelectItemNum];
 	int m_playStandby_selectItemSizeMaxWigth;
 
+	// 武器選択画面
+	void Draw_WeaponSelect();
+	void Action_WeaponSelect(CInputAllStatus* input);
+	CImage* m_WeaponSelect_SelectWeapon;
+	CImage* m_WeaponSelect_Left;
+	CImage* m_WeaponSelect_Right;
+	CImage* m_WeaponSelect_Rapid;
+	CImage* m_WeaponSelect_Slow;
+	CImage* m_WeaponSelect_Speed[2]; // 移動速度
+	CImage* m_WeaponSelect_ShotType[2]; // ショットタイプ
+	CImage* m_WeaponSelect_Sortie[2]; // 出撃
+	CImage* m_WeaponSelect_Weapon[4][2]; // 武器
+	CImage* m_WeaponSelect_Number[10][2]; // 数値
+	int m_WeaponSelect_selectIndex;
+	int m_SelectedSpeed[2]; // ラピッド　スロー
+	int m_SelectedWeapon[2]; // ラピッド　スロー
+
+
+
 	// 画面の状況
 	enum Status{
 		Top = 0, // TOP画面
 		PlayStandby, // Play押して、ランクや自機を選ぶ
+		PlayWeaponSelect, // ランクを選んだ後に自機を選ぶ
 		ExtraStandby,
-
 	};
 	Status m_status;
 };

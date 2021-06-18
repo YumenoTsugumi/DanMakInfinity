@@ -339,6 +339,59 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\r100a.png"), "TitleLog_strRank100a", 15025);
 
 
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Left.png"), "s_Left", 15026);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Right.png"), "s_Right", 15027);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Rapid.png"), "s_Rapid", 15028);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Slow.png"), "s_Slow", 15029);
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_MoveSpeed.png"), "s_MoveSpeed", 15030);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_MoveSpeeda.png"), "s_MoveSpeeda", 15031);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_ShotType.png"), "s_ShotType", 15032);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_ShotTypea.png"), "s_ShotTypea", 15033);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Sortie.png"), "s_Sortie", 15034);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Sortiea.png"), "s_Sortiea", 15035);
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Forward.png"), "s_Forward", 15036);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Forwarda.png"), "s_Forwarda", 15037);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Wide.png"), "s_Wide", 15038);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Widea.png"), "s_Widea", 15039);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Trace.png"), "s_Trace", 15040);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Tracea.png"), "s_Tracea", 15041);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Tilt.png"), "s_Tilt", 15042);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Tilta.png"), "s_Tilta", 15043);
+
+
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Title\\s%d.png", ii);
+		std::string format2 = MyFormat("sss%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 15044 + ii);
+	}
+	for (int ii = 0; ii < 10; ii++) {
+		std::string format1 = MyFormat("ResourceX\\Title\\s%da.png", ii);
+		std::string format2 = MyFormat("sss%da", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 15054 + ii);
+	}
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_StartRank.png"), "s_StartRank", 15065);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_SelectWeapon.png"), "s_SelectWeapon", 15066);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// 敵 small
 	for (int ii = 1; ii <= 7; ii++) {
