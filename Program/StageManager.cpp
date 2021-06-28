@@ -49,6 +49,10 @@ void StageManager::StageReset()
 
 void StageManager::Main()
 {
+	if (m_scene->m_isEscMenu) {
+		return;
+	}
+
 	if (m_count >= TotalSpawneTime) {
 		// 全敵のスポーンが終わってから一定時間まつ
 		if (m_count == TotalSpawneTime) {

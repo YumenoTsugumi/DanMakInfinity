@@ -121,9 +121,9 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		}
 
 		// スコアテキストの終点から　文字の幅*1~8
-		int drawWigth = drawImage->m_sizeX * 0.65;
-		double textNumber_x = textScore_endX + 10 + drawWigth * (maxDrawDigit - ii);
-		double gap = (drawWigth - drawImage->m_sizeX) / 2;
+		int drawWidth = drawImage->m_sizeX * 0.65;
+		double textNumber_x = textScore_endX + 10 + drawWidth * (maxDrawDigit - ii);
+		double gap = (drawWidth - drawImage->m_sizeX) / 2;
 
 		// 3の倍数の時は,を表示する
 		if (ii % 3 == 0 && maxDrawDigit != ii) {
@@ -163,9 +163,9 @@ void CBattleSceneUI::DrawGameAreaUI() {
 		}
 
 		// スコアテキストの終点から　文字の幅*1~8
-		int drawWigth = drawImage->m_sizeX * 0.65;
-		double textNumber_x = textHiScore_endX + 10 + drawWigth * (maxDrawDigit - ii);
-		double gap = (drawWigth - drawImage->m_sizeX) / 2;
+		int drawWidth = drawImage->m_sizeX * 0.65;
+		double textNumber_x = textHiScore_endX + 10 + drawWidth * (maxDrawDigit - ii);
+		double gap = (drawWidth - drawImage->m_sizeX) / 2;
 
 		// 3の倍数の時は,を表示する
 		if (ii % 3 == 0 && maxDrawDigit != ii) {

@@ -73,7 +73,7 @@ void CPlayer::Action(CInputAllStatus* input)
 	}
 
 	//移動処理
-	double move = 11.0;
+	double move = m_rapidSpeed;
 	int moveCo = 0;
 
 	if (input->GetBtnOnOff(INPUT_DEF_UP) == true) {
@@ -126,7 +126,7 @@ void CPlayer::Action(CInputAllStatus* input)
 		m_slowMove = MOVE_HI;
 	}
 	if (isSlow) {
-		move /= 2.0;
+		move = m_slowSpeed;
 	}
 	if (input->GetBtnOnOff(INPUT_DEF_UP) == true) {
 		m_pos.y -= move;
@@ -406,6 +406,12 @@ void CPlayer::SetShotType(ShotType rapid, ShotType slow) {
 	if (m_slowShotType == ShotType::Wide)m_slowSubShotGetFunc = GetSubShotWide;
 	if (m_slowShotType == ShotType::Trace)m_slowSubShotGetFunc = GetSubShotTrace;
 	if (m_slowShotType == ShotType::Tilt)m_slowSubShotGetFunc = GetSubShotTilt;
+}
+void CPlayer::SetSpeed(int rapid, int slow)
+{
+	// 1-9    1.5-13.5
+	m_rapidSpeed = ((double)rapid) * 1.5;
+	m_slowSpeed = ((double)slow) * 1.5;
 }
 
 void CPlayer::SubShotAction(){

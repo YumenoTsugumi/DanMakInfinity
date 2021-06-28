@@ -16,6 +16,8 @@
 #include "StageManager.h"
 
 constexpr int RankBasedDigit = 10000;
+constexpr int SelectEscMenuNum = 3;
+constexpr int ResumeTime = 60 * 3;
 
 class CBattleScene : public CScene{
 public:
@@ -31,7 +33,7 @@ public:
 	//------------------
 	//	ここから下は自由に
 	//------------------
-	void Init(CGame* gameP);
+	void Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon, int slowSpeed, int slowWeapon );
 
 	CGame *m_game; // 上位のゲームクラス
 	CPlayer m_player; // プレイヤー自身
@@ -187,6 +189,31 @@ public:
 
 	// 敵出現ルーチン
 	void DebugAllEnemyDirection();
+
+	//-----------------------------------------------
+	// ESC画面
+	std::function<void(CBattleScene*)> m_escItemFunc[SelectEscMenuNum];
+
+	static void Resume(CBattleScene* thisScene);
+	static void Retry(CBattleScene* thisScene);
+	static void GoTitle(CBattleScene* thisScene);
+	int m_escItemSize[SelectEscMenuNum];
+	int m_escItemSizeMaxWidth;
+	int m_escMenuIndex;
+	CImage* m_escSelectItem[SelectEscMenuNum][2]; // 非アクティブ、アクティブ
+	CImage* m_counterImage[2];
+	struct CounterImage {
+		CPos pos;
+		double alpha;
+	};
+	CounterImage m_counterImageData[60];
+	CImage* m_counterStringImage[3];
+	int m_pauseImage;
+	
+
+	void EscDraw();
+	bool m_isEscMenu;
+	int m_resumuCount;
 
 	// デバッグコマンド
 	void DebugCommand();

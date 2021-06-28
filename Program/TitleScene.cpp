@@ -1,5 +1,5 @@
 #include "TitleScene.h"
-
+#include "BattleScene.h"
 #include "Game.h"
 
 char fileNameSpaceBG_[8][20] = {
@@ -47,14 +47,14 @@ void CTitleScene::Init(CGame* gameP) {
 	m_planet2 = (CImage*)CGame::GetResource("bg_planet_00");
 	m_planet3 = (CImage*)CGame::GetResource("bg_planet_06");
 
-	m_selectItemSizeMaxWigth = 0;
+	m_selectItemSizeMaxWidth = 0;
 	for (int ii = 0; ii < SelectItemNum; ii++) {
 		m_selectItem[ii][0] = (CImage*)CGame::GetResource(15004 + ii*2); // 非アクティブ
 		m_selectItem[ii][1] = (CImage*)CGame::GetResource(15005 + ii*2); // アクティブ
 		int dmyY;
-		GetGraphSize(m_selectItem[ii][0]->m_iamge, &m_selectItemSizeWigth[ii], &dmyY);
-		if (m_selectItemSizeWigth[ii] > m_selectItemSizeMaxWigth) {
-			m_selectItemSizeMaxWigth = m_selectItemSizeWigth[ii];
+		GetGraphSize(m_selectItem[ii][0]->m_iamge, &m_selectItemSizeWidth[ii], &dmyY);
+		if (m_selectItemSizeWidth[ii] > m_selectItemSizeMaxWidth) {
+			m_selectItemSizeMaxWidth = m_selectItemSizeWidth[ii];
 		}
 	}
 	m_selectIndex = 0;
@@ -73,9 +73,9 @@ void CTitleScene::Init(CGame* gameP) {
 		m_playStandby_selectItem[ii][0] = (CImage*)CGame::GetResource(15014 + ii * 2); // 非アクティブ
 		m_playStandby_selectItem[ii][1] = (CImage*)CGame::GetResource(15015 + ii * 2); // アクティブ
 		int dmyY;
-		GetGraphSize(m_playStandby_selectItem[ii][0]->m_iamge, &m_playStandby_selectItemSizeWigth[ii], &dmyY);
-		if (m_playStandby_selectItemSizeWigth[ii] > m_playStandby_selectItemSizeMaxWigth) {
-			m_playStandby_selectItemSizeMaxWigth = m_playStandby_selectItemSizeWigth[ii];
+		GetGraphSize(m_playStandby_selectItem[ii][0]->m_iamge, &m_playStandby_selectItemSizeWidth[ii], &dmyY);
+		if (m_playStandby_selectItemSizeWidth[ii] > m_playStandby_selectItemSizeMaxWidth) {
+			m_playStandby_selectItemSizeMaxWidth = m_playStandby_selectItemSizeWidth[ii];
 		}
 	}
 
@@ -104,7 +104,8 @@ void CTitleScene::Init(CGame* gameP) {
 	m_WeaponSelect_selectIndex = 0;
 	m_SelectedWeapon[0] = 0;
 	m_SelectedWeapon[1] = 1; // ラピッド　スロー
-	m_SelectedSpeed[0] = m_SelectedSpeed[1] = 5; // ラピッド　スロー
+	m_SelectedSpeed[0] = 7;
+	m_SelectedSpeed[1] = 4; // ラピッド　スロー
 }
 
 
@@ -170,7 +171,7 @@ void CTitleScene::Draw()
 			double size = 1.0;
 			if (ii == m_selectIndex)size = 1.2;
 
-			int x = CGame::ToAllSizeX(0.7) - (m_selectItemSizeMaxWigth - m_selectItemSizeWigth[ii])/2;
+			int x = CGame::ToAllSizeX(0.7) - (m_selectItemSizeMaxWidth - m_selectItemSizeWidth[ii])/2;
 			int y = CGame::ToAllSizeY(0.45 + 0.1 * (double)ii);
 			CDxFunc::MyDrawRotaGraph(CPos(x,y ), size, 0.0, m_selectItem[ii][isAct]->m_iamge);
 		}
@@ -219,7 +220,7 @@ void CTitleScene::Draw_PlayStandby()
 		double size = 0.8;
 		if (ii == m_playStandby_selectIndex)size = 1.0;
 
-		int x = CGame::ToAllSizeX(0.7) - (m_playStandby_selectItemSizeMaxWigth - m_playStandby_selectItemSizeWigth[ii]) / 2;
+		int x = CGame::ToAllSizeX(0.7) - (m_playStandby_selectItemSizeMaxWidth - m_playStandby_selectItemSizeWidth[ii]) / 2;
 		int y = CGame::ToAllSizeY(0.45 + 0.08 * (double)ii);
 		CDxFunc::MyDrawRotaGraph(CPos(x, y), size, 0.0, m_playStandby_selectItem[ii][isAct]->m_iamge);
 	}
@@ -327,13 +328,24 @@ void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
 	}
 	if (input->m_btnStatus[INPUT_DEF_LEFT] == INPUT_PUSH) {
 		(*p)--;
-		if (min < 0)(*p) = max-1;
+		if (*p <= 0)(*p) = max-1;
 	}
-
 
 	if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
 		if (m_WeaponSelect_selectIndex == 4) {
 
+			SetFeedOut(30); // 今のシーンのフェードアウト時間
+
+			CBattleScene* battleScene = new CBattleScene(30); // 次のシーンのフェードイン時間
+			battleScene->Init(this->m_game, SelectRankItems[m_playStandby_selectIndex],
+				m_SelectedSpeed[0],	m_SelectedWeapon[0],
+				m_SelectedSpeed[1],	m_SelectedWeapon[1]	);	//シーンにゲームクラスポインタを渡す
+
+			SetNextScene(battleScene); // 次のシーンを設定
+			ChangeScene(); // シーン切り替え
+		}
+		else {
+			m_WeaponSelect_selectIndex = 4;
 		}
 	}
 	if (input->m_btnStatus[INPUT_DEF_CANCEL] == INPUT_PUSH) {

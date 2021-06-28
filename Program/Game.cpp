@@ -59,7 +59,7 @@ void CGame::Init()
 void CGame::CreateBattleScene()
 {
 	CBattleScene* battleScene = new CBattleScene(0);
-	battleScene->Init(this);	//シーンにゲームクラスポインタを渡す
+	battleScene->Init(this, 50, 7,0, 4,1);	//シーンにゲームクラスポインタを渡す
 	m_sceneManager.AddScene(battleScene);
 }
 
@@ -73,6 +73,9 @@ void CGame::CreateTitleScene()
 void CGame::Main() {
 
 	m_input.SetKeyboard(INPUT_DEF_SLOW, INPUT_KEY_LSHIFT);
+	m_input.SetKeyboard(INPUT_DEF_ESC, INPUT_KEY_ESCAPE);
+
+	CScene::SetSceneManager(&m_sceneManager);
 
 	// メインループ処理
 	while (ProcessMessage() == 0) {
@@ -338,7 +341,6 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\r100.png"), "TitleLog_strRank100", 15024);
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\r100a.png"), "TitleLog_strRank100a", 15025);
 
-
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Left.png"), "s_Left", 15026);
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Right.png"), "s_Right", 15027);
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_Rapid.png"), "s_Rapid", 15028);
@@ -375,10 +377,20 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_StartRank.png"), "s_StartRank", 15065);
 	m_resourceManager.Add(new CImage("ResourceX\\Title\\s_SelectWeapon.png"), "s_SelectWeapon", 15066);
 
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_resume.png"), "b_resume", 15070);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_resumea.png"), "b_resumea", 15071);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_restart.png"), "b_restart", 15072);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_restarta.png"), "b_restarta", 15073);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_end.png"), "b_end", 15074);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\b_enda.png"), "b_enda", 15075);
 
 
+	m_resourceManager.Add(new CImage("ResourceX\\timecounter.png"), "timecounter", 15076);
+	m_resourceManager.Add(new CImage("ResourceX\\timecounter_off.png"), "timecounter_off", 15077);
 
-
+	m_resourceManager.Add(new CImage("ResourceX\\resume3.png"), "resume3", 15078);
+	m_resourceManager.Add(new CImage("ResourceX\\resume2.png"), "resume2", 15079);
+	m_resourceManager.Add(new CImage("ResourceX\\resume1.png"), "resume1", 15080);
 
 
 

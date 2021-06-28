@@ -9,6 +9,7 @@
 
 constexpr int SelectItemNum = 5;
 constexpr int SelectRankItemNum = 6;
+constexpr int SelectRankItems[SelectRankItemNum] = {1,20,40,60,80,100};
 
 constexpr int SelectWeaponMenuNum = 5;
 constexpr int SelectWeaponNum = 4; // 武器自体は4つ
@@ -72,8 +73,8 @@ public:
 	// 選択肢
 	int m_selectIndex;
 	CImage* m_selectItem[SelectItemNum][2]; // 非アクティブ、アクティブ
-	int m_selectItemSizeWigth[SelectItemNum];
-	int m_selectItemSizeMaxWigth;
+	int m_selectItemSizeWidth[SelectItemNum];
+	int m_selectItemSizeMaxWidth;
 
 	int m_topTitleAnimeCount;
 	bool m_top_animetionFinishFlag;
@@ -84,8 +85,8 @@ public:
 	CImage* m_WeaponSelect_StartRank;
 	int m_playStandby_selectIndex;
 	CImage* m_playStandby_selectItem[SelectRankItemNum][2]; // 非アクティブ、アクティブ
-	int m_playStandby_selectItemSizeWigth[SelectItemNum];
-	int m_playStandby_selectItemSizeMaxWigth;
+	int m_playStandby_selectItemSizeWidth[SelectItemNum];
+	int m_playStandby_selectItemSizeMaxWidth;
 
 	// 武器選択画面
 	void Draw_WeaponSelect();

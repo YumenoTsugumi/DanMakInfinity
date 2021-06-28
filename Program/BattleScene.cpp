@@ -1,9 +1,7 @@
 #include "BattleScene.h"
 
 #include "Player.h"
-//#include "Inheritance.h"
-//#include "Area.h"
-//#include "OtherInfo.h"
+
 #include "Game.h"
 #include "BaseBullet.h"
 #include "CustomBullet.h"
@@ -11,9 +9,6 @@
 #include "BaseEffect.h"
 
 #include "EnemyL.h"
-//#include "EnemySmall.h"
-//#include "EnemyMedium.h"
-//#include "EnemyLarge.h"
 
 bool CBattleScene::m_enemyHitSizeDraw = false;
 bool CBattleScene::m_enemyLauncherDraw = false;
@@ -93,13 +88,13 @@ CBattleScene::~CBattleScene(){
 
 }
 
-void CBattleScene::Init(CGame* gameP) {
+void CBattleScene::Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon, int slowSpeed, int slowWeapon) {
 	m_player.Init();
 	m_player.SetBulletManager(&m_playerBullet); // プレイヤーにプレイヤ弾管理を設定
 
 	m_hiScore = 0;
 	m_score = 0;
-	m_rank = 50 * RankBasedDigit;
+	m_rank = rank * RankBasedDigit;
 	m_bulletRemoveTime = m_bulletRemoveCount = 0;
 
 	m_game = gameP;
@@ -112,6 +107,9 @@ void CBattleScene::Init(CGame* gameP) {
 	SetBattleScene(this);
 	m_stageManager.SetBattleScene(this);
 	m_player.SetBattleScene(this);
+
+	m_player.SetSpeed(rapidSpeed, slowSpeed);
+	m_player.SetShotType((CPlayer::ShotType)rapidWeapon, (CPlayer::ShotType)slowWeapon);
 
 	// デバッグ用の全敵表示
 	m_initPlayerPos = m_player.m_pos;
@@ -135,6 +133,28 @@ void CBattleScene::Init(CGame* gameP) {
 	m_haveLife = 3;
 	m_haveBomb = 3;
 
+	m_isEscMenu = false;
+	m_resumuCount = 0;
+	m_escMenuIndex = 0;
+	for (int ii = 0; ii < SelectEscMenuNum; ii++) {
+		m_escSelectItem[ii][0] = (CImage*)CGame::GetResource(15070 + ii * 2);
+		m_escSelectItem[ii][1] = (CImage*)CGame::GetResource(15071 + ii * 2);
+
+		int dmyY;
+		GetGraphSize(m_escSelectItem[ii][0]->m_iamge, &m_escItemSize[ii], &dmyY);
+		if (m_escItemSize[ii] > m_escItemSizeMaxWidth) {
+			m_escItemSizeMaxWidth = m_escItemSize[ii];
+		}
+	}
+	m_escItemFunc[0] = Resume;
+	m_escItemFunc[1] = Retry;
+	m_escItemFunc[2] = GoTitle;
+
+	m_counterImage[0] = (CImage*)CGame::GetResource(15076);
+	m_counterImage[1] = (CImage*)CGame::GetResource(15077);
+	m_counterStringImage[0] = (CImage*)CGame::GetResource(15080);
+	m_counterStringImage[1] = (CImage*)CGame::GetResource(15079);
+	m_counterStringImage[2] = (CImage*)CGame::GetResource(15078);
 }
 
 void addFuncA(CCustomBullet* m_bullet) {
@@ -147,80 +167,194 @@ void addFuncB(CCustomBullet* m_bullet) {
 		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Player, m_bullet->m_pos, 2.5, i * (360.0 / 10), 0, 0, 0, 0,10));
 	}
 }
-
+#include <chrono>
 void CBattleScene::Main(CInputAllStatus *input){
-	////フェード中でなければ
-	//if(!NowFeed()){
-	//	//入力参照
-	//	if(input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH){
-	//		SetFeedOut(120);
-	//		SetBackScene();
-	//	}
-	//}
 
-	static int count = 0;
-	count++;
+	// ポーズ画面でない
+	if (!m_isEscMenu && m_resumuCount == 0) {
+		bool isPause = false;
 
-	////どんな状態でもアクションする処理
-	m_stageManager.Main(); //敵スポーン
-
-	m_bgA.Action();
-	m_bgB.Action();
-	m_player.Action(input);
-	RemoveBullet(); // 弾消し処理
-
-	m_bgA.SetPlayerMovedPos(m_player.m_pos);
-	m_bgB.SetPlayerMovedPos(m_player.m_pos);
-	CBaseBullet::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
-	CBaseEnemy::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
-	CBaseLauncher::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
-	m_bgA.SetBattleScene(this);
-	m_bgB.SetBattleScene(this);
-	SetPlayerPos(m_player.m_pos);
-
-	m_playerBullet.Action();
-	m_enemyManager.Action();
-	m_itemManager.Action();
-	m_bulletManager.Action();
-	m_beamManager.Action();
-	m_effectManager.Action();
+		//フェード中でなければ
+		if (!NowFeed()) {
+			//入力参照
+			if (input->m_btnStatus[INPUT_DEF_ESC] == INPUT_PUSH) {
+				isPause = true;
+			}
 
 
-	Collision_EnemyBullet_Pulyer();
-	Collision_Enemy_PulyerBullet();
-	Collision_Item_Player();
-
-	m_nonActiveBg->Draw();
-	m_activeBg->Draw();
-	
-	m_effectManager.Draw(0); // 0 一番ボトム
-
-	m_enemyManager.Draw();
-	m_effectManager.Draw(10); // 10	敵よりあと
-
-	m_playerBullet.Draw();
-	m_player.Draw();
-	
-	m_effectManager.Draw(20); // 20 プレイヤーより後
-	
-	m_itemManager.Draw();
-	m_effectManager.Draw(30); // 30 プレイヤーの弾より後
-	m_bulletManager.Draw();
-	m_effectManager.Draw(40);
-	m_beamManager.Draw();
-	m_effectManager.Draw(50); // 50 最前面
-
-	m_ui.Draw();
+		}
 
 
-	// ステージクリアリザルト
-	StageClearResult();
+		////どんな状態でもアクションする処理
+		m_stageManager.Main(); //敵スポーン
+
+		m_bgA.Action();
+		m_bgB.Action();
+		m_player.Action(input);
+		RemoveBullet(); // 弾消し処理
+
+		m_bgA.SetPlayerMovedPos(m_player.m_pos);
+		m_bgB.SetPlayerMovedPos(m_player.m_pos);
+		CBaseBullet::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
+		CBaseEnemy::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
+		CBaseLauncher::SetTarget(m_player.m_pos - GetBackGroundscrollSmall());
+		m_bgA.SetBattleScene(this);
+		m_bgB.SetBattleScene(this);
+		SetPlayerPos(m_player.m_pos);
+
+		m_playerBullet.Action();
+		m_enemyManager.Action();
+		m_itemManager.Action();
+		m_bulletManager.Action();
+		m_beamManager.Action();
+		m_effectManager.Action();
 
 
-	m_effectManager.Draw(60); // 60 UI
+		Collision_EnemyBullet_Pulyer();
+		Collision_Enemy_PulyerBullet();
+		Collision_Item_Player();
 
-	// デバッグコマンド
-	DebugCommand();
+
+		m_nonActiveBg->Draw();
+		m_activeBg->Draw();
+
+		m_effectManager.Draw(0); // 0 一番ボトム
+
+		m_enemyManager.Draw();
+		m_effectManager.Draw(10); // 10	敵よりあと
+
+		m_playerBullet.Draw();
+		m_player.Draw();
+
+		m_effectManager.Draw(20); // 20 プレイヤーより後
+
+		m_itemManager.Draw();
+		m_effectManager.Draw(30); // 30 プレイヤーの弾より後
+		m_bulletManager.Draw();
+		m_effectManager.Draw(40);
+		m_beamManager.Draw();
+		m_effectManager.Draw(50); // 50 最前面
+
+		m_ui.Draw();
+
+
+		// ステージクリアリザルト
+		StageClearResult();
+
+		// ポーズ画面に移行
+		if (isPause) {
+			m_isEscMenu = true;
+
+			SaveDrawScreen(0, 0, CGame::GetAllGameRect().x, CGame::GetAllGameRect().y, "pause.bmp");
+			m_pauseImage = LoadGraph("pause.bmp");
+			isPause = false;
+		}
+
+
+
+		m_effectManager.Draw(60); // 60 UI
+
+		// デバッグコマンド
+		DebugCommand();
+
+	}
+	else {
+		if (m_isEscMenu) {
+			if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
+				m_escItemFunc[m_escMenuIndex](this);
+			}
+			if (input->m_btnStatus[INPUT_DEF_UP] == INPUT_PUSH) {
+				m_escMenuIndex--;
+				if (m_escMenuIndex < 0)m_escMenuIndex = SelectEscMenuNum - 1;
+			}
+			if (input->m_btnStatus[INPUT_DEF_DOWN] == INPUT_PUSH) {
+				m_escMenuIndex++;
+				if (m_escMenuIndex >= SelectEscMenuNum)m_escMenuIndex = 0;
+			}
+		}
+
+		// ESC画面
+		EscDraw();
+	}
+}
+
+void CBattleScene::EscDraw()
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	DrawGraph(0, 0, m_pauseImage, FALSE);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DrawBox(0, 0, CGame::GetAllGameRect().x, CGame::GetAllGameRect().y, GetColor(0, 0, 0), TRUE);
+
+	// ポーズ解除
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+	if (m_resumuCount > 0) {
+		m_resumuCount--;
+
+		int co = m_resumuCount % 60;
+
+		double x = CGame::ToGamePosX(0.5) + cos(CFunc::ToRad(270 - (360.0 / 60.0) * co)) * 200;
+		double y = CGame::ToGamePosY(0.5) + sin(CFunc::ToRad(270 - (360.0 / 60.0) * co)) * 200;
+
+		CounterImage* ip = &(m_counterImageData[co]);
+		ip->pos.x = x;
+		ip->pos.y = y;
+		ip->alpha = 255;
+		for (auto& d : m_counterImageData) {
+			d.alpha -= 30;
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, d.alpha);
+			CDxFunc::MyDrawRotaGraph(d.pos, 1.0, 0.0, m_counterImage[0]->m_iamge);
+		}
+
+		int countDown = m_resumuCount / 60;
+		// 180~120 なら 2    120～60 なら1 　60～なら0
+		double size = 3.0;
+		double alpha = 1.0;
+		if (m_resumuCount >= 120) {
+			size = 1.5 + 1.5 * (m_resumuCount - 120) / 60.0;
+			alpha = 0.2 + 1.0 * (m_resumuCount - 120) / 60.0;
+		}
+		else if (m_resumuCount >= 60) {
+			size = 1.5 + 1.5 * (m_resumuCount - 60) / 60.0;
+			alpha = 0.2 + 1.0 * (m_resumuCount - 60) / 60.0;
+		}
+		else {
+			size = 1.5 + 1.5 * (m_resumuCount - 0) / 60.0;
+			alpha = 0.2 + 1.0 * (m_resumuCount - 0) / 60.0;
+		}
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * alpha);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToGamePosX(0.5), CGame::ToGamePosY(0.5)),
+			size, 0.0, m_counterStringImage[countDown]->m_iamge);
+
+	}
+	else {
+		for (int ii = 0; ii < SelectEscMenuNum; ii++) {
+			int isAct = 0;
+			if (ii == m_escMenuIndex)isAct = 1;
+
+			double size = 1.0;
+			if (ii == m_escMenuIndex)size = 1.2;
+
+			int x = CGame::ToGamePosX(0.5) - (m_escItemSizeMaxWidth - m_escItemSize[ii]) / 2;
+			int y = CGame::ToGamePosY(0.5 + 0.1 * (double)ii);
+			CDxFunc::MyDrawRotaGraph(CPos(x, y), size, 0.0, m_escSelectItem[ii][isAct]->m_iamge);
+		}
+	}
+}
+void CBattleScene::Resume(CBattleScene* thisScene)
+{
+	thisScene->m_isEscMenu = false;
+	thisScene->m_resumuCount = ResumeTime;
+
+}
+void CBattleScene::Retry(CBattleScene* thisScene)
+{
+
+}
+void CBattleScene::GoTitle(CBattleScene* thisScene)
+{
 
 }
 

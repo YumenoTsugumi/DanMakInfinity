@@ -160,19 +160,19 @@ void CScene::SetFeedOut(int OutTime){
 	m_outStatus = PREFEED;
 }
 
-inline void CScene::SetNextScene(CScene* NextScene){
+void CScene::SetNextScene(CScene* NextScene){
 	//‚Ç‚¿‚ç‚àÝ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚É‚Ì‚ÝAÝ’è‚·‚é
 	if(m_nextScene == nullptr && m_backScene == false){
 		m_nextScene = NextScene;
 	}
 }
-inline void CScene::SetBackScene(){
+void CScene::SetBackScene(){
 	//‚Ç‚¿‚ç‚àÝ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚É‚Ì‚ÝAÝ’è‚·‚é
 	if(m_nextScene == nullptr && m_backScene == false){
 		m_backScene = true;
 	}
 }
-inline void CScene::ChangeScene(){
+void CScene::ChangeScene(){
 	if(m_nextScene != nullptr &&	m_outStatus == ENDFEED){
 		m_sceneManager->AddScene(m_nextScene);
 

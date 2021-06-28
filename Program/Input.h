@@ -14,7 +14,7 @@ const int INPUT_DEF_RIGHT = 3;
 const int INPUT_DEF_ENTER = 4;
 const int INPUT_DEF_CANCEL = 5;
 const int INPUT_DEF_SLOW = 6;
-
+const int INPUT_DEF_ESC = 7;
 
 
 // 入力状態のステータス

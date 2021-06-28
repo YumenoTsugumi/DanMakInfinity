@@ -125,7 +125,7 @@ void CBaseEffect::EffectAction(){
 	}
 	else {
 		if (m_blendDepth > m_maxBlend) {
-			m_blendDepth -= m_plusBlend;
+			m_blendDepth += m_plusBlend;
 		}
 		else {
 			m_blendDepth = m_maxBlend;
