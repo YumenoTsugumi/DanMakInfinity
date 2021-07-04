@@ -14,16 +14,13 @@ bool CBattleScene::m_enemyHitSizeDraw = false;
 bool CBattleScene::m_enemyLauncherDraw = false;
 bool CBattleScene::m_enableDebugCommand = true;
 CPos CBattleScene::m_playerPos;
-
-
 CBattleScene* CBattleScene::m_scene = nullptr;
 
-//静的なのを使うにはコレがいる？
-//CResourceManager* CScene::resManager;
+
 
 CEffectManager CBattleScene::m_effectManager;
 CItemManager CBattleScene::m_itemManager;
-CBattleScene::BulletRemoveType CBattleScene::m_bulletRemoveType;
+CBattleScene::BulletRemoveType CBattleScene::m_bulletRemoveType = CBattleScene::BulletRemoveType::Nothing;
 int CBattleScene::m_bulletRemoveTime;
 int CBattleScene::m_bulletRemoveCount;
 
@@ -51,6 +48,11 @@ int CBattleScene::m_haveBomb = 0;
 int CBattleScene::m_haveLife = 0;
 double CBattleScene::m_rankRatio = 1.0;
 int CBattleScene::m_nowStage = 1;
+constexpr int bgFeedTime = 60; // 背景のフェードアウト時間
+
+// 取得アイテム合計数
+int CBattleScene::m_takeItemRankCount[3] = { 0,0,0 }; // それぞれのランク毎
+
 void CBattleScene::StageCountReset()
 {
 	m_spawneSmallCount = 0;
@@ -65,11 +67,42 @@ void CBattleScene::StageCountReset()
 	m_missCount = 0;
 }
 
+void CBattleScene::StaticInit() {
+	m_effectManager.AllRemove();
+	m_itemManager.AllRemove();
+	m_bulletRemoveType = CBattleScene::BulletRemoveType::Nothing;
+	m_bulletRemoveTime = 0;
+	m_bulletRemoveCount = 0;
 
-constexpr int bgFeedTime = 60; // 背景のフェードアウト時間
+	m_enemyManager.AllRemove();
+	m_bulletManager.AllRemove();
+	m_beamManager.AllRemove();
 
-// 取得アイテム合計数
-int CBattleScene::m_takeItemRankCount[3] = { 0,0,0 }; // それぞれのランク毎
+	// スコア
+	m_hiScore = 0;
+	m_score = 0;
+	m_rank = 0;
+
+	m_spawneSmallCount = 0;
+	m_spawneMediumCount = 0;
+	m_spawneLargeCount = 0;
+	m_spawneDropItemCount = 0;
+	m_destroySpawneSmallCount = 0;
+	m_destroySpawneMediumCount = 0;
+	m_destroySpawneLargeCount = 0;
+	m_getSpawneDropItemCount = 0;
+	m_usedBomb = 0;
+	m_missCount = 0;
+	m_haveBomb = 0;
+	m_haveLife = 0;
+	m_rankRatio = 1.0;
+	m_nowStage = 1;
+
+	m_takeItemRankCount[0] = 0;
+	m_takeItemRankCount[1] = 0;
+	m_takeItemRankCount[2] = 0;
+}
+
 
 CBattleScene::CBattleScene(int InTime) :
 	CScene(InTime),
@@ -89,6 +122,7 @@ CBattleScene::~CBattleScene(){
 }
 
 void CBattleScene::Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon, int slowSpeed, int slowWeapon) {
+	StaticInit();
 	m_player.Init();
 	m_player.SetBulletManager(&m_playerBullet); // プレイヤーにプレイヤ弾管理を設定
 
@@ -130,7 +164,7 @@ void CBattleScene::Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon,
 	m_feedoutCount = 0;
 	m_feedinCount = 0;
 
-	m_haveLife = 3;
+	m_haveLife = 0;
 	m_haveBomb = 3;
 
 	m_isEscMenu = false;
@@ -155,19 +189,11 @@ void CBattleScene::Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon,
 	m_counterStringImage[0] = (CImage*)CGame::GetResource(15080);
 	m_counterStringImage[1] = (CImage*)CGame::GetResource(15079);
 	m_counterStringImage[2] = (CImage*)CGame::GetResource(15078);
+
+	m_isGameOver = false;
+	m_drawPlayer = true;
 }
 
-void addFuncA(CCustomBullet* m_bullet) {
-	for (int i = 0; i < 5; i++) {
-		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Abs, m_bullet->m_pos, 10.0, 90.0 + -20.0 + i * 10.0, 0, 0.10, 10, 0,10));
-	}
-}
-void addFuncB(CCustomBullet* m_bullet) {
-	for (int i = 0; i < 10; i++) {
-		m_bullet->m_manager->Add(new CBaseBullet(EDirType::Player, m_bullet->m_pos, 2.5, i * (360.0 / 10), 0, 0, 0, 0,10));
-	}
-}
-#include <chrono>
 void CBattleScene::Main(CInputAllStatus *input){
 
 	// ポーズ画面でない
@@ -180,13 +206,12 @@ void CBattleScene::Main(CInputAllStatus *input){
 			if (input->m_btnStatus[INPUT_DEF_ESC] == INPUT_PUSH) {
 				isPause = true;
 			}
-
-
 		}
 
-
-		////どんな状態でもアクションする処理
-		m_stageManager.Main(); //敵スポーン
+		if (!m_isGameOver) {
+			//どんな状態でもアクションする処理
+			m_stageManager.Main(); //敵スポーン
+		}
 
 		m_bgA.Action();
 		m_bgB.Action();
@@ -209,11 +234,20 @@ void CBattleScene::Main(CInputAllStatus *input){
 		m_beamManager.Action();
 		m_effectManager.Action();
 
-
 		Collision_EnemyBullet_Pulyer();
 		Collision_Enemy_PulyerBullet();
 		Collision_Item_Player();
+		
 
+		// 残機が0で、死亡アニメーションが終わったなら、シーンを切り替える
+		// 何もさせない
+		if (m_haveLife < 0) {
+			if (!m_player.IsDieAnimetion()) {
+				GoGameOver();
+				m_drawPlayer = false;
+			}
+			m_isGameOver = true;
+		}
 
 		m_nonActiveBg->Draw();
 		m_activeBg->Draw();
@@ -224,7 +258,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 		m_effectManager.Draw(10); // 10	敵よりあと
 
 		m_playerBullet.Draw();
-		m_player.Draw();
+		// ゲームオーバーの処理中なのでプレイヤーは表示しない
+		if (m_drawPlayer) {
+			m_player.Draw();
+		}
 
 		m_effectManager.Draw(20); // 20 プレイヤーより後
 
@@ -237,9 +274,10 @@ void CBattleScene::Main(CInputAllStatus *input){
 
 		m_ui.Draw();
 
-
-		// ステージクリアリザルト
-		StageClearResult();
+		if (!m_isGameOver) {
+			// ステージクリアリザルト
+			StageClearResult();
+		}
 
 		// ポーズ画面に移行
 		if (isPause) {
@@ -249,8 +287,6 @@ void CBattleScene::Main(CInputAllStatus *input){
 			m_pauseImage = LoadGraph("pause.bmp");
 			isPause = false;
 		}
-
-
 
 		m_effectManager.Draw(60); // 60 UI
 
@@ -327,7 +363,6 @@ void CBattleScene::EscDraw()
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 * alpha);
 		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToGamePosX(0.5), CGame::ToGamePosY(0.5)),
 			size, 0.0, m_counterStringImage[countDown]->m_iamge);
-
 	}
 	else {
 		for (int ii = 0; ii < SelectEscMenuNum; ii++) {
@@ -347,16 +382,26 @@ void CBattleScene::Resume(CBattleScene* thisScene)
 {
 	thisScene->m_isEscMenu = false;
 	thisScene->m_resumuCount = ResumeTime;
-
 }
 void CBattleScene::Retry(CBattleScene* thisScene)
 {
-
+	thisScene->m_titleScene->SetReturnStatus_Retry();
+	thisScene->SetFeedOut(30);
+	thisScene->SetBackScene();
 }
 void CBattleScene::GoTitle(CBattleScene* thisScene)
 {
-
+	thisScene->m_titleScene->SetReturnStatus_GoTitle();
+	thisScene->SetFeedOut(30);
+	thisScene->SetBackScene();
 }
+void CBattleScene::GoGameOver()
+{
+	m_titleScene->SetReturnStatus_GameOver(1,80,67867,557,50,0,5,1,1,123);
+	SetFeedOut(0);
+	SetBackScene();
+}
+
 
 std::tuple<CBattleScene::ClearRank, int, int> CBattleScene::CalcClearBounus(double destoryLargeEnemyRatio, double destoryMediumEnemyRatio, double destorySmallEnemyRatio,
 	double usedBomb, double missCount, double getItemRatio)

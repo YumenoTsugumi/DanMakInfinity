@@ -1,7 +1,7 @@
 #include "TitleScene.h"
 #include "BattleScene.h"
 #include "Game.h"
-
+#include "ResultScene.h"
 char fileNameSpaceBG_[8][20] = {
 	"X_bg_space_00",	"X_bg_space_01",	"X_bg_space_02",	"X_bg_space_03",
 	"X_bg_space_04",	"X_bg_space_05",	"X_bg_space_06",	"X_bg_space_07"
@@ -61,7 +61,7 @@ void CTitleScene::Init(CGame* gameP) {
 
 	m_selectItemFunc[0] = Play;
 	m_selectItemFunc[1] = Extra;
-	m_selectItemFunc[2] = Data;
+	m_selectItemFunc[2] = Result;
 	m_selectItemFunc[3] = Config;
 	m_selectItemFunc[4] = Exit;
 
@@ -106,11 +106,21 @@ void CTitleScene::Init(CGame* gameP) {
 	m_SelectedWeapon[1] = 1; // ラピッド　スロー
 	m_SelectedSpeed[0] = 7;
 	m_SelectedSpeed[1] = 4; // ラピッド　スロー
+
+	m_sceneReturnStatus = SceneReturnStatus::Nothing;
 }
 
 
 void CTitleScene::Main(CInputAllStatus *input){
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	// リトライなら何もせずにシーン以降する
+	if (m_sceneReturnStatus == SceneReturnStatus::Retry) {
+		return;
+	}
+	if (m_sceneReturnStatus == SceneReturnStatus::GameOver) {
+		return;
+	}
 
 	if(m_status == Status::Top){
 		Action(input);
@@ -180,6 +190,11 @@ void CTitleScene::Draw()
 
 void CTitleScene::Action(CInputAllStatus* input)
 {
+	//フェード中
+	if (NowFeed()) {
+		return;
+	}
+
 	if (!m_top_animetionFinishFlag) {
 		if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
 			m_top_animetionFinishFlag = true;
@@ -227,6 +242,11 @@ void CTitleScene::Draw_PlayStandby()
 }
 void CTitleScene::Action_PlayStandby(CInputAllStatus* input)
 {
+	//フェード中
+	if (NowFeed()) {
+		return;
+	}
+
 	if (input->m_btnStatus[INPUT_DEF_UP] == INPUT_PUSH) {
 		m_playStandby_selectIndex--;
 		if (m_playStandby_selectIndex < 0)m_playStandby_selectIndex = SelectRankItemNum - 1;
@@ -298,6 +318,11 @@ void CTitleScene::Draw_WeaponSelect()
 }
 void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
 {
+	//フェード中
+	if (NowFeed()) {
+		return;
+	}
+
 	if (input->m_btnStatus[INPUT_DEF_UP] == INPUT_PUSH) {
 		m_WeaponSelect_selectIndex--;
 		if (m_WeaponSelect_selectIndex < 0)m_WeaponSelect_selectIndex = SelectWeaponMenuNum - 1;
@@ -340,7 +365,7 @@ void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
 			battleScene->Init(this->m_game, SelectRankItems[m_playStandby_selectIndex],
 				m_SelectedSpeed[0],	m_SelectedWeapon[0],
 				m_SelectedSpeed[1],	m_SelectedWeapon[1]	);	//シーンにゲームクラスポインタを渡す
-
+			battleScene->SetTitleScene(this); // 下位シーンに本シーンを伝えておく
 			SetNextScene(battleScene); // 次のシーンを設定
 			ChangeScene(); // シーン切り替え
 		}
@@ -349,11 +374,48 @@ void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
 		}
 	}
 	if (input->m_btnStatus[INPUT_DEF_CANCEL] == INPUT_PUSH) {
-		//m_selectIndex = 0;
 		m_status = Status::PlayStandby;
 	}
 }
 
+// シーンに戻ってきた時の状態
+void CTitleScene::SetReturnStatus_Retry() {
+	m_sceneReturnStatus = SceneReturnStatus::Retry;
+
+	SetFeedOut(0); // 今のシーンのフェードアウト時間
+	CBattleScene* battleScene = new CBattleScene(30); // 次のシーンのフェードイン時間
+	battleScene->Init(this->m_game, SelectRankItems[m_playStandby_selectIndex],
+		m_SelectedSpeed[0], m_SelectedWeapon[0],
+		m_SelectedSpeed[1], m_SelectedWeapon[1]);	//シーンにゲームクラスポインタを渡す
+	battleScene->SetTitleScene(this); // 下位シーンに本シーンを伝えておく
+	SetNextScene(battleScene); // 次のシーンを設定
+	ChangeScene(); // シーン切り替え
+}
+void CTitleScene::SetReturnStatus_GoTitle() {
+	m_sceneReturnStatus = SceneReturnStatus::GoTitle;
+	Init(this->m_game);
+}
+void CTitleScene::SetReturnStatus_GameOver(
+	int startRank, int endRank,
+	int stage, int item, int liveTime,
+	int rapidShot, int rapidspeed, int slowShot, int slowspeed, long long score
+){
+	m_sceneReturnStatus = SceneReturnStatus::GameOver;
+
+	SetFeedOut(0); // 今のシーンのフェードアウト時間
+	CResultScene* resultScene = new CResultScene(30); // 次のシーンのフェードイン時間
+	resultScene->Init(this->m_game);	//シーンにゲームクラスポインタを渡す
+	resultScene->SetTitleScene(this); // 下位シーンに本シーンを伝えておく
+	resultScene->SetData(startRank, endRank,stage, item, liveTime,rapidShot, rapidspeed, slowShot, slowspeed, score);
+	SetNextScene(resultScene); // 次のシーンを設定
+	ChangeScene(); // シーン切り替え
+}
+void CTitleScene::SetReturnStatus_GoResult()
+{
+	m_sceneReturnStatus = SceneReturnStatus::GoResult;
+	Init(this->m_game);
+
+}
 
 //--------------------
 // 関数ポインタ
@@ -366,7 +428,7 @@ void CTitleScene::Extra(CTitleScene* thisScene)
 {
 
 }
-void CTitleScene::Data(CTitleScene* thisScene)
+void CTitleScene::Result(CTitleScene* thisScene)
 {
 
 }

@@ -237,7 +237,7 @@ void CPlayer::Die()
 }
 bool CPlayer::IsDieAnimetion()
 {
-	if (m_dieAnimetion > 0) {
+	if (m_dieAnimetion >= 0) {
 		return true;
 	}
 	return false;

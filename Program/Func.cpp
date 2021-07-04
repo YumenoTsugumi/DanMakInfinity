@@ -372,6 +372,16 @@ void CFunc::GetDigitArray(int zeroDigit, long long number, std::vector<int>& ind
 	return;
 }
 
+void CFunc::GetDigitArray2(long long number, std::vector<int>& indexAry)
+{
+	int digit = CFunc::GetDigit(number);
+	for (int ii = digit; ii > 0; ii--) {
+		int index = (number / (long long)pow(10, digit - ii)) % 10;
+		indexAry.insert(indexAry.begin(), index);
+	}
+}
+
+
 //1ベクトルの角度
 double CFunc::GetOneVectorAngle(CPos p)
 {
@@ -416,6 +426,42 @@ bool CFunc::CollisionCircleToCircle(const CPos& p1, double p1Radius, const CPos&
 	}
 	return false;
 }
+
+// C++でフォルダ以下のファイル一覧を取得する
+// https://qiita.com/tes2840/items/8d295b1caaf10eaf33ad
+bool CFunc::GetFileNames(std::string folderPath, std::string extName, std::vector<std::string>& file_names)
+{
+	HANDLE hFind;
+	WIN32_FIND_DATA win32fd;
+	// extName : *.*
+	std::string search_name = folderPath + "\\" + extName;
+
+	hFind = FindFirstFile(search_name.c_str(), &win32fd);
+
+	if (hFind == INVALID_HANDLE_VALUE) {
+		throw std::runtime_error("file not found");
+		return false;
+	}
+
+	/* 指定のディレクトリ以下のファイル名をファイルがなくなるまで取得する */
+	do {
+		if (win32fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			/* ディレクトリの場合は何もしない */
+			//printf("directory\n");
+		}
+		else {
+			/* ファイルが見つかったらVector配列に保存する */
+			file_names.push_back(win32fd.cFileName);
+			//printf("%s\n", file_names.back().c_str());
+		}
+	} while (FindNextFile(hFind, &win32fd));
+
+	FindClose(hFind);
+
+	return true;
+}
+
+
 
 /**
  * エルミート曲線の座標リストを取得

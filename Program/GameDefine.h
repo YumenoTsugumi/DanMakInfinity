@@ -32,6 +32,9 @@ const int GameWindowCenterY = GameWindowAreaTop + GameWindowSizeY/2;
 const int GameWindowAreaRight = GameWindowAreaLeft + GameWindowSizeX;
 const int GameWindowAreaBottom = GameWindowAreaTop + GameWindowSizeY;
 
-
-
+//              01234567890123456789012345678901234567
+//              12345678901234567890123456789012345678
+//char str[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_ ";
+constexpr int NameEntryFontMax = 26 + 10 + 1;
+constexpr int NameEntryFontMax_s = 26 + 10 + 2;
 

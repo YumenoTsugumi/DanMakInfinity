@@ -20,6 +20,13 @@ CBeamManager::CBeamManager(int num/* = 64*/) {
 CBeamManager::~CBeamManager() {
 	delete[] m_beam;
 }
+void CBeamManager::AllRemove()
+{
+	for (int i = 0; i < m_beamTotalNum; i++) {
+		delete m_beam[i];
+		m_beam[i] = nullptr;
+	}
+}
 
 void CBeamManager::Action() {
 	for (int i = 0; i < m_beamTotalNum; i++) {
@@ -223,6 +230,7 @@ void CBaseBeam::Action() {
 
 	m_count++;
 }
+
 
 void CBaseBeam::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);

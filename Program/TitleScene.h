@@ -37,7 +37,7 @@ public:
 
 	static void Play(CTitleScene* thisScene);
 	static void Extra(CTitleScene* thisScene);
-	static void Data(CTitleScene* thisScene);
+	static void Result(CTitleScene* thisScene);
 	static void Config(CTitleScene* thisScene);
 	static void Exit(CTitleScene* thisScene);
 
@@ -105,7 +105,23 @@ public:
 	int m_SelectedSpeed[2]; // ラピッド　スロー
 	int m_SelectedWeapon[2]; // ラピッド　スロー
 
-
+	// シーンに戻ってきた時の状態
+	enum SceneReturnStatus {
+		Nothing = 0, // 本当に最初
+		Retry,
+		GoTitle,
+		GameOver,
+		GoResult
+	};
+	SceneReturnStatus m_sceneReturnStatus;
+	void SetReturnStatus_Retry();
+	void SetReturnStatus_GoTitle();
+	// 開始ランク,終了ランク,生存時間,ラピッドショット,スローショット,アイテム数,スコア
+	void SetReturnStatus_GameOver(
+		int startRank, int endRank, 
+		int stage, int item, int liveTime, 
+		int rapidShot, int rapidspeed, int slowShot, int slowspeed, long long score);
+	void SetReturnStatus_GoResult();
 
 	// 画面の状況
 	enum Status{

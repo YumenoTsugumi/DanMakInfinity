@@ -34,7 +34,7 @@ public:
 	virtual void Draw();
 
 	int Add(CBaseBeam* beam);
-
+	void AllRemove();
 };
 
 //---------------------------------------------------------------------------------

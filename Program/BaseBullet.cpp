@@ -75,6 +75,14 @@ void CBulletManager::Action(){
 	}
 }
 
+void CBulletManager::AllRemove()
+{
+	for (int i = 0; i < m_bulletTotalNum; i++) {
+		delete m_bullet[i];
+		m_bullet[i] = nullptr;
+	}
+}
+
 void CBulletManager::Draw(){
 	CPos subPos = CBattleScene::GetBattleScene()->GetBackGroundscrollSmall();
 

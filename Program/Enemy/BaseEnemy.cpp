@@ -22,7 +22,12 @@ CEnemyManager::~CEnemyManager() {
 
 	delete[] m_enemy;
 }
-
+void CEnemyManager::AllRemove(){	
+	for (int i = 0; i < m_enemyTotalNum; i++) {
+		delete m_enemy[i];
+		m_enemy[i] = nullptr;
+	}
+}
 void CEnemyManager::Action() {
 	for (int i = 0; i < m_enemyTotalNum; i++) {
 		if (m_enemy[i] == nullptr) {

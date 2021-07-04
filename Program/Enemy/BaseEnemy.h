@@ -37,6 +37,7 @@ public:
 	void DestoryAllEnemyNothingItemDrop();
 	void DamageAllEnemy(int damage);
 	int Add(CBaseEnemy* enemy);
+	void AllRemove();
 };
 
 

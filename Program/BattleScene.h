@@ -14,6 +14,7 @@
 #include "BattleSceneUI.h"
 #include "BattleResultUI.h"
 #include "StageManager.h"
+#include "TitleScene.h"
 
 constexpr int RankBasedDigit = 10000;
 constexpr int SelectEscMenuNum = 3;
@@ -34,6 +35,11 @@ public:
 	//	ここから下は自由に
 	//------------------
 	void Init(CGame* gameP, int rank, int rapidSpeed, int rapidWeapon, int slowSpeed, int slowWeapon );
+	static void StaticInit();
+	CTitleScene* m_titleScene;
+	void SetTitleScene(CTitleScene* scene) {
+		m_titleScene = scene;
+	}
 
 	CGame *m_game; // 上位のゲームクラス
 	CPlayer m_player; // プレイヤー自身
@@ -126,6 +132,9 @@ public:
 	}
 	// ランク
 
+	// ゲーム終了処理中（スポーンやクリアリザルトに行かない
+	bool m_isGameOver;
+
 	// プレイヤーの情報
 	static int m_haveBomb;
 	static int m_haveLife;
@@ -210,10 +219,14 @@ public:
 	CImage* m_counterStringImage[3];
 	int m_pauseImage;
 	
-
 	void EscDraw();
 	bool m_isEscMenu;
 	int m_resumuCount;
+
+	//-----------------------------------------------
+	// ゲームオーバー
+	void GoGameOver();
+	bool m_drawPlayer;
 
 	// デバッグコマンド
 	void DebugCommand();

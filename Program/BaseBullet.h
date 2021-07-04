@@ -103,6 +103,8 @@ public:
 	virtual void Draw();
 
 	int Add(CBaseBullet *bullet);
+
+	void AllRemove();
 };
 
 //---------------------------------------------------------------------------------

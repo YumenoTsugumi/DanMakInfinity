@@ -154,6 +154,8 @@ public:
 	// [4] : 4
 	// [5] : 3
 	static void GetDigitArray(int zeroumeDigit, long long number, std::vector<int>& indexAry);
+	// 123 -> [0]1[1]2[2]3
+	static void GetDigitArray2(long long number, std::vector<int>& indexAry);
 
 	//数値だけの文字列に,をつけていく
 	//input:1234567
@@ -258,6 +260,9 @@ public:
 
 	// ２つの円が重なっているか
 	static bool CollisionCircleToCircle(const CPos& p1, double p1Radius, const CPos& p2, double p2Radius);
+
+	// C++でフォルダ以下のファイル一覧を取得する
+	static bool GetFileNames(std::string folderPath, std::string extName, std::vector<std::string>& file_names);
 };
 
 //矩形領域

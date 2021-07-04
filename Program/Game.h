@@ -7,6 +7,8 @@
 #include "Scene.h"
 #include "GameDefine.h"
 
+
+class SaveDatus;
 class CGame {
 public:
 	CFPSManager m_fpsManager;	//fps管理
@@ -80,8 +82,64 @@ public:
 	void ImageLoad();
 	static void ImageLoadByThread();
 
+	static std::vector<SaveDatus> m_saveData;
+	static void Load_SaveData();
+	static void Save_SaveData();
+
+
 	// メニュー関連
 public:
 	bool m_exitFlag;
 	void SetExit() { m_exitFlag = true; }
+};
+
+const int GameVer1 = 100;
+class SaveDatus {
+public:
+	static void Load(const char* filename, SaveDatus& datus);
+	static void Save(int startRank, int endRank,
+		int stage, int item, int liveTime,
+		int rapidShot, int rapidspeed,
+		int slowShot, int slowspeed,
+		long long score,
+		const struct tm& local,
+		char* name,
+		int gameMode
+	);
+	static void SaveImage(const struct tm& local);
+	int m_ver;
+	int m_startRank;
+	int m_endRank;
+	int m_stage;
+	int m_item;
+	int m_liveTime;
+	int m_rapidShot;
+	int m_rapidspeed;
+	int m_slowShot;
+	int m_slowspeed;
+
+	long long m_score; // 8byte
+
+	int checkA; // scoreより上のチェック
+	int checkB; // scoreのチェック
+
+	int m_year;
+	int m_mon;
+	int m_day;
+	int m_hour;
+	int m_min;
+	int m_sec;
+
+	char m_name[12];
+
+	int m_gameMode; // ノーマルかEXか
+	int buf1;
+	int buf2;
+	int buf3;
+	int buf4;
+	int buf5;
+	int buf6;
+	int buf7;
+	int buf8;
+	int buf9;
 };

@@ -173,6 +173,7 @@
     <ClCompile Include="Program\Input.cpp" />
     <ClCompile Include="Program\Player.cpp" />
     <ClCompile Include="Program\Resource.cpp" />
+    <ClCompile Include="Program\ResultScene.cpp" />
     <ClCompile Include="Program\Scene.cpp" />
     <ClCompile Include="Program\Spawner\Spawner.cpp" />
     <ClCompile Include="Program\StageManager.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Program\Launcher\Launcher.h" />
     <ClInclude Include="Program\Player.h" />
     <ClInclude Include="Program\Resource.h" />
+    <ClInclude Include="Program\ResultScene.h" />
     <ClInclude Include="Program\Scene.h" />
     <ClInclude Include="Program\Spawner\Spawner.h" />
     <ClInclude Include="Program\StageManager.h" />

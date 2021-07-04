@@ -7,9 +7,11 @@
 
 #include <thread>
 #include <chrono>
+#include <stdio.h>
+#include <direct.h>
 
 CResourceManager CGame::m_resourceManager;
-
+std::vector<SaveDatus> CGame::m_saveData;
 CPos CGame::m_allGameRect; // 全体　(1920,1080)
 CPos CGame::m_gameRectLT; // ゲーム内 (480,20)
 CPos CGame::m_gameRectRB; // ゲーム内 (1440,1060)
@@ -392,18 +394,32 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\resume2.png"), "resume2", 15079);
 	m_resourceManager.Add(new CImage("ResourceX\\resume1.png"), "resume1", 15080);
 
+	m_resourceManager.Add(new CImage("ResourceX\\GameOver.png"), "GameOver", 15081);
 
+	// リザルト画面
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\End.png"), "End", 15082);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\EndRank.png"), "EndRank", 15083);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Item.png"), "Item", 15084);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\LiveTime.png"), "LiveTime", 15085);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Name.png"), "Name", 15086);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Score.png"), "Score", 15087);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Small_s.png"), "Small_s", 15088);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Stage.png"), "Stage", 15089);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\StartRank.png"), "StartRank", 15090);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\Enda.png"), "Enda", 15091);
 
-
-
-
-
-
-
-
-
-
-
+	//            1234567890123456789012345678901234567
+	char str[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+	for (int ii = 0; ii < (NameEntryFontMax); ii++) {
+		std::string format1 = MyFormat("ResourceX\\Result\\%c.png", str[ii]);
+		std::string format2 = MyFormat("Result_%c", str[ii]);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 16000 + ii);
+	}
+	for (int ii = 0; ii < (NameEntryFontMax); ii++) {
+		std::string format1 = MyFormat("ResourceX\\Result\\%ca.png", str[ii]);
+		std::string format2 = MyFormat("Result_%ca", str[ii]);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 16050 + ii);
+	}
 
 	// 敵 small
 	for (int ii = 1; ii <= 7; ii++) {
@@ -541,4 +557,101 @@ double CGame::ToAllSizeY(double ratioPosY)
 {
 	int max = WindowY * CGame::GetWindowRatio();
 	return max * ratioPosY;
+}
+
+void CGame::Load_SaveData()
+{
+	std::vector<std::string> filepaths;
+	CFunc::GetFileNames("resultData","*.dat", filepaths);
+	for (auto path : filepaths) {
+		SaveDatus saveData;
+		SaveDatus::Load(path.c_str(), saveData);
+		m_saveData.push_back(saveData);
+	}
+}
+
+void SaveDatus::Load(const char* filename, SaveDatus& datus)
+{
+	FILE *fp;
+	errno_t err = fopen_s(&fp, filename, "rb");
+	if (err == 0) {
+		fread(&datus, sizeof(datus), 1, fp);
+		fclose(fp);
+	}
+}
+
+void SaveDatus::Save(
+	int startRank,
+	int endRank,
+	int stage,
+	int item,
+	int liveTime,
+	int rapidShot,
+	int rapidspeed,
+	int slowShot,
+	int slowspeed,
+	long long score,
+	const struct tm &local,
+	char *name,
+	int gameMode
+){
+	SaveDatus datus;
+	
+	datus.m_ver = GameVer1;
+	datus.m_startRank = startRank;
+	datus.m_endRank = startRank;
+	datus.m_stage = stage;
+	datus.m_item = item;
+	datus.m_liveTime = liveTime;
+	datus.m_rapidShot = rapidShot;
+	datus.m_rapidspeed = rapidspeed;
+	datus.m_slowShot = slowShot;
+	datus.m_slowspeed = slowspeed;
+		
+	datus.m_score = score;
+		
+	datus.m_year = local.tm_year + 1900;
+	datus.m_mon = local.tm_mon + 1;
+	datus.m_day = local.tm_mday;
+	datus.m_hour = local.tm_hour;
+	datus.m_min = local.tm_min;
+	datus.m_sec = local.tm_sec;
+		
+	strcpy_s(datus.m_name, name);
+		
+	datus.m_gameMode = gameMode;
+	datus.buf1 = -1;datus.buf2 = -1;datus.buf3 = -1;datus.buf4 = -1;datus.buf5 = -1;
+	datus.buf6 = -1;datus.buf7 = -1;datus.buf8 = -1;datus.buf9 = -1;
+	
+	int a = datus.m_score;
+	int b = datus.m_score;
+	datus.checkA = a % 293; // scoreより上のチェック
+	datus.checkB = a / 293; // scoreのチェック
+
+	const char* dirname = "resultData";
+	_mkdir(dirname);
+
+	char fileName[256];
+	sprintf_s(fileName, "resultData\\%04dy%02dm%02dd_%02dh%02dm%02d.dat",
+		(local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday,
+		local.tm_hour, local.tm_min, local.tm_sec);
+
+	FILE* fp;
+	errno_t err = fopen_s(&fp, fileName, "wb");
+	if (err == 0) {
+		fwrite(&datus, sizeof(datus), 1, fp);
+		fclose(fp);
+	}
+}
+
+void SaveDatus::SaveImage(const struct tm& local)
+{
+	const char* dirname = "resultData";
+	_mkdir(dirname);
+
+	char dateStr[256];
+	sprintf_s(dateStr, "resultData\\%04dy%02dm%02dd_%02dh%02dm%02d.jpg",
+		(local.tm_year + 1900), (local.tm_mon + 1), local.tm_mday,
+		local.tm_hour, local.tm_min, local.tm_sec);
+	SaveDrawScreen(0, 0, CGame::GetAllGameRect().x, CGame::GetAllGameRect().y, dateStr, DX_IMAGESAVETYPE_JPEG);
 }
