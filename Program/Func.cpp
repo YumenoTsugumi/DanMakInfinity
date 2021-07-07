@@ -372,15 +372,78 @@ void CFunc::GetDigitArray(int zeroDigit, long long number, std::vector<int>& ind
 	return;
 }
 
-void CFunc::GetDigitArray2(long long number, std::vector<int>& indexAry)
+void CFunc::GetDigitArray2(long long number, std::vector<int>& indexAry, bool front /*= true*/)
 {
 	int digit = CFunc::GetDigit(number);
 	for (int ii = digit; ii > 0; ii--) {
 		int index = (number / (long long)pow(10, digit - ii)) % 10;
-		indexAry.insert(indexAry.begin(), index);
+		if (front) {
+			indexAry.insert(indexAry.begin(), index);
+		}
+		else {
+			indexAry.push_back(index);
+		}
 	}
 }
+// 4 123 -> 0123
+void CFunc::GetDigitArray3(int zeroDigit, long long number, std::vector<int>& indexAry, bool front /*= true*/)
+{
+	int count = 0;
+	if (number == 0) {
+		for (int ii = zeroDigit; ii > 0; ii--) {
+			count++;
+			if (front) {
+				indexAry.insert(indexAry.begin(), 0);
+			}
+			else {
+				indexAry.push_back(0);
+			}
+			if (count % 3 == 0) {
+				if (ii == 1) {
+					continue;
+				}
+			}
+		}
+		return;
+	}
 
+	int digit = CFunc::GetDigit(number);
+	for (int ii = digit; ii > 0; ii--) {
+		count++;
+		int index = (number / (int)pow(10, digit - ii)) % 10;
+		if (front) {
+			indexAry.insert(indexAry.begin(), index);
+		} else {
+			indexAry.push_back(index);
+		}
+		if (count % 3 == 0) {
+			if (ii == 1) {
+				continue;
+			}
+		}
+	}
+	// 0が続く場合
+	if (zeroDigit - digit > 0) {
+		if (count % 3 == 0) {
+
+		}
+	}
+	for (int ii = 0; ii < zeroDigit - digit; ii++) {
+		count++;
+		if (front) {
+			indexAry.insert(indexAry.begin(), 0);
+		}
+		else {
+			indexAry.push_back(0);
+		}
+		if (count % 3 == 0) {
+			if (ii + digit == zeroDigit - 1) {
+				continue;
+			}
+		}
+	}
+	return;
+}
 
 //1ベクトルの角度
 double CFunc::GetOneVectorAngle(CPos p)

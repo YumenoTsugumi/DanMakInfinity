@@ -82,9 +82,9 @@ public:
 	void ImageLoad();
 	static void ImageLoadByThread();
 
+	static std::vector<SaveDatus>& GetSaveData() { return m_saveData; }
 	static std::vector<SaveDatus> m_saveData;
 	static void Load_SaveData();
-	static void Save_SaveData();
 
 
 	// メニュー関連
@@ -92,10 +92,69 @@ public:
 	bool m_exitFlag;
 	void SetExit() { m_exitFlag = true; }
 };
-
+#include <string.h>
 const int GameVer1 = 100;
 class SaveDatus {
 public:
+	SaveDatus() {
+		m_ver = 0;
+		m_startRank = 0;
+		m_endRank = 0;
+		m_stage = 0;
+		m_item = 0;	
+		m_liveTime = 0;
+		m_rapidShot = 0;
+		m_rapidspeed = 0;
+		m_slowShot = 0;	
+		m_slowspeed = 0;
+		m_score = 0;
+		checkA = 0;	
+		checkB = 0;	
+		m_year = 0;	
+		m_mon = 0;	
+		m_day = 0;	
+		m_hour = 0;
+		m_min = 0;	
+		m_sec = 0;	
+		for (int ii = 0; ii < 12; ii++) {
+			m_name[ii] = 0;
+		}
+
+		m_gameMode = 0;
+		buf1 = 0;		buf2 = 0;		buf3 = 0;		buf4 = 0;		buf5 = 0;		buf6 = 0;		buf7 = 0;		buf8 = 0;		buf9 = 0;
+	}
+	SaveDatus(const SaveDatus& datus) {
+		m_ver = datus.m_ver;
+		m_startRank = datus.m_startRank;
+		m_endRank = datus.m_endRank;
+		m_stage = datus.m_stage;
+		m_item = datus.m_item;
+		m_liveTime = datus.m_liveTime;
+		m_rapidShot = datus.m_rapidShot;
+		m_rapidspeed = datus.m_rapidspeed;
+		m_slowShot = datus.m_slowShot;
+		m_slowspeed = datus.m_slowspeed;
+		m_score = datus.m_score;
+		checkA = datus.checkA;
+		checkB = datus.checkB;
+		m_year = datus.m_year;
+		m_mon = datus.m_mon;
+		m_day = datus.m_day;
+		m_hour = datus.m_hour;
+		m_min = datus.m_min;
+		m_sec = datus.m_sec;
+		strcpy_s(m_name, datus.m_name);
+		m_gameMode = datus.m_gameMode;
+		buf1 = datus.buf1;
+		buf2 = datus.buf2;
+		buf3 = datus.buf3;
+		buf4 = datus.buf4;
+		buf5 = datus.buf5;
+		buf6 = datus.buf6;
+		buf7 = datus.buf7;
+		buf8 = datus.buf8;
+		buf9 = datus.buf9;
+	}
 	static void Load(const char* filename, SaveDatus& datus);
 	static void Save(int startRank, int endRank,
 		int stage, int item, int liveTime,

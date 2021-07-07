@@ -108,6 +108,27 @@ void CTitleScene::Init(CGame* gameP) {
 	m_SelectedSpeed[1] = 4; // ラピッド　スロー
 
 	m_sceneReturnStatus = SceneReturnStatus::Nothing;
+
+	// リザルト画面
+	m_ResultImage = (CImage*)CGame::GetResource(15092);
+	m_resultIndex = 0;
+	for (int ii = 0; ii < 10; ii++) {
+		m_strScoreImage[ii] = (CImage*)CGame::GetResource(15044 + ii);
+	}
+
+	m_strRankingGold = (CImage*)CGame::GetResource(15093);
+	m_strRankingSliver = (CImage*)CGame::GetResource(15094);
+	for (int ii = 0; ii < 10; ii++) {
+		m_strRankingBronzeImage[ii] = (CImage*)CGame::GetResource(15095+ii);
+	}
+	for (int ii = 0; ii < NameEntryFontMax; ii++) {
+		m_strImage[ii] = (CImage*)CGame::GetResource(16000 + ii);
+	}
+	for (int ii = 0; ii < 10; ii++) {
+		m_strNumber[ii] = m_strImage[26 + ii];
+	}
+	m_colonImage = (CImage*)CGame::GetResource(15110);
+	m_slashImage = (CImage*)CGame::GetResource(15111);
 }
 
 
@@ -133,6 +154,9 @@ void CTitleScene::Main(CInputAllStatus *input){
 	} else if (m_status == Status::PlayWeaponSelect) {
 		Action_WeaponSelect(input);
 		Draw_WeaponSelect();
+	} else if (m_status == Status::ShowResult) {
+		Draw_Result();
+		Action_Result(input);
 	}
 }
 
@@ -291,7 +315,6 @@ void CTitleScene::Draw_WeaponSelect()
 		CImage* number = m_WeaponSelect_Number[m_SelectedSpeed[1]][isAct];
 		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.89), CGame::ToAllSizeY(0.70)), 1.0, 0.0, number->m_iamge); // スピード
 
-
 		isAct = (m_WeaponSelect_selectIndex == 3) ? 1 : 0;
 		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.68), CGame::ToAllSizeY(0.77)), 1.0, 0.0, m_WeaponSelect_ShotType[isAct]->m_iamge); // タイプ
 		CImage* text = m_WeaponSelect_Weapon[m_SelectedWeapon[1]][isAct];
@@ -378,6 +401,182 @@ void CTitleScene::Action_WeaponSelect(CInputAllStatus* input)
 	}
 }
 
+//------------------------------------------------------
+// リザルト
+void CTitleScene::Draw_Result()
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 220);
+	DrawBox(CGame::ToAllSizeX(0.05), CGame::ToAllSizeY(0.05),
+			CGame::ToAllSizeX(0.95), CGame::ToAllSizeY(0.95), GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+
+	// Result
+	// ノーマル　<- ->　EXTRA
+	// 1
+	// 2
+	CImage* result = m_selectItem[2][0];
+	CImage* extra = m_selectItem[1][0];
+	CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.4), CGame::ToAllSizeY(0.1)), 1.0, 0, result->m_iamge);
+	if (m_resultIndex == 0) {
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.5), CGame::ToAllSizeY(0.1)), 1.0, 0, m_strImage[36]->m_iamge);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.6), CGame::ToAllSizeY(0.1)), 1.0, 0, m_ResultImage->m_iamge);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.1)), 1.0, 0, m_strImage[36]->m_iamge);
+	} else {
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.5), CGame::ToAllSizeY(0.1)), 1.0, 0, m_strImage[36]->m_iamge);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.6), CGame::ToAllSizeY(0.1)), 1.0, 0, extra->m_iamge);
+		CDxFunc::MyDrawRotaGraph(CPos(CGame::ToAllSizeX(0.7), CGame::ToAllSizeY(0.1)), 1.0, 0, m_strImage[36]->m_iamge);
+	}
+
+	// 表示する範囲
+	int y_min = 1; // 1位
+	int y_max = 10; // 10位
+	std::vector<SaveDatus>& saveData = m_game->GetSaveData();
+	int count = 0;
+	for (int ii = 0; ii < saveData.size(); ii++) {
+		if (ii < y_min-1)continue;
+		if (ii > y_max-1)continue;
+		SaveDatus s = saveData[ii];
+		Draw_ResultSub(count,ii+1, false, s);
+		count++;
+	}
+	for (int ii = count; ii < 10; ii++) {
+		SaveDatus s;
+		Draw_ResultSub(count, ii + 1, true, s);
+		count++;
+	}
+}
+void CTitleScene::Draw_ResultSub(int posY, int number, bool nulldata, SaveDatus& s) {
+
+	int py = CGame::ToAllSizeY(0.3 + (0.6 / 10.0) * (double)posY);
+	if (number == 1) {
+		CDxFunc::MyDrawRotaGraph(CGame::ToAllSizeX(0.065), py, 0.3, 0, m_strRankingGold->m_iamge);
+	}
+	else if (number == 2) {
+		CDxFunc::MyDrawRotaGraph(CGame::ToAllSizeX(0.065), py, 0.25, 0, m_strRankingSliver->m_iamge);
+	}
+	else {
+		std::vector<int> numberAry;
+		CFunc::GetDigitArray2(number, numberAry);
+		if (number < 10) {
+			CDxFunc::MyDrawRotaGraph(CGame::ToAllSizeX(0.065), py, 0.25, 0, m_strRankingBronzeImage[numberAry[0]]->m_iamge);
+		}
+		else {
+			for (int ii = 0; ii < numberAry.size(); ii++) {
+				CDxFunc::MyDrawRotaGraph(CGame::ToAllSizeX(0.065) - 14 + ii * 24, py, 0.25, 0, m_strRankingBronzeImage[numberAry[ii]]->m_iamge);
+			}
+		}
+	}
+
+	if (nulldata) {
+		return;
+	}
+
+	// スコア
+	std::vector<int> scoreAry;
+	CFunc::GetDigitArray2(s.m_score, scoreAry);
+	int digit = CFunc::GetDigit(s.m_score);
+	int coA = 0;
+	SetDrawBright(128,128,128);
+	for (int ii = 0; ii < (12-digit); ii++) {
+		double x = (coA * 26) + CGame::ToAllSizeX(0.09);
+		double y = py;
+		CDxFunc::MyDrawRotaGraph(x, y, 0.4, 0, m_strScoreImage[0]->m_iamge);
+		coA++;
+	}
+	SetDrawBright(255,255,255);
+	for (int ii = 0; ii < scoreAry.size(); ii++) {
+		int index = scoreAry[ii];
+		if (index < 0 || index > 9) {
+			continue;
+		}
+		double x = (coA * 26) + CGame::ToAllSizeX(0.09);
+		double y = py;
+		CDxFunc::MyDrawRotaGraph(x, y, 0.4, 0, m_strScoreImage[index]->m_iamge);
+		coA++;
+	}
+
+	//　名前
+	for (int ii = 0; ii < 10; ii++) {
+		double x13 = CGame::ToAllSizeX(0.3) + ii * 22;
+		double y13 = py;
+		int index = s.m_name[ii];
+		bool space = false;
+		if (index == NameEntryFontMax_s - 1) {
+			space = true;// 空白
+		}
+		if (!space) {
+			CImage* img = m_strImage[index];
+			CDxFunc::MyDrawRotaGraph(x13, y13, 0.4, 0, img->m_iamge);
+		}
+	}
+
+	// 年月日
+	{
+		std::vector<int> yearAry, monAry, dayAry, hourAry, minAry, secAry;
+		CFunc::GetDigitArray3(4, s.m_year, yearAry);
+		CFunc::GetDigitArray3(2, s.m_mon, monAry);
+		CFunc::GetDigitArray3(2, s.m_day, dayAry);
+		CFunc::GetDigitArray3(2, s.m_hour, hourAry);
+		CFunc::GetDigitArray3(2, s.m_min, minAry);
+		CFunc::GetDigitArray3(2, s.m_sec, secAry);
+
+		double size = 0.4;
+		int wigth = 18;
+		auto draw = [&](int value, int& count) {
+			double x = CGame::ToAllSizeX(0.6) + count * wigth;
+			CImage* img = m_strNumber[value];
+			CDxFunc::MyDrawRotaGraph(x, py, size, 0, img->m_iamge);
+			count++;
+		};
+
+		int co = 0;
+		for (int ii = 0; ii < yearAry.size(); ii++) {
+			draw(yearAry[ii], co);
+		}
+		double x;
+		x = CGame::ToAllSizeX(0.6) + co * wigth;
+		CDxFunc::MyDrawRotaGraph(x, py, size, 0, m_slashImage->m_iamge);
+
+		co++;
+		for (int ii = 0; ii < monAry.size(); ii++) {
+			draw(monAry[ii], co);
+		}
+
+		x = CGame::ToAllSizeX(0.6) + co * wigth;
+		CDxFunc::MyDrawRotaGraph(x, py, size, 0, m_slashImage->m_iamge);
+		co++;
+		for (int ii = 0; ii < dayAry.size(); ii++) {
+			draw(dayAry[ii], co);
+		}
+
+		co++;
+		for (int ii = 0; ii < hourAry.size(); ii++) {
+			draw(hourAry[ii], co);
+		}
+		x = CGame::ToAllSizeX(0.6) + co * wigth;
+		CDxFunc::MyDrawRotaGraph(x, py, size, 0, m_colonImage->m_iamge);
+		co++;
+		for (int ii = 0; ii < minAry.size(); ii++) {
+			draw(minAry[ii], co);
+		}
+		x = CGame::ToAllSizeX(0.6) + co * wigth;
+		CDxFunc::MyDrawRotaGraph(x, py, size, 0, m_colonImage->m_iamge);
+		co++;
+		for (int ii = 0; ii < secAry.size(); ii++) {
+			draw(secAry[ii], co);
+		}
+	}
+
+}
+
+void CTitleScene::Action_Result(CInputAllStatus* input)
+{
+	//フェード中
+	if (NowFeed()) {
+		return;
+	}
+}
+
 // シーンに戻ってきた時の状態
 void CTitleScene::SetReturnStatus_Retry() {
 	m_sceneReturnStatus = SceneReturnStatus::Retry;
@@ -430,7 +629,10 @@ void CTitleScene::Extra(CTitleScene* thisScene)
 }
 void CTitleScene::Result(CTitleScene* thisScene)
 {
+	thisScene->m_status = Status::ShowResult;
+	thisScene->m_playStandby_selectIndex = 0;
 
+	thisScene->m_game->Load_SaveData();
 }
 void CTitleScene::Config(CTitleScene* thisScene)
 {

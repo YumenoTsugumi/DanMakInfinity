@@ -397,7 +397,12 @@ void CBattleScene::GoTitle(CBattleScene* thisScene)
 }
 void CBattleScene::GoGameOver()
 {
-	m_titleScene->SetReturnStatus_GameOver(1,80,67867,557,50,0,5,1,1,123);
+	/*
+	int startRank, int endRank,
+	int stage, int item, int liveTime,
+	int rapidShot, int rapidspeed, int slowShot, int slowspeed, long long score
+	*/
+	m_titleScene->SetReturnStatus_GameOver(789,999,120,86754,557,0,5,1,1,123456789012);
 	SetFeedOut(0);
 	SetBackScene();
 }

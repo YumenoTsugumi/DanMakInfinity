@@ -105,6 +105,22 @@ public:
 	int m_SelectedSpeed[2]; // ラピッド　スロー
 	int m_SelectedWeapon[2]; // ラピッド　スロー
 
+	// リザルト画面
+	void Draw_Result();
+	void Draw_ResultSub(int posY, int number, bool nulldata,SaveDatus& s);
+	void Action_Result(CInputAllStatus* input);
+	CImage* m_ResultImage;
+	int m_resultIndex;
+	CImage* m_strScoreImage[10];
+	CImage* m_strRankingGold;
+	CImage* m_strRankingSliver;
+	CImage* m_strRankingBronzeImage[10];
+	CImage* m_strImage[37];
+	CImage* m_strNumber[10];
+	CImage* m_colonImage;
+	CImage* m_slashImage;
+
+
 	// シーンに戻ってきた時の状態
 	enum SceneReturnStatus {
 		Nothing = 0, // 本当に最初
@@ -129,6 +145,7 @@ public:
 		PlayStandby, // Play押して、ランクや自機を選ぶ
 		PlayWeaponSelect, // ランクを選んだ後に自機を選ぶ
 		ExtraStandby,
+		ShowResult, // リザルト画面
 	};
 	Status m_status;
 };

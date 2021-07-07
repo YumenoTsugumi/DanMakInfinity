@@ -81,6 +81,7 @@ void CResultScene::Init(CGame* gameP) {
 	m_imagePlanet = (CImage*)CGame::GetResource("bg_planet_09");
 	m_imageSpace = (CImage*)CGame::GetResource("X_bg_space_04");
 
+
 	m_startRank = 0;
 	m_endRank = 0;
 	m_stage = 0;
@@ -146,13 +147,9 @@ void CResultScene::Main(CInputAllStatus *input){
 	}
 
 	if (input->m_btnStatus[INPUT_DEF_ENTER] == INPUT_PUSH) {
-		if (m_phase1_count < Phase3Time) {
+		if (m_phase1_count < Phase2Time) {
 			m_gameOverAlpha = 1.0;
-			m_phase1_count = Phase3Time;
-		}
-		else {
-			m_gameOverAlpha = 0.0;
-			m_phase1_count = Phase4Time;
+			m_phase1_count = Phase2Time;
 		}
 	}
 

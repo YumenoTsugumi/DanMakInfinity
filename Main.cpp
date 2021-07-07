@@ -42,6 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CGame* game = new CGame();
 	game->Init();
 
+
 	//クライアント領域矩形
 	//game->SetRect(CRect(0, 0, windowX, windowY));
 

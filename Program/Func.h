@@ -153,9 +153,16 @@ public:
 	// [3] : ,
 	// [4] : 4
 	// [5] : 3
-	static void GetDigitArray(int zeroumeDigit, long long number, std::vector<int>& indexAry);
+	static void GetDigitArray(int zeroDigit, long long number, std::vector<int>& indexAry);
 	// 123 -> [0]1[1]2[2]3
-	static void GetDigitArray2(long long number, std::vector<int>& indexAry);
+	// front : 123
+	// back : 321
+	static void GetDigitArray2(long long number, std::vector<int>& indexAry, bool front = true);
+
+	// 4 123 -> 0123
+	// front : 0123
+	// back : 3210
+	static void GetDigitArray3(int zeroDigit, long long number, std::vector<int>& indexAry, bool front = true);
 
 	//数値だけの文字列に,をつけていく
 	//input:1234567

@@ -408,6 +408,19 @@ void CGame::ImageLoadByThread()
 	m_resourceManager.Add(new CImage("ResourceX\\Result\\StartRank.png"), "StartRank", 15090);
 	m_resourceManager.Add(new CImage("ResourceX\\Result\\Enda.png"), "Enda", 15091);
 
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\Normal.png"), "Normal", 15092);
+
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\gold1.png"), "gold1", 15093);
+	m_resourceManager.Add(new CImage("ResourceX\\Title\\silver2.png"), "silver2", 15094);
+	for (int ii = 0; ii < (10); ii++) {
+		std::string format1 = MyFormat("ResourceX\\Title\\bronze%d.png", ii);
+		std::string format2 = MyFormat("bronze_%d", ii);
+		m_resourceManager.Add(new CImage(format1.c_str()), format2.c_str(), 15095 + ii);
+	}
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\coron.png"), "coron", 15110);
+	m_resourceManager.Add(new CImage("ResourceX\\Result\\slash.png"), "slash", 15111);
+
+
 	//            1234567890123456789012345678901234567
 	char str[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
 	for (int ii = 0; ii < (NameEntryFontMax); ii++) {
@@ -559,8 +572,11 @@ double CGame::ToAllSizeY(double ratioPosY)
 	return max * ratioPosY;
 }
 
+#include <algorithm>
 void CGame::Load_SaveData()
 {
+	m_saveData.clear();
+
 	std::vector<std::string> filepaths;
 	CFunc::GetFileNames("resultData","*.dat", filepaths);
 	for (auto path : filepaths) {
@@ -568,12 +584,18 @@ void CGame::Load_SaveData()
 		SaveDatus::Load(path.c_str(), saveData);
 		m_saveData.push_back(saveData);
 	}
+
+	std::sort(m_saveData.begin(), m_saveData.end(), [](SaveDatus a, SaveDatus b) {
+		return a.m_score > b.m_score;
+	});
 }
 
 void SaveDatus::Load(const char* filename, SaveDatus& datus)
 {
 	FILE *fp;
-	errno_t err = fopen_s(&fp, filename, "rb");
+	std::string sss = "resultData\\";
+	sss += filename;
+	errno_t err = fopen_s(&fp, sss.c_str(), "rb");
 	if (err == 0) {
 		fread(&datus, sizeof(datus), 1, fp);
 		fclose(fp);
